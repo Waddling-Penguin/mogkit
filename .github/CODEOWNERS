@@ -1,0 +1,15 @@
+# CODEOWNERS — auto-requests review from these owners on every PR.
+# See https://docs.github.com/articles/about-code-owners
+#
+# Catch-all: every PR auto-requests review from the maintainer.
+*       @Waddling-Penguin
+
+# Load-bearing surfaces — extra-explicit so a PR touching them is never
+# missed in the review queue:
+/skills/                          @Waddling-Penguin
+/docs/                            @Waddling-Penguin
+/cli/                             @Waddling-Penguin
+/engine/graph-schema.json         @Waddling-Penguin
+/site/src/content/                @Waddling-Penguin
+/.github/workflows/               @Waddling-Penguin
+/netlify.toml                     @Waddling-Penguin
