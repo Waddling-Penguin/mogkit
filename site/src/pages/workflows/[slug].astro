@@ -21,49 +21,57 @@ const updatedStr = d.updated.toISOString().slice(0, 10);
 ---
 
 <BaseLayout title={`${d.title} · mogkit Workflow Library`} description={d.outcome}>
-  <article class="container-tight pt-16 sm:pt-20 pb-8">
-    <Eyebrow>Workflow Library · {d.wedge}</Eyebrow>
-    <h1 class="font-display text-3xl sm:text-4xl text-halo tracking-tightest leading-[1.02] mt-4 lift-in lift-in-2">
-      {d.title}
-    </h1>
-    <p class="mt-5 text-lg text-mercury leading-relaxed lift-in lift-in-3">{d.outcome}</p>
+  {/* Header + body share the same container-huge grid so the article
+      column lines up vertically between them on lg+. On <lg the header
+      content centers within container-huge. */}
+  <article class="container-huge pt-16 sm:pt-20 pb-8">
+    <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-12">
+      <div class="max-w-3xl mx-auto lg:mx-0 lg:order-1">
+        <Eyebrow>Workflow Library · {d.wedge}</Eyebrow>
+        <h1 class="font-display text-3xl sm:text-4xl text-halo tracking-tightest leading-[1.02] mt-4 lift-in lift-in-2">
+          {d.title}
+        </h1>
+        <p class="mt-5 text-lg text-mercury leading-relaxed lift-in lift-in-3">{d.outcome}</p>
 
-    <div class="mt-6 flex flex-wrap items-center gap-1.5 lift-in lift-in-4">
-      <span class="pill-accent">{d.wedge}</span>
-      <span class="pill">{d.difficulty}</span>
-      <span class="pill">{d.timeToImplement}</span>
-      {d.tools.map((t) => <span class="pill">{t}</span>)}
-    </div>
-
-    <dl class="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 text-sm border-y border-graphite/70 py-5">
-      <div>
-        <dt class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash">Published</dt>
-        <dd class="font-mono text-halo mt-1">{dateStr}</dd>
-      </div>
-      <div>
-        <dt class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash">Updated</dt>
-        <dd class="font-mono text-halo mt-1">{updatedStr}</dd>
-      </div>
-      <div>
-        <dt class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash">Cost</dt>
-        <dd class="text-chrome mt-1 text-[13px] leading-snug">{d.costNote}</dd>
-      </div>
-      {d.relatedSkill && (
-        <div>
-          <dt class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash">Related skill</dt>
-          <dd class="font-mono text-halo mt-1">{d.relatedSkill}</dd>
+        <div class="mt-6 flex flex-wrap items-center gap-1.5 lift-in lift-in-4">
+          <span class="pill-accent">{d.wedge}</span>
+          <span class="pill">{d.difficulty}</span>
+          <span class="pill">{d.timeToImplement}</span>
+          {d.tools.map((t) => <span class="pill">{t}</span>)}
         </div>
-      )}
-    </dl>
+
+        <dl class="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 text-sm border-y border-graphite/70 py-5">
+          <div>
+            <dt class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash">Published</dt>
+            <dd class="font-mono text-halo mt-1">{dateStr}</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash">Updated</dt>
+            <dd class="font-mono text-halo mt-1">{updatedStr}</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash">Cost</dt>
+            <dd class="text-chrome mt-1 text-[13px] leading-snug">{d.costNote}</dd>
+          </div>
+          {d.relatedSkill && (
+            <div>
+              <dt class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash">Related skill</dt>
+              <dd class="font-mono text-halo mt-1">{d.relatedSkill}</dd>
+            </div>
+          )}
+        </dl>
+      </div>
+      {/* Right column of the grid stays empty in the header row on lg+ */}
+    </div>
   </article>
 
   <Section spacing="default">
     <div class="container-huge">
       <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-12">
-        <div class="prose-voidchrome max-w-3xl lg:order-1 order-2">
+        <div class="prose-voidchrome max-w-3xl mx-auto lg:mx-0 lg:order-1 order-2">
           <Content />
         </div>
-        <div class="lg:order-2 order-1">
+        <div class="lg:order-2 order-1 max-w-3xl mx-auto lg:max-w-none">
           <WorkflowUnlock
             unlocks={d.unlocks}
             helps={d.helps}
