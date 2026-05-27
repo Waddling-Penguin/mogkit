@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mogkit.dev/schemas/graph.schema.json",
+  "$id": "https://mogkit.com/schemas/graph.schema.json",
   "title": "mogkit Discovery graph",
   "description": "The output of the `graphify` skill. Represents an evidence-backed knowledge graph derived from a PM's sources/ corpus. Every node and edge carries provenance — except Assumption nodes, whose empty provenance is the point and must be explicit.",
   "type": "object",

@@ -10,7 +10,7 @@ export async function GET(context: APIContext) {
     title: "mogkit Workflow Library",
     description:
       "Implementable AI-for-PM workflows. Each entry teaches its mechanism.",
-    site: context.site ?? "https://mogkit.dev",
+    site: context.site ?? "https://mogkit.com",
     items: workflows.map((w) => ({
       title: w.data.title,
       pubDate: w.data.published,

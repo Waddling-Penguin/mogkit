@@ -19,7 +19,7 @@ cd my-workspace
 # open in Claude Code; the skills are already installed
 ```
 
-- **Site:** [mogkit.dev](https://mogkit.dev) *(once deployed)*
+- **Site:** [mogkit.com](https://mogkit.com)
 - **License:** MIT
 - **Status:** v0.1 — Phase 1–5 shipped (skills + CLI + Discovery engine + site + Workflow Library)
 
@@ -67,7 +67,7 @@ Then open the workspace in [Claude Code](https://claude.com/claude-code) and
 run any skill from `.claude/skills/`. Try `tradeoff-frame` against a real
 decision you're stuck on, or `spec-stress-test` on a PRD draft.
 
-**New to the terminal?** The [Setup 101 page](https://mogkit.dev/setup) walks
+**New to the terminal?** The [Setup 101 page](https://mogkit.com/setup) walks
 you through every step from opening Terminal to running your first skill.
 Genuinely followable from zero.
 
@@ -104,7 +104,7 @@ A growing, newest-first collection of implementable AI-for-PM workflows. Each
 entry is two things: a copy-paste recipe you can ship today, *and* a "how it
 works" explainer that teaches the mechanism. We never ship a black box.
 
-Browse at [/workflows](https://mogkit.dev/workflows) or
+Browse at [/workflows](https://mogkit.com/workflows) or
 [`site/src/content/workflows/`](site/src/content/workflows/). Contribute one
 following [`docs/WORKFLOW-FEED-SPEC.md`](docs/WORKFLOW-FEED-SPEC.md).
 

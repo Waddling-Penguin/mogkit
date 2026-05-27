@@ -6,7 +6,7 @@ import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://mogkit.dev",
+  site: "https://mogkit.com",
   trailingSlash: "never",
   integrations: [
     mdx(),
