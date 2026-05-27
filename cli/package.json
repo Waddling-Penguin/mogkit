@@ -4,8 +4,27 @@
   "description": "mogkit — the open-source toolkit for product managers. Scaffolds a PM workspace and installs Claude Code skills. Out-craft the room.",
   "license": "MIT",
   "type": "module",
+  "homepage": "https://github.com/Waddling-Penguin/mogkit",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Waddling-Penguin/mogkit.git",
+    "directory": "cli"
+  },
+  "bugs": {
+    "url": "https://github.com/Waddling-Penguin/mogkit/issues"
+  },
+  "keywords": [
+    "product-management",
+    "pm",
+    "cli",
+    "claude-code",
+    "discovery",
+    "scaffold",
+    "skills",
+    "workspace"
+  ],
   "bin": {
-    "mogkit": "./dist/index.js"
+    "mogkit": "dist/index.js"
   },
   "files": [
     "dist",
