@@ -1,0 +1,75 @@
+---
+// Voidchrome — workflow sidepanel.
+// Sticky on lg+, inline above the article on smaller screens. Three short
+// sections — concrete, no fluff:
+//   • What you unlock — capabilities the PM can act on after shipping this
+//   • How it helps — practical impact in your week
+//   • Skip if      — honest fit-check; one line each
+//
+// Brand voice constraint: every item is one short sentence with a concrete
+// noun. No "supercharge", no "leverage", no "unlock the power of".
+interface Props {
+  unlocks: string[];
+  helps: string[];
+  skipIf: string[];
+}
+const { unlocks, helps, skipIf } = Astro.props;
+const empty = !unlocks?.length && !helps?.length && !skipIf?.length;
+---
+{!empty && (
+  <aside
+    class:list={[
+      "rounded-xl border border-graphite bg-obsidian/80 backdrop-blur-sm",
+      "p-5 sm:p-6",
+      "lg:sticky lg:top-20",
+    ]}
+  >
+    {unlocks.length > 0 && (
+      <section class="mb-6 last:mb-0">
+        <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-mercury">
+          What you unlock
+        </p>
+        <ul class="mt-3 space-y-2.5">
+          {unlocks.map((u) => (
+            <li class="flex gap-2.5 text-[13.5px] text-chrome leading-snug">
+              <span class="text-accent-400 mt-[0.45em] shrink-0" aria-hidden="true">●</span>
+              <span>{u}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {helps.length > 0 && (
+      <section class="mb-6 last:mb-0 pt-5 border-t border-graphite/70">
+        <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-mercury">
+          How it helps
+        </p>
+        <ul class="mt-3 space-y-2.5">
+          {helps.map((h) => (
+            <li class="flex gap-2.5 text-[13.5px] text-chrome leading-snug">
+              <span class="text-mercury mt-[0.45em] shrink-0" aria-hidden="true">→</span>
+              <span>{h}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {skipIf.length > 0 && (
+      <section class="pt-5 border-t border-graphite/70">
+        <p class="font-mono text-[10px] uppercase tracking-[0.22em] text-mercury">
+          Skip this if
+        </p>
+        <ul class="mt-3 space-y-2.5">
+          {skipIf.map((s) => (
+            <li class="flex gap-2.5 text-[13.5px] text-ash leading-snug">
+              <span class="text-ash mt-[0.45em] shrink-0" aria-hidden="true">×</span>
+              <span>{s}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </aside>
+)}

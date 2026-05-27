@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Eyebrow from "../../components/Eyebrow.astro";
 import Section from "../../components/Section.astro";
+import WorkflowUnlock from "../../components/WorkflowUnlock.astro";
 
 export async function getStaticPaths() {
   const workflows = await getCollection("workflows");
@@ -57,8 +58,19 @@ const updatedStr = d.updated.toISOString().slice(0, 10);
   </article>
 
   <Section spacing="default">
-    <div class="container-tight prose-voidchrome">
-      <Content />
+    <div class="container-huge">
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-12">
+        <div class="prose-voidchrome max-w-3xl lg:order-1 order-2">
+          <Content />
+        </div>
+        <div class="lg:order-2 order-1">
+          <WorkflowUnlock
+            unlocks={d.unlocks}
+            helps={d.helps}
+            skipIf={d.skipIf}
+          />
+        </div>
+      </div>
     </div>
   </Section>
 

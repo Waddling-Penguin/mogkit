@@ -3,8 +3,8 @@
 // Rendered as an absolutely-positioned background layer. The hero text in
 // index.astro overlays it at a higher z-index, Morphic-style.
 //
-// `client:only="react"` keeps R3F off the server. A static ChromeGlyph is
-// shown until the island hydrates so there's a deliberate placeholder.
+// `client:only="react"` keeps R3F off the server. No SSR placeholder —
+// the canvas hydrates fast enough that a placeholder added visual noise.
 import SurfboardHero from "./three/SurfboardHero";
 
 interface Props {

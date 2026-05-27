@@ -12,6 +12,17 @@ relatedSkill: null
 hasCliSetup: false
 costNote: "Claude API usage, ~$0.05–$0.30/week depending on competitor count and verbosity of their changelogs."
 tags: ["competitive", "strategy", "automation", "digest", "weekly"]
+unlocks:
+  - "A Monday digest of competitor changes scored against your market description — high/medium only, lows omitted."
+  - "Per-competitor change list with a one-line summary and a 'why this matters to us' note."
+  - "A versioned issue history of how the landscape moved week over week, searchable in six months."
+helps:
+  - "Replaces sporadic 'did you see X shipped?' Slack threads with one structured artifact."
+  - "Forces you to articulate what your team actually cares about — the prompt is the strategy doc."
+  - "$0.20 of API per week saves the team 30+ minutes of changelog browsing nobody was doing anyway."
+skipIf:
+  - "You don't have a clear market focus yet — the relevance scoring relies on your description."
+  - "You expect this to replace a real competitive teardown. The digest tells you when a teardown is worth doing."
 ---
 
 ## The problem
@@ -40,6 +51,43 @@ A scheduled GitHub Action that:
 The output is structured: per competitor, a short list of "notable
 changes" with one-line summaries and a relevance score. Stuff scored
 low is omitted. You read it in three minutes.
+
+## Example output
+
+The Monday digest issue scored against a fictional project-management-tool
+market description:
+
+```
+# Competitive digest — week of 2026-05-27
+
+—— Linear  (2 high · 1 medium) ————————————————————————
+
+[HIGH] Native Slack integration with threaded replies
+  Direct competitor for the Slack work we've been scoping. Their depth
+  (threaded replies in Slack) is significant — closes the gap we
+  identified as our differentiation.
+
+[HIGH] Pricing: Team tier seat minimum raised from 5 → 10
+  Could push their SMB users to us. Check if our SMB conversion shifts
+  next quarter.
+
+[MED]  Jira import now preserves attachments
+  We have this in beta but haven't GA'd. They beat us. Promote our beta
+  or accelerate.
+
+—— Asana  (1 high) ——————————————————————————————————
+
+[HIGH] OKR module free for all users
+  Pricing pressure on the strategy-tier features. Decide if our roadmap
+  module's free tier needs to match.
+
+—— Notion  (0 changes this week) ————————————————————
+
+(quiet week)
+```
+
+You read it in 3 minutes. The "high" items get a Slack thread; "medium"
+gets a mention in the next strategy sync.
 
 ## Prerequisites
 

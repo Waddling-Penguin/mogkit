@@ -12,6 +12,17 @@ relatedSkill: null
 hasCliSetup: false
 costNote: "Claude API usage per run (~$0.50–$2.00 depending on conversation volume)."
 tags: ["automation", "docs", "support", "intercom", "mintlify", "agent"]
+unlocks:
+  - "A weekly PR on your docs repo with proposed edits, anchored to specific existing files."
+  - "A versioned `docs-gaps.md` listing themes that have no doc yet — the next quarter's docs roadmap, derived from real questions."
+  - "A record of what users actually ask, week over week, without anyone owning the manual digest."
+helps:
+  - "Closes the support→docs loop that every team says they should close and nobody does."
+  - "Compresses 200 conversations into ~5 themed proposals you can review in 10 minutes."
+  - "Forces the model to edit real files, not invent a parallel docs structure — output is mergeable."
+skipIf:
+  - "Your support volume is under ~50 conversations/week — clusters are noisy at low N."
+  - "Your docs aren't in a repo you control. The PR-on-docs flow is the load-bearing piece."
 ---
 
 ## The problem
@@ -34,6 +45,42 @@ with:
 - A short summary at the top of the PR description
 
 A human reviews the PR, edits or rejects proposed changes, and merges.
+
+## Example output
+
+The Monday morning PR title + body that lands on your docs repo:
+
+```
+docs: weekly support-driven updates (2026-05-27 · 4 clusters)
+
+This week the agent clustered 142 recent Intercom conversations into
+4 themes. Each cluster maps to an existing doc edit or a new gap.
+
+— Proposed edits ————————————————————————————————————————
+
+docs/api/authentication.mdx
+  Cluster: "API key rotation expiry confusion" (22 conversations)
+  Added a callout in the Rotation section linking to the expiration
+  matrix. Users repeatedly missed how the 30-day grace period interacts
+  with rotation.
+
+docs/integrations/slack.mdx
+  Cluster: "Slack OAuth permission scope errors" (11 conversations)
+  Clarified the required scopes and added a screenshot of the consent
+  screen showing the right boxes ticked.
+
+— New gaps (no doc yet) ————————————————————————————————
+
+SSO debug log location (8 conversations)
+  Where users find logs to diagnose failed SSO. Appended to
+  docs-gaps.md.
+
+CSV export size limits (5 conversations)
+  We never documented the 50k-row cap on the CSV export endpoint.
+```
+
+You read this in 5 minutes. The model did the synthesis; you do the
+editorial pass.
 
 ## Prerequisites
 
