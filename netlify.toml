@@ -1,5 +1,5 @@
 [build]
-  base = "site"
+  # base = repo root (default). Publish path is repo-relative.
   publish = "site/dist"
   command = "pnpm install --frozen-lockfile=false && pnpm --filter @mogkit/site run build"
 
