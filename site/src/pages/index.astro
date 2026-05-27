@@ -165,25 +165,28 @@ const recentWorkflows = workflows.slice(0, 3);
     </div>
   </Section>
 
-  {/* GET STARTED — the on-ramp */}
+  {/* GET STARTED — the on-ramp. Uses container-wide to align its left
+      edge with the wedges + workflow library sections above. */}
   <Section hairline spacing="loose">
-    <div class="container-tight">
-      <Eyebrow>Get started</Eyebrow>
-      <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
-        Two commands and you're set up.
-      </h2>
-      <p class="mt-4 text-chrome leading-relaxed">
-        If you've used a terminal before, two commands and you're set up. If
-        you haven't, Setup 101 walks you through every step from opening the
-        terminal to running your first skill.
-      </p>
-      <pre class="mt-8"><code>$ npx mogkit init my-workspace
+    <div class="container-wide">
+      <div class="max-w-2xl">
+        <Eyebrow>Get started</Eyebrow>
+        <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
+          Two commands and you're set up.
+        </h2>
+        <p class="mt-4 text-chrome leading-relaxed">
+          If you've used a terminal before, two commands and you're set up. If
+          you haven't, Setup 101 walks you through every step from opening the
+          terminal to running your first skill.
+        </p>
+        <pre class="mt-8"><code>$ npm install -g mogkit
+$ mogkit init my-workspace
 $ cd my-workspace
-$ open this folder in Claude Code
-$ run your first skill</code></pre>
-      <div class="mt-7 flex flex-wrap gap-3">
-        <Button href="/setup" variant="primary">Setup 101 →</Button>
-        <Button href="https://github.com/Waddling-Penguin/mogkit" variant="ghost">GitHub</Button>
+$ open this folder in Claude Code</code></pre>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <Button href="/setup" variant="primary">Setup 101 →</Button>
+          <Button href="https://github.com/Waddling-Penguin/mogkit" variant="ghost">GitHub</Button>
+        </div>
       </div>
     </div>
   </Section>
