@@ -22,41 +22,43 @@ const recentWorkflows = workflows.slice(0, 3);
 <BaseLayout title="mogkit — out-craft the room">
 
   {/* HERO — chrome surfboard floats BEHIND the headline (Morphic-style).
-      Absolute-positioned R3F island fills the section; text overlays it. */}
+      Absolute-positioned R3F island fills the section; text overlays it.
+      Mobile: shorter section + smaller padding so the content lands above
+      the fold without a giant void. */}
   <section class="relative overflow-hidden">
-    <div class="relative w-full min-h-[78vh] sm:min-h-[82vh]">
+    <div class="relative w-full min-h-[640px] sm:min-h-[82vh]">
       <SurfboardHeroIsland />
 
-      <div class="relative z-10 flex flex-col items-center text-center px-6
-                  pt-[14vh] sm:pt-[18vh] pb-20">
+      <div class="relative z-10 flex flex-col items-center text-center px-5
+                  pt-[8vh] sm:pt-[18vh] pb-24 sm:pb-20">
         <p class="eyebrow lift-in lift-in-1">
-          the open-source toolkit for product managers
+          the open-source toolkit for PMs
         </p>
-        <h1 class="font-display text-5xl sm:text-6xl md:text-7xl text-halo tracking-tightest leading-[0.95] mt-6 max-w-3xl mx-auto lift-in lift-in-2 [text-shadow:0_2px_28px_rgb(10_10_11_/_0.95)]">
+        <h1 class="font-display text-[2.4rem] leading-[1.02] sm:text-6xl md:text-7xl sm:leading-[0.95] text-halo tracking-tightest mt-5 sm:mt-6 max-w-3xl mx-auto lift-in lift-in-2 [text-shadow:0_2px_28px_rgb(10_10_11_/_0.95)]">
           Sharper thinking.<br/>
           <span class="text-mercury">Not just faster output.</span>
         </h1>
-        <p class="mt-7 text-lg text-chrome max-w-2xl mx-auto leading-relaxed lift-in lift-in-3 [text-shadow:0_1px_16px_rgb(10_10_11_/_0.9)]">
+        <p class="mt-5 sm:mt-7 text-base sm:text-lg text-chrome max-w-2xl mx-auto leading-relaxed lift-in lift-in-3 [text-shadow:0_1px_16px_rgb(10_10_11_/_0.9)]">
           mogkit installs PM craft into your terminal — a library of
           methodology-backed skills that run in Claude Code, a thin CLI that
           scaffolds your workspace, and a growing library of AI-for-PM workflows
           you can ship today.
         </p>
-        <p class="mt-3 text-lg text-chrome max-w-2xl mx-auto leading-relaxed lift-in lift-in-3 [text-shadow:0_1px_16px_rgb(10_10_11_/_0.9)]">
+        <p class="mt-3 text-base sm:text-lg text-chrome max-w-2xl mx-auto leading-relaxed lift-in lift-in-3 [text-shadow:0_1px_16px_rgb(10_10_11_/_0.9)]">
           It won't write your PRD. It'll make you write a better one.
         </p>
-        <div class="mt-9 flex flex-wrap items-center justify-center gap-3 lift-in lift-in-4">
+        <div class="mt-7 sm:mt-9 flex flex-wrap items-center justify-center gap-3 lift-in lift-in-4">
           <Button href="/setup" variant="primary">Start with Setup 101 →</Button>
           <Button href="/wedges/discovery" variant="ghost">See the Discovery engine</Button>
         </div>
-        <p class="mt-7 font-mono text-[12px] text-ash tracking-tight lift-in lift-in-4">
+        <p class="mt-6 sm:mt-7 font-mono text-[11px] sm:text-[12px] text-ash tracking-tight lift-in lift-in-4 break-all sm:break-normal">
           $ npx mogkit init my-workspace
         </p>
       </div>
 
       {/* Scroll hint — pinned to the bottom of the hero, fills the dead
           space below the CTA */}
-      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 lift-in lift-in-4">
+      <div class="absolute bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-10 lift-in lift-in-4">
         <ScrollHint />
       </div>
     </div>
