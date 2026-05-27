@@ -1,18 +1,18 @@
 ---
 import type { SkillMeta } from "../lib/skills";
+import Card from "./Card.astro";
 interface Props { skill: SkillMeta }
 const { skill } = Astro.props;
 const tierLabel = skill.tier === "discovery" ? "discovery engine" : "standalone";
 ---
-
-<div class="rounded-lg border border-ink-200 bg-white p-4">
-  <div class="flex items-baseline justify-between gap-3 mb-1">
-    <h3 class="font-mono text-ink-900 text-sm font-semibold">{skill.name}</h3>
+<Card padding="sm">
+  <div class="flex items-baseline justify-between gap-3 mb-2">
+    <h3 class="font-mono text-halo text-sm">{skill.name}</h3>
     <span class="pill">{skill.level}</span>
   </div>
-  <div class="text-xs text-ink-500 mb-2">
+  <div class="flex flex-wrap items-center gap-1.5 mb-3">
     <span class="pill-accent">{tierLabel}</span>
-    <span class="pill ml-1">{skill.wedge}</span>
+    <span class="pill">{skill.wedge}</span>
   </div>
-  <p class="text-sm text-ink-700 leading-relaxed">{skill.summary}</p>
-</div>
+  <p class="text-sm text-chrome leading-relaxed">{skill.summary}</p>
+</Card>

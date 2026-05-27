@@ -1,0 +1,25 @@
+---
+// Voidchrome — Card primitive.
+// Obsidian fill, hairline graphite border, generous padding, 12px radius.
+// On hover: border lifts toward --mercury and a soft top-edge glow appears
+// (the single-light-source motif). Set `href` to render as a link.
+interface Props {
+  href?: string;
+  class?: string;
+  padding?: "sm" | "md" | "lg";
+}
+const { href, class: cls, padding = "md" } = Astro.props;
+const padClass = { sm: "p-4", md: "p-5 sm:p-6", lg: "p-7 sm:p-8" }[padding];
+const Tag = href ? "a" : "div";
+---
+<Tag
+  {...href ? { href } : {}}
+  class:list={[
+    "card-glow block rounded-xl border border-graphite bg-obsidian",
+    "no-underline overflow-hidden",
+    padClass,
+    cls,
+  ]}
+>
+  <slot />
+</Tag>

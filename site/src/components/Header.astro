@@ -1,27 +1,36 @@
 ---
+// Voidchrome — header.
+// --void bg, hairline --graphite divider, mono labels, current route indicated
+// in --mercury. Sticky, faintly translucent so the bloom underneath remains
+// visible as you scroll.
 const nav = [
-  { href: "/wedges/discovery", label: "Wedges" },
-  { href: "/workflows", label: "Workflow Library" },
-  { href: "/setup", label: "Setup 101" },
-  { href: "/search", label: "Search" },
+  { href: "/wedges", label: "Wedges", match: ["/wedges"] },
+  { href: "/workflows", label: "Workflow Library", match: ["/workflows"] },
+  { href: "/setup", label: "Setup", match: ["/setup"] },
+  { href: "/search", label: "Search", match: ["/search"] },
 ];
 const current = Astro.url.pathname;
+function isActive(matches: string[]) {
+  return matches.some((m) => current === m || current.startsWith(m + "/"));
+}
 ---
-
-<header class="border-b border-ink-200 bg-ink-50/80 backdrop-blur sticky top-0 z-30">
+<header class="sticky top-0 z-30 border-b border-graphite/70 bg-void/85 backdrop-blur-md">
   <div class="container-wide flex items-center justify-between h-14">
-    <a href="/" class="no-underline text-ink-900 font-mono font-semibold text-lg lowercase tracking-tight hover:text-accent-700 transition-colors">
+    <a
+      href="/"
+      class="font-mono font-medium text-base lowercase tracking-tight text-halo hover:text-mercury transition-colors duration-450"
+    >
       mogkit
     </a>
-    <nav class="flex items-center gap-1 sm:gap-2 text-sm">
+    <nav class="flex items-center gap-1 text-[12px] font-mono uppercase tracking-[0.14em]">
       {nav.map((item) => (
         <a
           href={item.href}
           class:list={[
-            "px-2.5 py-1.5 rounded-md no-underline transition-colors",
-            current.startsWith(item.href.replace(/\/discovery$/, ""))
-              ? "text-ink-900 bg-ink-100"
-              : "text-ink-600 hover:text-ink-900 hover:bg-ink-100",
+            "px-2.5 py-1.5 rounded-md transition-colors duration-450 ease-voidchrome",
+            isActive(item.match)
+              ? "text-mercury"
+              : "text-ash hover:text-chrome",
           ]}
         >
           {item.label}
@@ -29,7 +38,7 @@ const current = Astro.url.pathname;
       ))}
       <a
         href="https://github.com/Waddling-Penguin/mogkit"
-        class="hidden sm:inline-flex ml-1 px-2.5 py-1.5 text-sm rounded-md no-underline text-ink-600 hover:text-ink-900 hover:bg-ink-100"
+        class="hidden sm:inline-flex ml-2 px-2.5 py-1.5 rounded-md text-ash hover:text-chrome transition-colors duration-450"
       >
         GitHub
       </a>

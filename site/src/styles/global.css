@@ -2,34 +2,159 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+ * Voidchrome — design tokens
+ * Single source of truth for the palette. Components reference these
+ * via tailwind utility classes (text-chrome, bg-obsidian, etc.).
+ * Hard-coded colors are banned outside this block.
+ * ============================================================ */
 @layer base {
+  :root {
+    /* Page background — near-black, faintly warm. Banned: pure #000. */
+    --void: 10 10 11;
+    /* Raised surfaces: cards, terminal blocks */
+    --obsidian: 20 20 22;
+    /* Borders, hairlines, dividers */
+    --graphite: 42 42 46;
+    /* Secondary text, captions, disabled states */
+    --ash: 110 110 118;
+    /* PRIMARY body text — silver, not white */
+    --chrome: 200 202 208;
+    /* Headlines + key emphasis ONLY — rationed. Banned: pure #fff. */
+    --halo: 244 244 246;
+    /* The only non-grey — cool light. Used as glow, focus, links */
+    --mercury: 156 163 180;
+
+    /* Functional signal only — tags, active states, never decorative */
+    --accent-400: 52 211 153;
+    --accent-500: 16 185 129;
+    --accent-600: 5 150 105;
+    --accent-700: 4 120 87;
+  }
+
   html {
-    @apply text-ink-800 bg-ink-50 antialiased;
-    font-feature-settings: "ss01", "cv11";
+    background-color: rgb(var(--void));
+    color: rgb(var(--chrome));
+    font-feature-settings: "ss01", "cv11", "cv09";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
   body {
-    @apply min-h-screen flex flex-col;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
   }
+
+  /* The single-light-source motif — a soft radial bloom top-center.
+     Fixed to the viewport so it doesn't scroll away. Behind everything. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        70% 50% at 50% -5%,
+        rgb(var(--mercury) / 0.10) 0%,
+        rgb(var(--mercury) / 0.05) 25%,
+        transparent 60%
+      ),
+      radial-gradient(
+        90% 90% at 50% 110%,
+        rgb(var(--obsidian) / 0.6) 0%,
+        transparent 50%
+      );
+    z-index: 0;
+  }
+
+  /* Faint static noise — barely perceptible. SVG, no network round-trip.
+     Keep opacity extremely low; we don't want texture, we want depth. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    z-index: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  main, header, footer {
+    position: relative;
+    z-index: 1;
+  }
+
   ::selection {
-    @apply bg-accent-500/20 text-ink-900;
+    background-color: rgb(var(--mercury) / 0.25);
+    color: rgb(var(--halo));
   }
+
+  /* Typography defaults — display, body, mono each carry one job */
+  h1, h2, h3, h4, h5, h6 {
+    color: rgb(var(--halo));
+    font-family: "Inter Tight", "InterVariable", system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+  h1 { letter-spacing: -0.04em; }
+
+  p, li {
+    color: rgb(var(--chrome));
+    line-height: 1.65;
+  }
+
   a {
-    @apply underline decoration-ink-300 underline-offset-4 hover:decoration-accent-600 transition-colors;
+    color: inherit;
+    text-decoration: none;
+    transition: color 450ms cubic-bezier(0.22, 1, 0.36, 1);
   }
+  a:hover {
+    color: rgb(var(--halo));
+  }
+
+  /* Mono code, terminal blocks, inline code */
   code {
-    @apply font-mono text-[0.9em] bg-ink-100 text-ink-900 px-1 py-0.5 rounded;
-  }
-  pre code {
-    @apply bg-transparent text-ink-50 px-0;
+    font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    font-size: 0.9em;
+    color: rgb(var(--chrome));
+    background-color: rgb(var(--obsidian));
+    border: 1px solid rgb(var(--graphite));
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
   }
   pre {
-    @apply font-mono text-sm bg-ink-900 text-ink-50 rounded-md p-4 overflow-x-auto;
+    font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    background-color: rgb(var(--void));
+    border: 1px solid rgb(var(--graphite));
+    color: rgb(var(--chrome));
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 0.875rem;
+    line-height: 1.6;
   }
-  h1, h2, h3, h4 {
-    @apply text-ink-900 font-semibold tracking-tight;
+  pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* Focus — mercury ring, generous. Visible on every interactive surface. */
+  :focus-visible {
+    outline: 2px solid rgb(var(--mercury));
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 }
 
+/* ============================================================
+ * Components — semantic building blocks
+ * ============================================================ */
 @layer components {
   .container-tight {
     @apply mx-auto w-full max-w-3xl px-6;
@@ -37,19 +162,211 @@
   .container-wide {
     @apply mx-auto w-full max-w-5xl px-6;
   }
+  .container-huge {
+    @apply mx-auto w-full max-w-6xl px-6;
+  }
+
+  /* Eyebrow: mono, uppercase, letter-spaced, mercury */
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.22em] text-mercury;
+  }
+
+  /* Hairline divider */
+  .hairline {
+    @apply border-t border-graphite;
+  }
+
+  /* Pill tags. Default = ghost neutral. -accent variant = the rationed green. */
   .pill {
-    @apply inline-flex items-center gap-1 rounded-full bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-700;
+    @apply inline-flex items-center gap-1 rounded-full border border-graphite
+           bg-obsidian px-2.5 py-0.5 text-[11px] font-mono uppercase
+           tracking-wider text-ash;
   }
   .pill-accent {
-    @apply inline-flex items-center gap-1 rounded-full bg-accent-50 px-2 py-0.5 text-xs font-medium text-accent-700;
+    @apply inline-flex items-center gap-1 rounded-full
+           border border-accent-700/40 bg-accent-700/10 px-2.5 py-0.5
+           text-[11px] font-mono uppercase tracking-wider text-accent-400;
   }
-  .btn {
-    @apply inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium no-underline transition-colors;
+
+  /* MDX prose recolor — dark, calm, generous */
+  .prose-voidchrome {
+    @apply text-chrome;
   }
-  .btn-primary {
-    @apply bg-ink-900 text-ink-50 hover:bg-ink-800;
+  .prose-voidchrome p {
+    @apply text-chrome leading-relaxed mb-5;
   }
-  .btn-ghost {
-    @apply bg-transparent text-ink-800 hover:bg-ink-100 border border-ink-200;
+  .prose-voidchrome h2 {
+    @apply text-halo font-display text-2xl tracking-tight mt-12 mb-4;
+  }
+  .prose-voidchrome h3 {
+    @apply text-halo font-display text-xl tracking-tight mt-10 mb-3;
+  }
+  .prose-voidchrome a {
+    @apply text-mercury underline decoration-graphite underline-offset-4
+           hover:decoration-mercury;
+  }
+  .prose-voidchrome ul, .prose-voidchrome ol {
+    @apply mb-5 pl-6 space-y-1.5;
+  }
+  .prose-voidchrome ul { @apply list-disc; }
+  .prose-voidchrome ol { @apply list-decimal; }
+  .prose-voidchrome li::marker { color: rgb(var(--ash)); }
+  .prose-voidchrome strong { @apply text-halo font-medium; }
+  .prose-voidchrome code {
+    @apply text-chrome bg-obsidian border-graphite;
+  }
+  .prose-voidchrome blockquote {
+    @apply border-l border-graphite pl-4 italic text-ash my-5;
+  }
+  .prose-voidchrome hr {
+    @apply border-graphite my-10;
+  }
+}
+
+/* ============================================================
+ * Motion — slow, weighty, never bouncy.
+ * All gated behind `prefers-reduced-motion: reduce`.
+ * ============================================================ */
+@layer utilities {
+  /* Scroll-fade — applied to <Section> by default. JS toggles
+     [data-revealed="true"] via IntersectionObserver. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal[data-revealed="true"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Page-load stagger — used on hero rows */
+  .lift-in {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: liftIn 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .lift-in-1 { animation-delay: 80ms; }
+  .lift-in-2 { animation-delay: 200ms; }
+  .lift-in-3 { animation-delay: 320ms; }
+  .lift-in-4 { animation-delay: 440ms; }
+
+  @keyframes liftIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Silver-sweep — the diagonal specular highlight on primary buttons. */
+  .silver-sweep {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .silver-sweep::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      rgb(var(--halo) / 0.18) 48%,
+      rgb(var(--halo) / 0.32) 50%,
+      rgb(var(--halo) / 0.18) 52%,
+      transparent 70%
+    );
+    transform: translateX(-120%);
+    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1;
+  }
+  .silver-sweep:hover::after {
+    transform: translateX(120%);
+  }
+  .silver-sweep > * {
+    position: relative;
+    z-index: 2;
+  }
+  /* Slow ambient sweep variant — auto-loops every ~6s, no user input */
+  .silver-sweep-ambient::after {
+    animation: ambientSweep 6.5s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    transition: none;
+  }
+  .silver-sweep-ambient:hover::after {
+    animation-play-state: paused;
+    transform: translateX(120%);
+    transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes ambientSweep {
+    0%   { transform: translateX(-120%); }
+    60%  { transform: translateX(120%); }
+    100% { transform: translateX(120%); }
+  }
+
+  /* Card hover — single-light motif. Top-edge glow + border lift. */
+  .card-glow {
+    position: relative;
+    transition:
+      border-color 450ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform   450ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card-glow::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      rgb(var(--mercury) / 0.22) 0%,
+      transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 450ms cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 0;
+  }
+  .card-glow:hover {
+    border-color: rgb(var(--mercury) / 0.5);
+    transform: translateY(-3px);
+  }
+  .card-glow:hover::before {
+    opacity: 1;
+  }
+  .card-glow > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Reduced motion — freeze everything that moves */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .lift-in,
+    .lift-in-1,
+    .lift-in-2,
+    .lift-in-3,
+    .lift-in-4 {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+      transition: none !important;
+    }
+    .silver-sweep::after,
+    .silver-sweep-ambient::after {
+      animation: none !important;
+      transition: none !important;
+      transform: translateX(120%) !important;
+    }
+    .card-glow {
+      transition: border-color 200ms ease !important;
+    }
+    .card-glow:hover {
+      transform: none !important;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
   }
 }

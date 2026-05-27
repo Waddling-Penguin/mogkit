@@ -1,7 +1,11 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import Eyebrow from "../../components/Eyebrow.astro";
+import Card from "../../components/Card.astro";
 import SkillCard from "../../components/SkillCard.astro";
+import ChromeGlyph from "../../components/ChromeGlyph.astro";
 import { getSkill } from "../../lib/skills";
 import { WEDGE_META, type WedgeSlug } from "../../lib/wedges";
 
@@ -24,58 +28,72 @@ const material = materialRefs.filter((m): m is NonNullable<typeof m> => Boolean(
 ---
 
 <BaseLayout title={`${meta.title} · mogkit`} description={entry.data.summary}>
-  <article class="container-tight py-16">
-    <p class="font-mono text-xs text-accent-700 mb-2">WEDGE · {String(entry.data.order)}/5</p>
-    <h1 class="text-4xl font-semibold tracking-tight text-ink-900">{meta.title}</h1>
-    <p class="mt-3 text-lg text-ink-700">{meta.subtitle}</p>
-
-    <div class="mt-4">
+  <article class="container-tight pt-16 sm:pt-20 pb-8">
+    <div class="flex items-center gap-3 mb-1">
+      <ChromeGlyph size={28} />
+      <p class="eyebrow">Wedge · {String(entry.data.order)}/5</p>
+    </div>
+    <h1 class="font-display text-4xl sm:text-5xl text-halo tracking-tightest leading-[0.98] mt-4 lift-in lift-in-2">
+      {meta.title}
+    </h1>
+    <p class="mt-4 text-lg text-mercury leading-relaxed lift-in lift-in-3">
+      {meta.subtitle}
+    </p>
+    <div class="mt-5 lift-in lift-in-4">
       {entry.data.engineStatus === "full" ? (
         <span class="pill-accent">knowledge engine: shipped</span>
       ) : (
         <span class="pill">knowledge engine: coming · standalone skills shipped</span>
       )}
     </div>
+  </article>
 
-    <section class="mt-12">
-      <h2 class="text-xl font-semibold text-ink-900 mb-2">The problem</h2>
-      <p class="text-ink-700 leading-relaxed">{entry.data.problem}</p>
-    </section>
+  <Section spacing="tight" hairline>
+    <div class="container-tight">
+      <Eyebrow>The problem</Eyebrow>
+      <p class="mt-3 text-chrome leading-relaxed text-[17px]">{entry.data.problem}</p>
+    </div>
+  </Section>
 
-    <section class="prose prose-ink max-w-none mt-12">
+  <Section spacing="default">
+    <div class="container-tight prose-voidchrome">
       <Content />
-    </section>
+    </div>
+  </Section>
 
-    {skills.length > 0 && (
-      <section class="mt-16">
-        <h2 class="text-xl font-semibold text-ink-900 mb-4">Skills to install</h2>
-        <div class="grid sm:grid-cols-2 gap-3">
+  {skills.length > 0 && (
+    <Section hairline>
+      <div class="container-tight">
+        <Eyebrow>Skills to install</Eyebrow>
+        <div class="grid sm:grid-cols-2 gap-3 mt-6">
           {skills.map((s) => <SkillCard skill={s} />)}
         </div>
-        <p class="mt-4 text-sm text-ink-500">
+        <p class="mt-5 text-sm text-ash">
           All of these install automatically when you run
           <code class="ml-1">npx mogkit init</code>.
         </p>
-      </section>
-    )}
+      </div>
+    </Section>
+  )}
 
-    {material.length > 0 && (
-      <section class="mt-16">
-        <h2 class="text-xl font-semibold text-ink-900 mb-4">Material</h2>
-        <p class="text-sm text-ink-500 mb-3">A curated path. Not a link dump.</p>
-        <ul class="space-y-3">
+  {material.length > 0 && (
+    <Section hairline>
+      <div class="container-tight">
+        <Eyebrow>Material</Eyebrow>
+        <p class="mt-2 text-sm text-ash">A curated path. Not a link dump.</p>
+        <ul class="mt-6 space-y-3">
           {material.map((m) => (
-            <li class="rounded-lg border border-ink-200 bg-white p-4">
+            <Card padding="md" class="block">
               <div class="flex items-baseline justify-between gap-3">
-                <a href={m.data.url} class="font-semibold text-ink-900">{m.data.title}</a>
+                <a href={m.data.url} class="font-display text-lg text-halo tracking-tight hover:text-mercury">{m.data.title}</a>
                 <span class="pill">{m.data.kind}</span>
               </div>
-              <div class="text-sm text-ink-500 mt-0.5">by {m.data.author}</div>
-              <p class="mt-2 text-sm text-ink-700">{m.data.why}</p>
-            </li>
+              <div class="text-sm text-ash mt-1 font-mono uppercase tracking-wider text-[11px]">by {m.data.author}</div>
+              <p class="mt-3 text-chrome leading-relaxed">{m.data.why}</p>
+            </Card>
           ))}
         </ul>
-      </section>
-    )}
-  </article>
+      </div>
+    </Section>
+  )}
 </BaseLayout>

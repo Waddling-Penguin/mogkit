@@ -1,4 +1,5 @@
 ---
+import Card from "./Card.astro";
 interface Props {
   slug: string;
   title: string;
@@ -12,17 +13,16 @@ interface Props {
 const { slug, title, outcome, wedge, difficulty, tools, published, timeToImplement } = Astro.props;
 const dateStr = published.toISOString().slice(0, 10);
 ---
-
-<a href={`/workflows/${slug}`} class="group block rounded-lg border border-ink-200 bg-white p-5 no-underline hover:border-ink-400 transition-colors">
-  <div class="flex items-baseline justify-between gap-3 mb-1">
-    <h3 class="text-ink-900 font-semibold group-hover:text-accent-700">{title}</h3>
-    <time class="font-mono text-xs text-ink-500" datetime={dateStr}>{dateStr}</time>
+<Card href={`/workflows/${slug}`} padding="md" class="group">
+  <div class="flex items-baseline justify-between gap-4 mb-1">
+    <h3 class="font-display text-xl text-halo tracking-tight">{title}</h3>
+    <time class="font-mono text-[11px] uppercase tracking-[0.18em] text-mercury shrink-0" datetime={dateStr}>{dateStr}</time>
   </div>
-  <p class="text-sm text-ink-700 leading-relaxed mb-3">{outcome}</p>
-  <div class="flex flex-wrap items-center gap-1.5 text-xs">
+  <p class="text-[15px] text-chrome leading-relaxed mb-4">{outcome}</p>
+  <div class="flex flex-wrap items-center gap-1.5">
     <span class="pill-accent">{wedge}</span>
     <span class="pill">{difficulty}</span>
     <span class="pill">{timeToImplement}</span>
     {tools.map((t) => <span class="pill">{t}</span>)}
   </div>
-</a>
+</Card>

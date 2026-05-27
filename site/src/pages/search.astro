@@ -1,24 +1,47 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Eyebrow from "../components/Eyebrow.astro";
 ---
 
 <BaseLayout
   title="Search · mogkit"
   description="Search the mogkit site — wedges, workflows, setup."
 >
-  <section class="container-tight py-16">
-    <p class="font-mono text-xs text-accent-700 mb-2">SEARCH</p>
-    <h1 class="text-3xl font-semibold tracking-tight text-ink-900">
+  <section class="container-tight pt-16 sm:pt-20 pb-8">
+    <Eyebrow>Search</Eyebrow>
+    <h1 class="font-display text-4xl sm:text-5xl text-halo tracking-tightest leading-[0.98] mt-4 lift-in lift-in-2">
       Search the site
     </h1>
-    <p class="mt-3 text-ink-700">
+    <p class="mt-5 text-chrome leading-relaxed lift-in lift-in-3">
       Indexes wedges, workflows, and the Setup 101 page. Powered by
-      <a href="https://pagefind.app">Pagefind</a> — fully static, no backend.
+      <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="https://pagefind.app">Pagefind</a>
+      — fully static, no backend.
     </p>
 
-    <div id="search" class="mt-8"></div>
+    <div id="search" class="mt-10 lift-in lift-in-4"></div>
 
+    {/* Pagefind defaults — themed via the global pagefind-ui CSS vars below */}
     <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+    <style is:global>
+      #search {
+        --pagefind-ui-scale: 0.95;
+        --pagefind-ui-primary: rgb(var(--halo));
+        --pagefind-ui-text: rgb(var(--chrome));
+        --pagefind-ui-background: rgb(var(--obsidian));
+        --pagefind-ui-border: rgb(var(--graphite));
+        --pagefind-ui-tag: rgb(var(--graphite));
+        --pagefind-ui-border-width: 1px;
+        --pagefind-ui-border-radius: 8px;
+        --pagefind-ui-image-border-radius: 4px;
+        --pagefind-ui-image-box-ratio: 3 / 2;
+        --pagefind-ui-font: "Inter", system-ui, sans-serif;
+      }
+      #search .pagefind-ui__search-input:focus {
+        outline: 2px solid rgb(var(--mercury));
+        outline-offset: 2px;
+        border-color: rgb(var(--mercury));
+      }
+    </style>
     <script is:inline src="/pagefind/pagefind-ui.js"></script>
     <script is:inline>
       window.addEventListener("DOMContentLoaded", () => {
@@ -31,9 +54,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           });
         } else {
           document.getElementById("search").innerHTML =
-            '<p class="text-sm text-ink-500">' +
-            "Pagefind index not built. Run <code>pnpm --filter ./site run build</code> first." +
-            "</p>";
+            '<p class="text-sm text-ash">Pagefind index not built. Run <code>pnpm --filter ./site run build</code> first.</p>';
         }
       });
     </script>

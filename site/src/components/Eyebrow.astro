@@ -1,0 +1,9 @@
+---
+// Voidchrome — Eyebrow primitive.
+// Mono, uppercase, letter-spaced, --mercury. Used above headlines.
+interface Props {
+  class?: string;
+}
+const { class: cls } = Astro.props;
+---
+<p class:list={["eyebrow", cls]}><slot /></p>

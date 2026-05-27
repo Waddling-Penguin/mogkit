@@ -1,36 +1,34 @@
 /** @type {import('tailwindcss').Config} */
+// Voidchrome design system — tokens are declared as CSS variables in
+// src/styles/global.css. Tailwind utility classes resolve through them so
+// the entire palette can be retuned in one place.
 export default {
   content: ["./src/**/*.{astro,html,md,mdx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        // verbal brand only — neutral palette derived from terminal aesthetics
-        ink: {
-          50: "#fafaf9",
-          100: "#f5f5f4",
-          200: "#e7e5e4",
-          300: "#d6d3d1",
-          400: "#a8a29e",
-          500: "#78716c",
-          600: "#57534e",
-          700: "#44403c",
-          800: "#292524",
-          900: "#1c1917",
-          950: "#0c0a09",
-        },
+        // Voidchrome — neutral chromatics. Banned: pure #000 + pure #fff.
+        void: "rgb(var(--void) / <alpha-value>)",
+        obsidian: "rgb(var(--obsidian) / <alpha-value>)",
+        graphite: "rgb(var(--graphite) / <alpha-value>)",
+        ash: "rgb(var(--ash) / <alpha-value>)",
+        chrome: "rgb(var(--chrome) / <alpha-value>)",
+        halo: "rgb(var(--halo) / <alpha-value>)",
+        mercury: "rgb(var(--mercury) / <alpha-value>)",
+        // mogkit's existing green — kept as a tiny functional signal only
+        // (tags, active state pills). Not decorative.
         accent: {
-          // a single accent: a sharp, restrained green — terminal-prompt-like
-          50: "#ecfdf5",
-          400: "#34d399",
-          500: "#10b981",
-          600: "#059669",
-          700: "#047857",
+          400: "rgb(var(--accent-400) / <alpha-value>)",
+          500: "rgb(var(--accent-500) / <alpha-value>)",
+          600: "rgb(var(--accent-600) / <alpha-value>)",
+          700: "rgb(var(--accent-700) / <alpha-value>)",
         },
       },
       fontFamily: {
-        sans: [
+        // Display: tight-tracked grotesk, low weight, large sizes
+        display: [
+          "Inter Tight",
           "InterVariable",
-          "Inter",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -40,7 +38,22 @@ export default {
           "Arial",
           "sans-serif",
         ],
+        // Body: standard Inter
+        sans: [
+          "Inter",
+          "InterVariable",
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica",
+          "Arial",
+          "sans-serif",
+        ],
+        // Mono: JetBrains Mono — the native mogkit voice
         mono: [
+          "JetBrains Mono",
           "ui-monospace",
           "SFMono-Regular",
           "Menlo",
@@ -51,18 +64,17 @@ export default {
           "monospace",
         ],
       },
-      typography: ({ theme }) => ({
-        DEFAULT: {
-          css: {
-            "--tw-prose-body": theme("colors.ink.800"),
-            "--tw-prose-headings": theme("colors.ink.900"),
-            "--tw-prose-links": theme("colors.accent.700"),
-            "--tw-prose-code": theme("colors.ink.900"),
-            "--tw-prose-pre-bg": theme("colors.ink.900"),
-            "--tw-prose-pre-code": theme("colors.ink.50"),
-          },
-        },
-      }),
+      transitionTimingFunction: {
+        // Voidchrome — slow and weighty. Nothing bounces.
+        voidchrome: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
+      transitionDuration: {
+        450: "450ms",
+        600: "600ms",
+      },
+      letterSpacing: {
+        tightest: "-0.04em",
+      },
     },
   },
   plugins: [],

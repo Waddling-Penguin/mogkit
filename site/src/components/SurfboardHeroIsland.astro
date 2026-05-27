@@ -1,0 +1,29 @@
+---
+// Voidchrome — lazy mount of the SurfboardHero React island.
+// `client:only="react"` means R3F never runs server-side; the placeholder
+// renders immediately and the island swaps in once hydrated. The container
+// has a fixed height so there's no layout shift when it lands.
+import SurfboardHero from "./three/SurfboardHero";
+import ChromeGlyph from "./ChromeGlyph.astro";
+
+interface Props {
+  /** CSS height; defaults to a responsive aspect band. */
+  class?: string;
+}
+const { class: cls } = Astro.props;
+---
+<div
+  class:list={[
+    "relative w-full",
+    "h-[60vh] min-h-[420px] max-h-[640px]",
+    cls,
+  ]}
+  aria-hidden="true"
+>
+  {/* Placeholder — static chrome silhouette while the React island hydrates */}
+  <div class="absolute inset-0 flex items-center justify-center">
+    <ChromeGlyph size={120} class="opacity-60" />
+  </div>
+
+  <SurfboardHero client:only="react" />
+</div>

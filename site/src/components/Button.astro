@@ -1,0 +1,50 @@
+---
+// Voidchrome — Button primitive with the silver-chrome sweep treatment.
+//
+// variant="primary": brushed-silver fill, --halo text, diagonal specular
+//   highlight that loops slowly (~6s) AND sweeps on hover. 1px graphite
+//   border that brightens to --mercury. Outer glow on hover. Active = 0.98.
+// variant="ghost": transparent fill, --graphite border, --chrome text,
+//   border brightens on hover. No sweep.
+//
+// Renders as <a> if `href` is given, else <button>.
+interface Props {
+  variant?: "primary" | "ghost";
+  href?: string;
+  type?: "button" | "submit";
+  class?: string;
+  /** Disable the auto-loop sweep; sweep still triggers on hover */
+  noLoop?: boolean;
+}
+const {
+  variant = "primary",
+  href,
+  type = "button",
+  class: cls,
+  noLoop = false,
+} = Astro.props;
+
+const base =
+  "inline-flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-medium tracking-tight " +
+  "no-underline transition-all duration-450 ease-voidchrome " +
+  "active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-mercury focus-visible:outline-offset-2";
+
+const primary =
+  "silver-sweep " + (noLoop ? "" : "silver-sweep-ambient ") +
+  "bg-gradient-to-b from-obsidian via-obsidian to-[rgb(20_20_22_/_0.75)] " +
+  "border border-graphite text-halo " +
+  "hover:border-mercury hover:shadow-[0_0_40px_-8px_rgb(var(--mercury)_/_0.5)]";
+
+const ghost =
+  "bg-transparent border border-graphite text-chrome " +
+  "hover:border-mercury hover:text-halo";
+
+const variantClasses = variant === "primary" ? primary : ghost;
+const Tag = href ? "a" : "button";
+---
+<Tag
+  {...href ? { href } : { type }}
+  class:list={[base, variantClasses, cls]}
+>
+  <slot />
+</Tag>

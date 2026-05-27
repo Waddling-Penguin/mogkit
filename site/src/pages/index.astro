@@ -1,8 +1,12 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/Section.astro";
+import Eyebrow from "../components/Eyebrow.astro";
+import Button from "../components/Button.astro";
 import WedgeTile from "../components/WedgeTile.astro";
 import WorkflowListItem from "../components/WorkflowListItem.astro";
+import SurfboardHeroIsland from "../components/SurfboardHeroIsland.astro";
 import { WEDGE_ORDER, WEDGE_META } from "../lib/wedges";
 
 const wedges = await getCollection("wedges");
@@ -16,76 +20,100 @@ const recentWorkflows = workflows.slice(0, 3);
 
 <BaseLayout title="mogkit — out-craft the room">
 
-  <section class="container-wide pt-20 pb-16">
-    <p class="font-mono text-xs text-accent-700 mb-4 tracking-wide">THE OPEN-SOURCE TOOLKIT FOR PRODUCT MANAGERS</p>
-    <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-ink-900 leading-tight max-w-3xl">
-      Sharper thinking.<br/>Not just faster output.
-    </h1>
-    <p class="mt-6 text-lg text-ink-700 max-w-2xl leading-relaxed">
-      mogkit installs PM craft into your terminal — a library of methodology-backed
-      skills that run in Claude Code, a thin CLI that scaffolds your workspace, and
-      a growing library of AI-for-PM workflows you can ship today.
-    </p>
-    <p class="mt-3 text-lg text-ink-700 max-w-2xl leading-relaxed">
-      It won't write your PRD. It'll make you write a better one.
-    </p>
-    <div class="mt-8 flex flex-wrap items-center gap-3">
-      <a href="/setup" class="btn btn-primary">Start with Setup 101 →</a>
-      <a href="/wedges/discovery" class="btn btn-ghost">See the Discovery engine</a>
-    </div>
-    <p class="mt-5 font-mono text-xs text-ink-500">
-      $ npx mogkit init my-workspace
-    </p>
-  </section>
-
-  <section class="border-t border-ink-200 py-16">
-    <div class="container-wide grid sm:grid-cols-2 gap-8">
-      <div>
-        <p class="font-mono text-xs text-accent-700 mb-2">CRAFT, NOT OUTPUT</p>
-        <h2 class="text-xl font-semibold text-ink-900">No skill writes the finished deliverable.</h2>
-        <p class="mt-2 text-ink-700 leading-relaxed">
-          Every skill produces a reasoning scaffold: what your evidence supports,
-          what you're assuming without proof, what to validate next. You write the
-          doc — and the doc is sharper. We sell judgment, not typing.
-        </p>
+  {/* HERO — chrome surfboard floating in the void, headline below.
+      Page-load `.lift-in` cascade staggers the content into place. */}
+  <section class="container-huge pt-12 sm:pt-16 pb-20 sm:pb-28">
+    <SurfboardHeroIsland />
+    <div class="text-center mt-2 sm:mt-6">
+      <p class="eyebrow lift-in lift-in-1">
+        the open-source toolkit for product managers
+      </p>
+      <h1 class="font-display text-5xl sm:text-6xl md:text-7xl text-halo tracking-tightest leading-[0.95] mt-6 max-w-3xl mx-auto lift-in lift-in-2">
+        Sharper thinking.<br/>
+        <span class="text-mercury">Not just faster output.</span>
+      </h1>
+      <p class="mt-7 text-lg text-chrome max-w-2xl mx-auto leading-relaxed lift-in lift-in-3">
+        mogkit installs PM craft into your terminal — a library of
+        methodology-backed skills that run in Claude Code, a thin CLI that
+        scaffolds your workspace, and a growing library of AI-for-PM workflows
+        you can ship today.
+      </p>
+      <p class="mt-3 text-lg text-chrome max-w-2xl mx-auto leading-relaxed lift-in lift-in-3">
+        It won't write your PRD. It'll make you write a better one.
+      </p>
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-3 lift-in lift-in-4">
+        <Button href="/setup" variant="primary">Start with Setup 101 →</Button>
+        <Button href="/wedges/discovery" variant="ghost">See the Discovery engine</Button>
       </div>
-      <div>
-        <p class="font-mono text-xs text-accent-700 mb-2">LOCAL AND YOURS</p>
-        <h2 class="text-xl font-semibold text-ink-900">Runs in your terminal. MIT-licensed.</h2>
-        <p class="mt-2 text-ink-700 leading-relaxed">
-          Version-controlled workspace. Your research is an asset you own and grow,
-          not data in someone else's cloud. No SaaS, no login, no lock-in. The CLI
-          never calls a model.
-        </p>
-      </div>
-      <div>
-        <p class="font-mono text-xs text-accent-700 mb-2">THE ON-RAMP</p>
-        <h2 class="text-xl font-semibold text-ink-900">From "lives in Notion" to "works like an engineer."</h2>
-        <p class="mt-2 text-ink-700 leading-relaxed">
-          Every step is small. Every step earns the next. We don't gatekeep the
-          terminal — we make it approachable. Setup 101 is genuinely followable
-          by someone who has never opened one.
-        </p>
-      </div>
-      <div>
-        <p class="font-mono text-xs text-accent-700 mb-2">BY THE CRAFT, FOR THE CRAFT</p>
-        <h2 class="text-xl font-semibold text-ink-900">Methodology-backed. Community-built.</h2>
-        <p class="mt-2 text-ink-700 leading-relaxed">
-          Continuous discovery, Working Backwards, the real traditions. Skills are
-          plain markdown; workflow entries are MDX; both follow documented specs.
-          The library compounds as PMs contribute to it.
-        </p>
-      </div>
+      <p class="mt-7 font-mono text-[12px] text-ash tracking-tight lift-in lift-in-4">
+        $ npx mogkit init my-workspace
+      </p>
     </div>
   </section>
 
-  <section class="border-t border-ink-200 py-16">
+  {/* THE FOUR PILLARS */}
+  <Section hairline>
     <div class="container-wide">
-      <div class="flex items-baseline justify-between mb-6">
-        <h2 class="text-2xl font-semibold text-ink-900">The five wedges</h2>
-        <span class="text-sm text-ink-500">one deep system, many sharp tools</span>
+      <div class="grid sm:grid-cols-2 gap-y-12 gap-x-12">
+        <div>
+          <Eyebrow>Craft, not output</Eyebrow>
+          <h2 class="font-display text-2xl text-halo tracking-tight mt-3">
+            No skill writes the finished deliverable.
+          </h2>
+          <p class="mt-3 text-chrome leading-relaxed">
+            Every skill produces a reasoning scaffold: what your evidence
+            supports, what you're assuming without proof, what to validate
+            next. You write the doc — and the doc is sharper. We sell
+            judgment, not typing.
+          </p>
+        </div>
+        <div>
+          <Eyebrow>Local and yours</Eyebrow>
+          <h2 class="font-display text-2xl text-halo tracking-tight mt-3">
+            Runs in your terminal. MIT-licensed.
+          </h2>
+          <p class="mt-3 text-chrome leading-relaxed">
+            Version-controlled workspace. Your research is an asset you own
+            and grow, not data in someone else's cloud. No SaaS, no login,
+            no lock-in. The CLI never calls a model.
+          </p>
+        </div>
+        <div>
+          <Eyebrow>The on-ramp</Eyebrow>
+          <h2 class="font-display text-2xl text-halo tracking-tight mt-3">
+            From "lives in Notion" to "works like an engineer."
+          </h2>
+          <p class="mt-3 text-chrome leading-relaxed">
+            Every step is small. Every step earns the next. We don't gatekeep
+            the terminal — we make it approachable. Setup 101 is genuinely
+            followable by someone who has never opened one.
+          </p>
+        </div>
+        <div>
+          <Eyebrow>By the craft, for the craft</Eyebrow>
+          <h2 class="font-display text-2xl text-halo tracking-tight mt-3">
+            Methodology-backed. Community-built.
+          </h2>
+          <p class="mt-3 text-chrome leading-relaxed">
+            Continuous discovery, Working Backwards, the real traditions.
+            Skills are plain markdown; workflow entries are MDX; both follow
+            documented specs. The library compounds as PMs contribute to it.
+          </p>
+        </div>
       </div>
-      <div class="grid sm:grid-cols-2 gap-3">
+    </div>
+  </Section>
+
+  {/* THE FIVE WEDGES */}
+  <Section hairline>
+    <div class="container-wide">
+      <div class="mb-8">
+        <Eyebrow>One deep system, many sharp tools</Eyebrow>
+        <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
+          The five wedges
+        </h2>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-4">
         {WEDGE_ORDER.map((slug) => {
           const entry = wedgesBySlug.get(slug);
           if (!entry) return null;
@@ -100,20 +128,28 @@ const recentWorkflows = workflows.slice(0, 3);
         })}
       </div>
     </div>
-  </section>
+  </Section>
 
-  <section class="border-t border-ink-200 py-16">
+  {/* WORKFLOW LIBRARY — recent entries */}
+  <Section hairline>
     <div class="container-wide">
-      <div class="flex items-baseline justify-between mb-6">
-        <h2 class="text-2xl font-semibold text-ink-900">Workflow Library</h2>
-        <a href="/workflows" class="text-sm text-ink-600 hover:text-accent-700">browse all →</a>
+      <div class="flex items-baseline justify-between mb-3 gap-4">
+        <div>
+          <Eyebrow>Recipes + mechanism</Eyebrow>
+          <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
+            Workflow Library
+          </h2>
+        </div>
+        <a href="/workflows" class="text-sm text-mercury hover:text-halo transition-colors">
+          browse all →
+        </a>
       </div>
-      <p class="text-ink-700 mb-6 max-w-2xl">
-        Implementable AI-for-PM workflows. Each entry is both a copy-paste recipe
-        and a "how it works" explainer that teaches the mechanism. We never ship a
-        black box.
+      <p class="text-chrome mb-8 max-w-2xl leading-relaxed">
+        Implementable AI-for-PM workflows. Each entry is both a copy-paste
+        recipe and a "how it works" explainer that teaches the mechanism.
+        We never ship a black box.
       </p>
-      <div class="grid gap-3">
+      <div class="grid gap-4">
         {recentWorkflows.map((w) => (
           <WorkflowListItem
             slug={w.data.slug}
@@ -128,25 +164,29 @@ const recentWorkflows = workflows.slice(0, 3);
         ))}
       </div>
     </div>
-  </section>
+  </Section>
 
-  <section class="border-t border-ink-200 py-16">
-    <div class="container-wide max-w-2xl">
-      <h2 class="text-2xl font-semibold text-ink-900">Get started</h2>
-      <p class="mt-3 text-ink-700 leading-relaxed">
-        If you've used a terminal before, two commands and you're set up. If you
-        haven't, Setup 101 walks you through every step from opening the terminal
-        to running your first skill.
+  {/* GET STARTED — the on-ramp */}
+  <Section hairline spacing="loose">
+    <div class="container-tight">
+      <Eyebrow>Get started</Eyebrow>
+      <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
+        Two commands and you're set up.
+      </h2>
+      <p class="mt-4 text-chrome leading-relaxed">
+        If you've used a terminal before, two commands and you're set up. If
+        you haven't, Setup 101 walks you through every step from opening the
+        terminal to running your first skill.
       </p>
-      <pre class="mt-6"><code>$ npx mogkit init my-workspace
+      <pre class="mt-8"><code>$ npx mogkit init my-workspace
 $ cd my-workspace
 $ open this folder in Claude Code
 $ run your first skill</code></pre>
-      <div class="mt-6 flex flex-wrap gap-3">
-        <a href="/setup" class="btn btn-primary">Setup 101 →</a>
-        <a href="https://github.com/Waddling-Penguin/mogkit" class="btn btn-ghost">GitHub</a>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <Button href="/setup" variant="primary">Setup 101 →</Button>
+        <Button href="https://github.com/Waddling-Penguin/mogkit" variant="ghost">GitHub</Button>
       </div>
     </div>
-  </section>
+  </Section>
 
 </BaseLayout>

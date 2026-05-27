@@ -1,0 +1,41 @@
+---
+// Voidchrome — Section primitive.
+// A vertical band with optional hairline top, generous padding, and the
+// scroll-fade `.reveal` treatment driven by an IntersectionObserver in
+// BaseLayout. `reveal` is on by default; pass `revealMode="off"` to opt out
+// (e.g. for the hero, which uses the page-load `.lift-in` cascade instead).
+interface Props {
+  /** "default" = px-6 py-16 ; "tight" = py-8 ; "loose" = py-24 */
+  spacing?: "default" | "tight" | "loose";
+  /** Add a hairline divider on top */
+  hairline?: boolean;
+  revealMode?: "default" | "off";
+  class?: string;
+  as?: "section" | "div" | "article";
+}
+const {
+  spacing = "default",
+  hairline = false,
+  revealMode = "default",
+  class: cls,
+  as: Tag = "section",
+} = Astro.props;
+
+const spacingMap: Record<NonNullable<Props["spacing"]>, string> = {
+  default: "py-16",
+  tight: "py-8",
+  loose: "py-24 sm:py-28",
+};
+const spacingClass = spacingMap[spacing];
+---
+<Tag
+  class:list={[
+    spacingClass,
+    hairline && "border-t border-graphite/70",
+    revealMode === "default" && "reveal",
+    cls,
+  ]}
+  data-revealed={revealMode === "off" ? "true" : "false"}
+>
+  <slot />
+</Tag>

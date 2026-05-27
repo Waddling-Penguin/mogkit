@@ -125,6 +125,34 @@ pnpm run test         # validates skills + sample graph + workflows; runs CLI te
 pnpm run build        # builds CLI + site
 ```
 
+## Site design — Voidchrome
+
+The site (`site/`) is built on a single design system called **Voidchrome**:
+dark, monolithic, calm. Every visible color is a CSS variable declared in
+`site/src/styles/global.css` and re-exposed as Tailwind utilities in
+`site/tailwind.config.mjs`. There are no hard-coded colors in components.
+
+**Components.** Four shared primitives carry the system:
+
+- `Eyebrow.astro` — mono, uppercase, mercury. Above every headline.
+- `Section.astro` — vertical band with the scroll-fade `.reveal` treatment.
+- `Card.astro` — obsidian fill, graphite border, hover lifts toward mercury
+  with a top-edge glow (the single-light motif).
+- `Button.astro` — `variant="primary"` (silver-sweep highlight, loops slowly
+  and sweeps on hover) or `variant="ghost"` (transparent + graphite border).
+
+**Motion.** Slow and weighty. Standard transition 450–600ms with
+`cubic-bezier(0.22, 1, 0.36, 1)`. Nothing bounces. Three motion utilities
+shipped in `global.css`: `.reveal` (IntersectionObserver-driven scroll
+fade), `.lift-in` (page-load stagger), `.silver-sweep` /
+`.silver-sweep-ambient` (the chrome button highlight). All gated behind
+`prefers-reduced-motion: reduce`.
+
+**The 3D prop.** The chrome surfboard hero is a React Three Fiber island
+mounted with `client:only="react"` so the canvas never blocks first paint.
+A static `ChromeGlyph` placeholder renders while React hydrates. Procedural
+geometry — no GLB download. See `/credits` for the provenance decision.
+
 ## Read next
 
 In order, if you're picking up the project fresh:

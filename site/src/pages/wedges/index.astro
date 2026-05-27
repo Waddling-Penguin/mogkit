@@ -1,0 +1,49 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Section from "../../components/Section.astro";
+import Eyebrow from "../../components/Eyebrow.astro";
+import WedgeTile from "../../components/WedgeTile.astro";
+import { WEDGE_ORDER, WEDGE_META } from "../../lib/wedges";
+
+const wedges = await getCollection("wedges");
+const wedgesBySlug = new Map(wedges.map((w) => [w.data.slug, w]));
+---
+
+<BaseLayout
+  title="Wedges · mogkit"
+  description="The five PM wedges. One deep system (Discovery), many sharp tools (Strategy, Planning, GTM, Conflict)."
+>
+  <section class="container-wide pt-16 sm:pt-20 pb-12">
+    <Eyebrow>Wedges</Eyebrow>
+    <h1 class="font-display text-4xl sm:text-5xl text-halo tracking-tightest leading-[0.98] mt-4 lift-in lift-in-2">
+      One deep system,<br/>
+      <span class="text-mercury">many sharp tools.</span>
+    </h1>
+    <p class="mt-6 text-lg text-chrome max-w-2xl leading-relaxed lift-in lift-in-3">
+      mogkit ships exactly one stateful, corpus-backed system: the Discovery
+      knowledge engine. Every other wedge gets standalone single-shot skills
+      that need nothing but Claude Code and a pasted input. Breadth comes
+      from sharp tools — never from shallow imitations of the deep one.
+    </p>
+  </section>
+
+  <Section spacing="default">
+    <div class="container-wide">
+      <div class="grid sm:grid-cols-2 gap-4">
+        {WEDGE_ORDER.map((slug) => {
+          const entry = wedgesBySlug.get(slug);
+          if (!entry) return null;
+          return (
+            <WedgeTile
+              slug={slug}
+              title={WEDGE_META[slug].title}
+              summary={entry.data.summary}
+              engineStatus={entry.data.engineStatus}
+            />
+          );
+        })}
+      </div>
+    </div>
+  </Section>
+</BaseLayout>

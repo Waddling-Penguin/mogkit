@@ -1,4 +1,5 @@
 ---
+import Card from "./Card.astro";
 interface Props {
   slug: string;
   title: string;
@@ -7,15 +8,14 @@ interface Props {
 }
 const { slug, title, summary, engineStatus } = Astro.props;
 ---
-
-<a href={`/wedges/${slug}`} class="group block rounded-lg border border-ink-200 bg-white p-5 no-underline hover:border-ink-400 transition-colors">
-  <div class="flex items-baseline justify-between mb-2">
-    <h3 class="text-ink-900 font-semibold group-hover:text-accent-700">{title}</h3>
+<Card href={`/wedges/${slug}`} padding="md" class="group">
+  <div class="flex items-baseline justify-between mb-2 gap-3">
+    <h3 class="font-display text-lg text-halo tracking-tight">{title}</h3>
     {engineStatus === "full" ? (
       <span class="pill-accent">knowledge engine</span>
     ) : (
-      <span class="pill">standalone skills</span>
+      <span class="pill">standalone</span>
     )}
   </div>
-  <p class="text-sm text-ink-600 leading-relaxed">{summary}</p>
-</a>
+  <p class="text-sm text-chrome leading-relaxed">{summary}</p>
+</Card>
