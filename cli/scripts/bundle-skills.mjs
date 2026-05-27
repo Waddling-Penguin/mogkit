@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// Build-time step: copy ../skills into cli/skills so it ships with the package,
-// and copy src/templates into dist/templates so the runtime can find them.
+// Build-time step: copy ../skills into cli/skills, src/templates into
+// dist/templates, and engine/sample-corpus into cli/sample-corpus so they
+// ship with the published package.
 
 import { cpSync, existsSync, rmSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -10,24 +11,22 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const CLI_ROOT = resolve(HERE, "..");
 const MONO_ROOT = resolve(CLI_ROOT, "..");
 
-const srcSkills = join(MONO_ROOT, "skills");
-const dstSkills = join(CLI_ROOT, "skills");
-const srcTpl = join(CLI_ROOT, "src", "templates");
-const dstTpl = join(CLI_ROOT, "dist", "templates");
+const copies = [
+  { src: join(MONO_ROOT, "skills"), dst: join(CLI_ROOT, "skills"), required: true },
+  { src: join(CLI_ROOT, "src", "templates"), dst: join(CLI_ROOT, "dist", "templates"), required: true },
+  { src: join(MONO_ROOT, "engine", "sample-corpus"), dst: join(CLI_ROOT, "sample-corpus"), required: true },
+];
 
-if (!existsSync(srcSkills)) {
-  console.error(`bundle-skills: source not found at ${srcSkills}`);
-  process.exit(1);
+for (const { src, dst, required } of copies) {
+  if (!existsSync(src)) {
+    if (required) {
+      console.error(`bundle-skills: required source not found at ${src}`);
+      process.exit(1);
+    }
+    continue;
+  }
+  if (existsSync(dst)) rmSync(dst, { recursive: true, force: true });
+  mkdirSync(dirname(dst), { recursive: true });
+  cpSync(src, dst, { recursive: true });
+  console.log(`bundle-skills: copied ${src} -> ${dst}`);
 }
-
-if (existsSync(dstSkills)) rmSync(dstSkills, { recursive: true, force: true });
-cpSync(srcSkills, dstSkills, { recursive: true });
-console.log(`bundle-skills: copied ${srcSkills} -> ${dstSkills}`);
-
-if (!existsSync(srcTpl)) {
-  console.error(`bundle-skills: templates source not found at ${srcTpl}`);
-  process.exit(1);
-}
-mkdirSync(dstTpl, { recursive: true });
-cpSync(srcTpl, dstTpl, { recursive: true });
-console.log(`bundle-skills: copied ${srcTpl} -> ${dstTpl}`);

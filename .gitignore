@@ -2,9 +2,11 @@ node_modules/
 dist/
 build/
 
-# CLI build artifact: cli/skills/ is bundled from the root skills/ at build time
-# by cli/scripts/bundle-skills.mjs and ships in the npm tarball via prepack.
+# CLI build artifacts: cli/skills/ and cli/sample-corpus/ are bundled from
+# the monorepo root at build time by cli/scripts/bundle-skills.mjs and ship
+# in the npm tarball via prepack. Not source.
 cli/skills/
+cli/sample-corpus/
 .DS_Store
 *.log
 .env

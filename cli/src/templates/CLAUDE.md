@@ -60,6 +60,40 @@ alternative.
   installs skills. It never calls an LLM. All reasoning happens in your
   Claude Code session via the skills.
 
+## Running a skill (for the PM reading this)
+
+There are two ways to invoke a mogkit skill from your Claude Code chat:
+
+1. **As a slash command** — type `/skill-name` then provide the input:
+   ```
+   /tradeoff-frame
+   We're deciding whether to build native Slack integration or partner
+   via Zapier. Engineering wants build; growth wants partner.
+   ```
+2. **In natural language** — Claude Code can pick the right skill from
+   the description:
+   ```
+   Use the tradeoff-frame skill on this contested decision: ...
+   ```
+
+The slash form is the cleaner muscle memory. Both work.
+
+If you can't remember the skill names, the bundled list lives in
+`.claude/skills/` — each folder is a skill.
+
+## Persist every output to `knowledge/`
+
+Skill outputs are too valuable to live only in chat scrollback. After
+emitting any skill's output, ALSO write a copy to
+`knowledge/<skill-name>/<YYYY-MM-DD>-<short-slug>.md`. The slug is a 2-4
+word kebab-case summary of the input (e.g. `slack-integration-buy-vs-build`).
+The file's first line is the date and the PM's input; the body is the
+skill's output verbatim.
+
+Create the `knowledge/<skill-name>/` directory if it doesn't exist. This
+turns the workspace into a versioned record of every interrogation — and
+makes the `knowledge/` folder live up to its name.
+
 ## The Discovery loop
 
 The Tier B (Discovery) skills are not six tools; they are one loop:

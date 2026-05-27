@@ -59,11 +59,16 @@ export async function runInit(
   p.note(
     [
       `${kleur.bold("Next:")}`,
-      `  cd ${target}`,
-      `  open this directory in Claude Code`,
-      `  ${kleur.cyan("mogkit add")}     — ingest your first research file`,
-      `  ${kleur.cyan("mogkit status")}  — corpus health report`,
+      `  ${kleur.cyan("cd " + target)}`,
+      ``,
+      `  ${kleur.dim("# install mogkit globally so it's on your PATH")}`,
+      `  ${kleur.cyan("npm install -g mogkit")}`,
+      ``,
       `  ${kleur.cyan("mogkit doctor")}  — verify your setup`,
+      `  ${kleur.cyan("mogkit demo")}    — load the sample corpus to play with`,
+      `  ${kleur.cyan("mogkit add")}     — ingest your own research file`,
+      ``,
+      `  ${kleur.dim("then open this directory in Claude Code and run a skill")}`,
     ].join("\n"),
     "workspace ready",
   );

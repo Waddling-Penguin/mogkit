@@ -4,6 +4,7 @@ import { runAdd } from "./commands/add.js";
 import { runStatus } from "./commands/status.js";
 import { runSkillsList, runSkillsAdd } from "./commands/skills.js";
 import { runDoctor } from "./commands/doctor.js";
+import { runDemo } from "./commands/demo.js";
 
 const program = new Command();
 
@@ -38,6 +39,13 @@ program
   .description("corpus health report — count, type spread, gaps")
   .action(() => {
     process.exitCode = runStatus();
+  });
+
+program
+  .command("demo")
+  .description("load the bundled 8-file sample corpus into sources/")
+  .action(async () => {
+    process.exitCode = await runDemo();
   });
 
 const skills = program.command("skills").description("manage installed skills");

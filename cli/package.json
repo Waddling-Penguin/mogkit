@@ -1,6 +1,6 @@
 {
   "name": "mogkit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "mogkit — the open-source toolkit for product managers. Scaffolds a PM workspace and installs Claude Code skills. Out-craft the room.",
   "license": "MIT",
   "type": "module",
@@ -29,6 +29,7 @@
   "files": [
     "dist",
     "skills",
+    "sample-corpus",
     "README.md"
   ],
   "engines": {

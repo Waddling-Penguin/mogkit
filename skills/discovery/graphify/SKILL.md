@@ -28,9 +28,10 @@ state is the primary state, not a problem to paper over.
 
 ## Procedure
 
-1. List every file in `sources/`. Skip `README.md` and any file without a
-   readable text extension (`.md`, `.markdown`, `.txt`) — note skipped files
-   in `meta.notes`.
+1. List every file in `sources/`. **Skip `sources/README.md`** — it is the
+   workspace boilerplate that `mogkit init` ships, not a real source. Also
+   skip any file without a readable text extension (`.md`, `.markdown`,
+   `.txt`). Note any skipped non-trivial files in `meta.notes`.
 2. For each file, read it end to end. Parse the YAML frontmatter for `type`
    (e.g. `interview`, `ticket`, `prd`, `memo`, `research`, `transcript`,
    `note`, `other`). If a file has no `type`, treat it as `untagged` and
