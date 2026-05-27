@@ -1,0 +1,39 @@
+---
+// Voidchrome — scroll hint.
+// Deadpan mono "scroll" with a slow vertical breathe. Sits at the bottom
+// of the hero, fills the dead space below the CTA. Reduced-motion: static.
+interface Props {
+  /** Optional override label */
+  label?: string;
+  class?: string;
+}
+const { label = "scroll", class: cls } = Astro.props;
+---
+<div
+  class:list={[
+    "flex flex-col items-center gap-2 text-mercury",
+    "font-mono text-[10px] uppercase tracking-[0.32em]",
+    "scroll-hint",
+    cls,
+  ]}
+  aria-hidden="true"
+>
+  <span class="opacity-70">{label}</span>
+  <span class="scroll-hint-arrow text-base leading-none">↓</span>
+</div>
+
+<style is:global>
+  /* Breathe — slow vertical bob + opacity pulse. The arrow drifts down a
+     few pixels and fades, suggesting motion without being pushy. */
+  .scroll-hint-arrow {
+    animation: scrollHintBreathe 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+  @keyframes scrollHintBreathe {
+    0%   { transform: translateY(-2px); opacity: 0.45; }
+    50%  { transform: translateY(6px);  opacity: 1; }
+    100% { transform: translateY(-2px); opacity: 0.45; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-hint-arrow { animation: none; opacity: 0.7; transform: none; }
+  }
+</style>

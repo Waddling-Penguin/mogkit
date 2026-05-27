@@ -15,7 +15,15 @@ const dateStr = published.toISOString().slice(0, 10);
 ---
 <Card href={`/workflows/${slug}`} padding="md" class="group">
   <div class="flex items-baseline justify-between gap-4 mb-1">
-    <h3 class="font-display text-xl text-halo tracking-tight">{title}</h3>
+    <h3 class="font-display text-xl text-halo tracking-tight flex items-baseline gap-3">
+      <span
+        class="font-mono text-base text-mercury translate-x-[-6px] opacity-0
+               group-hover:translate-x-0 group-hover:opacity-100
+               transition-all duration-450 ease-voidchrome"
+        aria-hidden="true"
+      >▸</span>
+      <span>{title}</span>
+    </h3>
     <time class="font-mono text-[11px] uppercase tracking-[0.18em] text-mercury shrink-0" datetime={dateStr}>{dateStr}</time>
   </div>
   <p class="text-[15px] text-chrome leading-relaxed mb-4">{outcome}</p>

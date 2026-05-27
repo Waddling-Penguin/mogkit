@@ -249,8 +249,15 @@
  * All gated behind `prefers-reduced-motion: reduce`.
  * ============================================================ */
 @layer utilities {
-  /* Scroll-fade — applied to <Section> by default. JS toggles
-     [data-revealed="true"] via IntersectionObserver. */
+  /* ---------- Scroll-driven reveal system ----------
+     Two layers:
+     1. `.reveal` — IntersectionObserver-driven (BaseLayout script);
+        works everywhere. Adds opacity + 12px lift on enter.
+     2. `.scroll-reveal` / `.scroll-rise` / `.scroll-tilt` — modern
+        scroll-driven CSS using animation-timeline: view() as a
+        progressive enhancement. Scroll-position-linked, so the
+        animation tracks the viewport instead of firing once.
+     Both gated behind prefers-reduced-motion. */
   .reveal {
     opacity: 0;
     transform: translateY(12px);
@@ -261,6 +268,51 @@
   .reveal[data-revealed="true"] {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  @supports (animation-timeline: view()) {
+    .scroll-reveal {
+      animation: scrollReveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+    .scroll-rise {
+      animation: scrollRise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 40%;
+    }
+    .scroll-tilt {
+      animation: scrollTilt linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 35%;
+      transform-origin: center top;
+    }
+    /* Per-card stagger — children of a `.stagger` parent get a slight
+       delay that ramps up across siblings. Compounds nicely with the
+       view-timeline above. */
+    .stagger > * {
+      animation: scrollRise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 25%;
+    }
+    .stagger > *:nth-child(1) { animation-range: entry 0% cover 22%; }
+    .stagger > *:nth-child(2) { animation-range: entry 6% cover 28%; }
+    .stagger > *:nth-child(3) { animation-range: entry 12% cover 34%; }
+    .stagger > *:nth-child(4) { animation-range: entry 18% cover 40%; }
+    .stagger > *:nth-child(5) { animation-range: entry 24% cover 46%; }
+    .stagger > *:nth-child(n+6) { animation-range: entry 28% cover 50%; }
+  }
+  @keyframes scrollReveal {
+    from { opacity: 0; filter: blur(6px); transform: translateY(28px); }
+    to   { opacity: 1; filter: blur(0);    transform: translateY(0); }
+  }
+  @keyframes scrollRise {
+    from { opacity: 0; transform: translateY(40px) scale(0.985); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+  @keyframes scrollTilt {
+    from { opacity: 0; transform: translateY(36px) rotateX(8deg); }
+    to   { opacity: 1; transform: translateY(0)    rotateX(0deg); }
   }
 
   /* Page-load stagger — used on hero rows */
@@ -366,8 +418,13 @@
     .lift-in-1,
     .lift-in-2,
     .lift-in-3,
-    .lift-in-4 {
+    .lift-in-4,
+    .scroll-reveal,
+    .scroll-rise,
+    .scroll-tilt,
+    .stagger > * {
       opacity: 1 !important;
+      filter: none !important;
       transform: none !important;
       animation: none !important;
       transition: none !important;

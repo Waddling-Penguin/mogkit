@@ -30,8 +30,8 @@ const wedgesBySlug = new Map(wedges.map((w) => [w.data.slug, w]));
 
   <Section spacing="default">
     <div class="container-wide">
-      <div class="grid sm:grid-cols-2 gap-4">
-        {WEDGE_ORDER.map((slug) => {
+      <div class="grid sm:grid-cols-2 gap-4 stagger">
+        {WEDGE_ORDER.map((slug, i) => {
           const entry = wedgesBySlug.get(slug);
           if (!entry) return null;
           return (
@@ -40,6 +40,7 @@ const wedgesBySlug = new Map(wedges.map((w) => [w.data.slug, w]));
               title={WEDGE_META[slug].title}
               summary={entry.data.summary}
               engineStatus={entry.data.engineStatus}
+              order={i + 1}
             />
           );
         })}

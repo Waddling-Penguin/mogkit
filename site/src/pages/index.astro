@@ -7,6 +7,7 @@ import Button from "../components/Button.astro";
 import WedgeTile from "../components/WedgeTile.astro";
 import WorkflowListItem from "../components/WorkflowListItem.astro";
 import SurfboardHeroIsland from "../components/SurfboardHeroIsland.astro";
+import ScrollHint from "../components/ScrollHint.astro";
 import { WEDGE_ORDER, WEDGE_META } from "../lib/wedges";
 
 const wedges = await getCollection("wedges");
@@ -52,64 +53,55 @@ const recentWorkflows = workflows.slice(0, 3);
           $ npx mogkit init my-workspace
         </p>
       </div>
+
+      {/* Scroll hint — pinned to the bottom of the hero, fills the dead
+          space below the CTA */}
+      <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 lift-in lift-in-4">
+        <ScrollHint />
+      </div>
     </div>
   </section>
 
   {/* THE FOUR PILLARS */}
-  <Section hairline>
+  <Section hairline glyph>
     <div class="container-wide">
-      <div class="grid sm:grid-cols-2 gap-y-12 gap-x-12">
-        <div>
-          <Eyebrow>Craft, not output</Eyebrow>
-          <h2 class="font-display text-2xl text-halo tracking-tight mt-3">
-            No skill writes the finished deliverable.
-          </h2>
-          <p class="mt-3 text-chrome leading-relaxed">
-            Every skill produces a reasoning scaffold: what your evidence
-            supports, what you're assuming without proof, what to validate
-            next. You write the doc — and the doc is sharper. We sell
-            judgment, not typing.
-          </p>
-        </div>
-        <div>
-          <Eyebrow>Local and yours</Eyebrow>
-          <h2 class="font-display text-2xl text-halo tracking-tight mt-3">
-            Runs in your terminal. MIT-licensed.
-          </h2>
-          <p class="mt-3 text-chrome leading-relaxed">
-            Version-controlled workspace. Your research is an asset you own
-            and grow, not data in someone else's cloud. No SaaS, no login,
-            no lock-in. The CLI never calls a model.
-          </p>
-        </div>
-        <div>
-          <Eyebrow>The on-ramp</Eyebrow>
-          <h2 class="font-display text-2xl text-halo tracking-tight mt-3">
-            From "lives in Notion" to "works like an engineer."
-          </h2>
-          <p class="mt-3 text-chrome leading-relaxed">
-            Every step is small. Every step earns the next. We don't gatekeep
-            the terminal — we make it approachable. Setup 101 is genuinely
-            followable by someone who has never opened one.
-          </p>
-        </div>
-        <div>
-          <Eyebrow>By the craft, for the craft</Eyebrow>
-          <h2 class="font-display text-2xl text-halo tracking-tight mt-3">
-            Methodology-backed. Community-built.
-          </h2>
-          <p class="mt-3 text-chrome leading-relaxed">
-            Continuous discovery, Working Backwards, the real traditions.
-            Skills are plain markdown; workflow entries are MDX; both follow
-            documented specs. The library compounds as PMs contribute to it.
-          </p>
-        </div>
+      <div class="grid sm:grid-cols-2 gap-y-14 gap-x-16 stagger">
+        {[
+          {
+            eyebrow: "Craft, not output",
+            title: "No skill writes the finished deliverable.",
+            body: "Every skill produces a reasoning scaffold: what your evidence supports, what you're assuming without proof, what to validate next. You write the doc — and the doc is sharper. We sell judgment, not typing.",
+          },
+          {
+            eyebrow: "Local and yours",
+            title: "Runs in your terminal. MIT-licensed.",
+            body: "Version-controlled workspace. Your research is an asset you own and grow, not data in someone else's cloud. No SaaS, no login, no lock-in. The CLI never calls a model.",
+          },
+          {
+            eyebrow: "The on-ramp",
+            title: "From \"lives in Notion\" to \"works like an engineer.\"",
+            body: "Every step is small. Every step earns the next. We don't gatekeep the terminal — we make it approachable. Setup 101 is genuinely followable by someone who has never opened one.",
+          },
+          {
+            eyebrow: "By the craft, for the craft",
+            title: "Methodology-backed. Community-built.",
+            body: "Continuous discovery, Working Backwards, the real traditions. Skills are plain markdown; workflow entries are MDX; both follow documented specs. The library compounds as PMs contribute to it.",
+          },
+        ].map((p) => (
+          <div>
+            <Eyebrow>{p.eyebrow}</Eyebrow>
+            <h2 class="font-display text-2xl text-halo tracking-tight mt-3 leading-[1.15]">
+              {p.title}
+            </h2>
+            <p class="mt-3 text-chrome leading-relaxed">{p.body}</p>
+          </div>
+        ))}
       </div>
     </div>
   </Section>
 
   {/* THE FIVE WEDGES */}
-  <Section hairline>
+  <Section hairline glyph>
     <div class="container-wide">
       <div class="mb-8">
         <Eyebrow>One deep system, many sharp tools</Eyebrow>
@@ -117,8 +109,8 @@ const recentWorkflows = workflows.slice(0, 3);
           The five wedges
         </h2>
       </div>
-      <div class="grid sm:grid-cols-2 gap-4">
-        {WEDGE_ORDER.map((slug) => {
+      <div class="grid sm:grid-cols-2 gap-4 stagger">
+        {WEDGE_ORDER.map((slug, i) => {
           const entry = wedgesBySlug.get(slug);
           if (!entry) return null;
           return (
@@ -127,6 +119,7 @@ const recentWorkflows = workflows.slice(0, 3);
               title={WEDGE_META[slug].title}
               summary={entry.data.summary}
               engineStatus={entry.data.engineStatus}
+              order={i + 1}
             />
           );
         })}
@@ -135,7 +128,7 @@ const recentWorkflows = workflows.slice(0, 3);
   </Section>
 
   {/* WORKFLOW LIBRARY — recent entries */}
-  <Section hairline>
+  <Section hairline glyph>
     <div class="container-wide">
       <div class="flex items-baseline justify-between mb-3 gap-4">
         <div>
@@ -153,7 +146,7 @@ const recentWorkflows = workflows.slice(0, 3);
         recipe and a "how it works" explainer that teaches the mechanism.
         We never ship a black box.
       </p>
-      <div class="grid gap-4">
+      <div class="grid gap-4 stagger">
         {recentWorkflows.map((w) => (
           <WorkflowListItem
             slug={w.data.slug}
@@ -171,7 +164,7 @@ const recentWorkflows = workflows.slice(0, 3);
   </Section>
 
   {/* GET STARTED — the on-ramp */}
-  <Section hairline spacing="loose">
+  <Section hairline glyph spacing="loose">
     <div class="container-tight">
       <Eyebrow>Get started</Eyebrow>
       <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
