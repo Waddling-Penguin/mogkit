@@ -31,9 +31,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="mogkit" />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content={new URL("/logomark.png", Astro.site).toString()} />
     <meta name="twitter:card" content="summary" />
+    <meta name="twitter:image" content={new URL("/logomark.png", Astro.site).toString()} />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     {/* Voidchrome fonts — display (Inter Tight), body (Inter), mono (JetBrains Mono) */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -26,10 +26,13 @@
     "typescript": "^5.4.0"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^4.3.0",
+    "@gltf-transform/functions": "^4.3.0",
     "@types/node": "^20.11.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/three": "^0.169.0",
+    "draco3dgltf": "^1.5.7",
     "pagefind": "^1.1.1"
   }
 }

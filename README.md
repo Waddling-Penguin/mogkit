@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logomark.png" alt="mogkit logomark" width="160" />
+</p>
+
 # mogkit
 
 > The PM mogged everyone in the room. He had `mogkit`.
