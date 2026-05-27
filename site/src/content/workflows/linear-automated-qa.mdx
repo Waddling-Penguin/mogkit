@@ -12,6 +12,17 @@ relatedSkill: null
 hasCliSetup: false
 costNote: "Claude API usage, ~cents per issue."
 tags: ["automation", "qa", "linear", "ci"]
+unlocks:
+  - "A per-criterion pass / flag JSON verdict on every PR, posted as a comment before human review."
+  - "A consistent rubric grade against the issue's own acceptance criteria — not 'looks fine'."
+  - "Pressure to write testable acceptance criteria, because the gate makes vague ones visible."
+helps:
+  - "Kills the 'looks fine' QA drift that ships unread criteria."
+  - "Reviewer reads one structured comment instead of mentally re-checking each criterion."
+  - "Costs cents and ~30 seconds per PR; the second pair of eyes you don't have to wait for."
+skipIf:
+  - "Your Linear issues don't carry acceptance criteria — the gate degrades to vibes without the rubric."
+  - "Your team treats the model's verdict as the verdict. The human reviewer stays the call."
 ---
 
 ## The problem
@@ -27,6 +38,30 @@ fetches that issue's acceptance criteria, sends the PR diff and the
 criteria to Claude, and posts a per-criterion pass/flag comment on the PR
 before review. The reviewer still owns the call; the gate just makes
 sure no criterion goes unread.
+
+## Example output
+
+The PR comment that lands on every pull request:
+
+```
+## qa-gate · ENG-1234
+
+✓ pass    Issue card shows the new "Linked to Linear" badge
+          The diff adds the badge in IssueSidebar.tsx:88 with the
+          correct variant; rendered conditionally on issue.linearId.
+
+⚠ flag    Empty state shows "Not linked yet" with a Link button
+          The empty state renders but the Link button is non-functional —
+          onClick is wired to a stub that logs to console.
+
+? unclear Invite flow still respects the existing seat-limit modal
+          The diff doesn't touch invite-flow code, so this criterion is
+          not addressed in the PR. Verify with a manual test.
+
+— qa-gate · auto-review against ENG-1234 acceptance criteria
+```
+
+The reviewer reads this in 15 seconds and knows where to look.
 
 ## Prerequisites
 

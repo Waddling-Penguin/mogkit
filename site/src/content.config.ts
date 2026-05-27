@@ -34,6 +34,12 @@ const workflows = defineCollection({
     hasCliSetup: z.boolean().default(false),
     costNote: z.string(),
     tags: z.array(z.string()).default([]),
+    // Sidepanel — concrete answers to "what does this unlock for me as a PM"
+    // and "how does it actually help my week". No fluff. Each is a short
+    // bulleted list. `skipIf` is the honest fit-check.
+    unlocks: z.array(z.string()).default([]),
+    helps: z.array(z.string()).default([]),
+    skipIf: z.array(z.string()).default([]),
   }),
 });
 

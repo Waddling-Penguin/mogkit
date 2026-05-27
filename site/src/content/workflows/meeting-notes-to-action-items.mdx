@@ -12,6 +12,17 @@ relatedSkill: null
 hasCliSetup: false
 costNote: "Claude API usage, ~$0.02–$0.10 per meeting depending on transcript length."
 tags: ["automation", "meetings", "actions", "linear", "planning"]
+unlocks:
+  - "A structured JSON list of action items with owner, due date, and a verbatim `context_quote` for each."
+  - "Draft Linear tickets you review before they go live — model proposes, you dispose."
+  - "A versioned `actions/<date>-<slug>.json` archive of every meeting's commitments."
+helps:
+  - "Closes the 'X said yes in the meeting then forgot' loop without writing it up at midnight."
+  - "Cuts post-meeting action-writeup from 20 minutes to 90 seconds of review."
+  - "Quote-anchoring makes hallucinated actions impossible to ship — wrong quotes are obvious on review."
+skipIf:
+  - "Your meetings aren't transcribed. Garbage transcript in, garbage actions out."
+  - "Owners aren't named explicitly in your meeting culture. The model can't extract what wasn't said."
 ---
 
 ## The problem
@@ -39,6 +50,44 @@ prompt, and gets back:
 
 You review the output, edit, and post the tickets. The model never
 creates tickets directly.
+
+## Example output
+
+The JSON the agent returns after a Tuesday planning meeting:
+
+```json
+{
+  "actions": [
+    {
+      "task": "Draft the Q3 retention bet doc for ops review",
+      "owner": "Maya",
+      "due": "2026-06-03",
+      "context_quote": "I'll take a first pass on the retention doc by Tuesday and bring it to ops."
+    },
+    {
+      "task": "Pull cohort-3 activation numbers for next standup",
+      "owner": "Jordan",
+      "due": null,
+      "context_quote": "Yeah I can get those by Thursday for the standup."
+    },
+    {
+      "task": "Confirm whether trial users count in active-seats",
+      "owner": null,
+      "due": null,
+      "context_quote": "Wait — are trial users in active-seats? Nobody knew."
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "Does the enterprise tier need a separate audit log feature, or can we extend the existing one?",
+      "context_quote": "We didn't really land on whether audit logs are a separate enterprise thing."
+    }
+  ]
+}
+```
+
+Every action carries a `context_quote` — if the quote doesn't match the
+task, you spot the hallucination on review and drop it.
 
 ## Prerequisites
 

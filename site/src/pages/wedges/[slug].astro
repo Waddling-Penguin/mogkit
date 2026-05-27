@@ -5,7 +5,6 @@ import Section from "../../components/Section.astro";
 import Eyebrow from "../../components/Eyebrow.astro";
 import Card from "../../components/Card.astro";
 import SkillCard from "../../components/SkillCard.astro";
-import ChromeGlyph from "../../components/ChromeGlyph.astro";
 import { getSkill } from "../../lib/skills";
 import { WEDGE_META, type WedgeSlug } from "../../lib/wedges";
 
@@ -29,10 +28,7 @@ const material = materialRefs.filter((m): m is NonNullable<typeof m> => Boolean(
 
 <BaseLayout title={`${meta.title} · mogkit`} description={entry.data.summary}>
   <article class="container-tight pt-16 sm:pt-20 pb-8">
-    <div class="flex items-center gap-3 mb-1">
-      <ChromeGlyph size={28} />
-      <p class="eyebrow">Wedge · {String(entry.data.order)}/5</p>
-    </div>
+    <p class="eyebrow mb-1">Wedge · {String(entry.data.order)}/5</p>
     <h1 class="font-display text-4xl sm:text-5xl text-halo tracking-tightest leading-[0.98] mt-4 lift-in lift-in-2">
       {meta.title}
     </h1>

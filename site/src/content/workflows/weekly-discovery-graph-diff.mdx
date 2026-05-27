@@ -12,6 +12,17 @@ relatedSkill: "graphify"
 hasCliSetup: true
 costNote: "No model calls in CI. The diff is computed from two JSON files. Cost: $0 in CI; only the graphify run uses Claude (which happens in your editor, not the workflow)."
 tags: ["mogkit", "discovery", "graphify", "diff", "weekly", "ci"]
+unlocks:
+  - "A Monday morning issue listing exactly what moved in your discovery graph in the past 7 days."
+  - "A 'provenance grew' section: single-source claims that got triangulated this week — your hard-earned conviction."
+  - "Visibility on new Assumptions entering the corpus and Assumptions retired by new evidence."
+helps:
+  - "Replaces the 'what did we learn this week?' silence with one readable artifact."
+  - "Makes the corpus visibly compound — leadership can see discovery work paying off, not just feel it."
+  - "Catches incoming Assumptions before they harden into team beliefs nobody questions."
+skipIf:
+  - "Nobody on the team runs graphify regularly. The diff is computed; the discovery is on you."
+  - "You don't version `graph/graph.json` in git. The diff needs last week's snapshot to exist."
 ---
 
 ## The problem
@@ -35,6 +46,37 @@ The diff lands as either a commit message on a `weekly-digest` branch, a
 PR comment, or a posted GitHub Discussion — your pick. The point is the
 weekly artifact: a five-minute read that tells you what your discovery
 *moved* this week.
+
+## Example output
+
+The Monday-morning issue the action posts:
+
+```
+# Discovery graph — week ending 2026-05-27
+
+Health
+  developing → developing (no rating shift, corpus grew by 4 sources)
+
+New nodes (this week)
+  Pain     · admin-cant-revoke-team-access-quickly  (1 source)
+  Segment  · enterprise-procurement-buyer           (1 source — new segment)
+  Outcome  · 60-day-account-renewal-rate            (memo)
+
+Provenance grew (claims that triangulated this week)
+  csv-import-loses-comments         1 source → 3 sources
+  admin-decisions-block-invites     2 sources → 4 sources
+
+New Assumptions
+  enterprise-needs-sso-day-one
+    voiced in: prd-enterprise-onboarding-draft.md
+    risk: if wrong, enterprise rollout doesn't need an SSO sprint
+
+Assumptions retired
+  import-cause-vs-trigger  — now backed by 2 interviews.
+```
+
+The "provenance grew" section is the one you read first — those are the
+claims you triangulated this week, the real progress.
 
 ## Prerequisites
 

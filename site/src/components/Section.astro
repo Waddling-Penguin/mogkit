@@ -1,18 +1,13 @@
 ---
 // Voidchrome — Section primitive.
-// A vertical band with optional hairline top, generous padding, and a
-// progressive-enhancement reveal:
-//   • Always: .reveal (IO + opacity/lift) so older browsers still animate.
-//   • When supported: .scroll-reveal (animation-timeline: view()) layered
-//     on top — a smooth scroll-position-linked fade + blur lift.
-// `hairline` adds a top divider; `glyph` adds a centered chrome dot to it.
+// Vertical band with optional hairline top, generous padding, and IO-based
+// reveal (`.reveal` set in BaseLayout's script — opacity:0 → 1 on viewport
+// entry, un-observed once revealed so sections stay visible).
 interface Props {
   /** "default" = py-16 ; "tight" = py-8 ; "loose" = py-24 */
   spacing?: "default" | "tight" | "loose";
   /** Add a hairline divider on top */
   hairline?: boolean;
-  /** When `hairline` is true, place a small chrome dot at the center of it */
-  glyph?: boolean;
   revealMode?: "default" | "off";
   class?: string;
   as?: "section" | "div" | "article";
@@ -20,7 +15,6 @@ interface Props {
 const {
   spacing = "default",
   hairline = false,
-  glyph = false,
   revealMode = "default",
   class: cls,
   as: Tag = "section",
@@ -43,12 +37,5 @@ const spacingClass = spacingMap[spacing];
   ]}
   data-revealed={revealMode === "off" ? "true" : "false"}
 >
-  {hairline && glyph && (
-    <span
-      class="absolute -top-[5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full"
-      style="background: radial-gradient(circle at 35% 30%, rgb(var(--halo) / 0.95) 0%, rgb(var(--mercury) / 0.7) 45%, rgb(var(--obsidian)) 100%); box-shadow: 0 0 12px rgb(var(--mercury) / 0.45);"
-      aria-hidden="true"
-    ></span>
-  )}
   <slot />
 </Tag>
