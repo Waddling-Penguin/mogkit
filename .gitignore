@@ -1,0 +1,18 @@
+node_modules/
+dist/
+build/
+
+# CLI build artifact: cli/skills/ is bundled from the root skills/ at build time
+# by cli/scripts/bundle-skills.mjs and ships in the npm tarball via prepack.
+cli/skills/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+coverage/
+.turbo/
+.cache/
+.astro/
+.netlify/
+.pnpm-store/

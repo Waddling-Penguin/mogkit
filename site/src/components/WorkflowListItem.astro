@@ -1,0 +1,28 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  outcome: string;
+  wedge: string;
+  difficulty: string;
+  tools: string[];
+  published: Date;
+  timeToImplement: string;
+}
+const { slug, title, outcome, wedge, difficulty, tools, published, timeToImplement } = Astro.props;
+const dateStr = published.toISOString().slice(0, 10);
+---
+
+<a href={`/workflows/${slug}`} class="group block rounded-lg border border-ink-200 bg-white p-5 no-underline hover:border-ink-400 transition-colors">
+  <div class="flex items-baseline justify-between gap-3 mb-1">
+    <h3 class="text-ink-900 font-semibold group-hover:text-accent-700">{title}</h3>
+    <time class="font-mono text-xs text-ink-500" datetime={dateStr}>{dateStr}</time>
+  </div>
+  <p class="text-sm text-ink-700 leading-relaxed mb-3">{outcome}</p>
+  <div class="flex flex-wrap items-center gap-1.5 text-xs">
+    <span class="pill-accent">{wedge}</span>
+    <span class="pill">{difficulty}</span>
+    <span class="pill">{timeToImplement}</span>
+    {tools.map((t) => <span class="pill">{t}</span>)}
+  </div>
+</a>

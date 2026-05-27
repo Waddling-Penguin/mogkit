@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mogkit.dev/schemas/graph.schema.json",
+  "title": "mogkit Discovery graph",
+  "description": "The output of the `graphify` skill. Represents an evidence-backed knowledge graph derived from a PM's sources/ corpus. Every node and edge carries provenance — except Assumption nodes, whose empty provenance is the point and must be explicit.",
+  "type": "object",
+  "required": ["meta", "nodes", "edges"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": { "$ref": "#/$defs/meta" },
+    "nodes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    }
+  },
+  "$defs": {
+    "meta": {
+      "type": "object",
+      "required": ["generated", "sourceCount", "sourceTypes", "health"],
+      "additionalProperties": false,
+      "properties": {
+        "generated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp of when this graph was produced."
+        },
+        "sourceCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of files in sources/ that contributed to the graph."
+        },
+        "sourceTypes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 0,
+          "uniqueItems": true,
+          "description": "The distinct source types observed in the corpus (interview, ticket, prd, memo, research, transcript, note, other)."
+        },
+        "health": {
+          "type": "string",
+          "enum": ["thin", "developing", "rich"],
+          "description": "Derived corpus health. Skills gate confidence on this value."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional graphify-emitted notes (e.g. files skipped, ambiguities)."
+        }
+      }
+    },
+    "provenanceItem": {
+      "type": "object",
+      "required": ["source", "quote"],
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "Relative path to the source file (e.g. sources/interview-03.md)."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Verbatim quote from the source that supports the node/edge."
+        },
+        "loc": {
+          "type": "string",
+          "description": "Optional location hint inside the source (e.g. 'L42' or a section heading)."
+        }
+      }
+    },
+    "node": {
+      "oneOf": [
+        { "$ref": "#/$defs/nodeWithProvenance" },
+        { "$ref": "#/$defs/assumptionNode" }
+      ]
+    },
+    "nodeWithProvenance": {
+      "type": "object",
+      "required": ["id", "type", "label", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z]+-[a-z0-9-]+$",
+          "description": "Stable id; convention `<type-prefix>-<slug>` e.g. pain-onboarding-time."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "Person",
+            "Segment",
+            "Pain",
+            "Need",
+            "Feature",
+            "Competitor",
+            "Insight",
+            "Quote",
+            "Outcome"
+          ]
+        },
+        "label": { "type": "string", "minLength": 1 },
+        "provenance": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/provenanceItem" }
+        }
+      }
+    },
+    "assumptionNode": {
+      "type": "object",
+      "required": ["id", "type", "label", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^assumption-[a-z0-9-]+$"
+        },
+        "type": { "const": "Assumption" },
+        "label": { "type": "string", "minLength": 1 },
+        "provenance": {
+          "type": "array",
+          "maxItems": 0,
+          "description": "Assumption nodes MUST have an empty provenance array. The empty array is the point: it signals the absence of evidence explicitly."
+        },
+        "risk": {
+          "type": "string",
+          "description": "Optional one-line statement of what is at risk if this assumption is wrong."
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["from", "to", "type", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "experiences",
+            "requests",
+            "blocks",
+            "contradicts",
+            "supports",
+            "belongs-to",
+            "competes-with",
+            "evidences",
+            "assumes"
+          ]
+        },
+        "provenance": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/provenanceItem" }
+        }
+      }
+    }
+  }
+}

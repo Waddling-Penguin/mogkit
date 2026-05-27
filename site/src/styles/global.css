@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply text-ink-800 bg-ink-50 antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  body {
+    @apply min-h-screen flex flex-col;
+  }
+  ::selection {
+    @apply bg-accent-500/20 text-ink-900;
+  }
+  a {
+    @apply underline decoration-ink-300 underline-offset-4 hover:decoration-accent-600 transition-colors;
+  }
+  code {
+    @apply font-mono text-[0.9em] bg-ink-100 text-ink-900 px-1 py-0.5 rounded;
+  }
+  pre code {
+    @apply bg-transparent text-ink-50 px-0;
+  }
+  pre {
+    @apply font-mono text-sm bg-ink-900 text-ink-50 rounded-md p-4 overflow-x-auto;
+  }
+  h1, h2, h3, h4 {
+    @apply text-ink-900 font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .container-tight {
+    @apply mx-auto w-full max-w-3xl px-6;
+  }
+  .container-wide {
+    @apply mx-auto w-full max-w-5xl px-6;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1 rounded-full bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-700;
+  }
+  .pill-accent {
+    @apply inline-flex items-center gap-1 rounded-full bg-accent-50 px-2 py-0.5 text-xs font-medium text-accent-700;
+  }
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium no-underline transition-colors;
+  }
+  .btn-primary {
+    @apply bg-ink-900 text-ink-50 hover:bg-ink-800;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-ink-800 hover:bg-ink-100 border border-ink-200;
+  }
+}

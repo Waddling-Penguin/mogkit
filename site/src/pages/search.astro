@@ -1,0 +1,41 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Search · mogkit"
+  description="Search the mogkit site — wedges, workflows, setup."
+>
+  <section class="container-tight py-16">
+    <p class="font-mono text-xs text-accent-700 mb-2">SEARCH</p>
+    <h1 class="text-3xl font-semibold tracking-tight text-ink-900">
+      Search the site
+    </h1>
+    <p class="mt-3 text-ink-700">
+      Indexes wedges, workflows, and the Setup 101 page. Powered by
+      <a href="https://pagefind.app">Pagefind</a> — fully static, no backend.
+    </p>
+
+    <div id="search" class="mt-8"></div>
+
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+    <script is:inline src="/pagefind/pagefind-ui.js"></script>
+    <script is:inline>
+      window.addEventListener("DOMContentLoaded", () => {
+        if (window.PagefindUI) {
+          new window.PagefindUI({
+            element: "#search",
+            showSubResults: true,
+            showImages: false,
+            resetStyles: false,
+          });
+        } else {
+          document.getElementById("search").innerHTML =
+            '<p class="text-sm text-ink-500">' +
+            "Pagefind index not built. Run <code>pnpm --filter ./site run build</code> first." +
+            "</p>";
+        }
+      });
+    </script>
+  </section>
+</BaseLayout>

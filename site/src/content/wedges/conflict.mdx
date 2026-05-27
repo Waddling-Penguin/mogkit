@@ -1,0 +1,44 @@
+---
+title: "Stakeholder & Conflict"
+slug: "conflict"
+order: 5
+summary: "A stalled decision is rarely a logic problem. It's an incentive problem you haven't named."
+problem: "When a decision stalls, the room usually argues about the surface question — build vs buy, ship now vs ship later — while the real disagreement sits underneath: who owns the call, whose quarter takes the hit, what nobody wants to say out loud. Most senior PMs eventually learn to map this out by feel. mogkit ships the structured version so you don't have to wait for the seniority."
+engineStatus: "coming"
+skills: ["stakeholder-map", "tradeoff-frame"]
+material:
+  - fisher-ury-getting-to-yes
+  - bezos-shareholder-letters
+---
+
+## The level-up path
+
+Two standalone skills:
+
+- **`stakeholder-map`** — for each stakeholder, their stated position
+  and their likely role-level incentive; the real fault line under the
+  surface argument; the minimum set of conversations that would
+  actually unblock the situation. Names dynamics; never scripts
+  manipulation or persuasion tactics.
+- **`tradeoff-frame`** — once you can see the real disagreement, this
+  exposes the axes the options optimize against and the evidence that
+  would actually move a reasonable person. Frames; does not pick.
+
+## A note on the knowledge engine
+
+No stakeholder-side engine in v1. Stakeholder dynamics change too fast
+for a versioned graph to be the right model, and the failure mode of
+such a tool (writing scripts to "manage" specific named individuals) is
+exactly what mogkit shouldn't ship. The standalone skills name the
+dynamic; you handle the room.
+
+## Visual setup walkthrough
+
+1. `npx mogkit init my-conflict-workspace` (or use any existing mogkit
+   workspace; these skills don't need a corpus).
+2. Paste the decision and the stakeholders into `stakeholder-map`. Get
+   back the map.
+3. If the call is still contested after that, paste the options into
+   `tradeoff-frame`. Get back the axes.
+4. Walk into the room as yourself. The map is diagnosis; the
+   conversation is yours.

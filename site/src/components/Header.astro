@@ -1,0 +1,38 @@
+---
+const nav = [
+  { href: "/wedges/discovery", label: "Wedges" },
+  { href: "/workflows", label: "Workflow Library" },
+  { href: "/setup", label: "Setup 101" },
+  { href: "/search", label: "Search" },
+];
+const current = Astro.url.pathname;
+---
+
+<header class="border-b border-ink-200 bg-ink-50/80 backdrop-blur sticky top-0 z-30">
+  <div class="container-wide flex items-center justify-between h-14">
+    <a href="/" class="no-underline text-ink-900 font-mono font-semibold text-lg lowercase tracking-tight hover:text-accent-700 transition-colors">
+      mogkit
+    </a>
+    <nav class="flex items-center gap-1 sm:gap-2 text-sm">
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            "px-2.5 py-1.5 rounded-md no-underline transition-colors",
+            current.startsWith(item.href.replace(/\/discovery$/, ""))
+              ? "text-ink-900 bg-ink-100"
+              : "text-ink-600 hover:text-ink-900 hover:bg-ink-100",
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+      <a
+        href="https://github.com/Waddling-Penguin/mogkit"
+        class="hidden sm:inline-flex ml-1 px-2.5 py-1.5 text-sm rounded-md no-underline text-ink-600 hover:text-ink-900 hover:bg-ink-100"
+      >
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>

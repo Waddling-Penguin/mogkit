@@ -1,0 +1,78 @@
+---
+title: "Discovery"
+slug: "discovery"
+order: 1
+summary: "Customer research as a versioned, compounding asset. mogkit's deepest system lives here."
+problem: "Discovery is the wedge where most PM tooling rots into a Notion graveyard of half-summarized interviews. The pattern is universal: the team runs research, the notes sit somewhere, and three months later nobody can answer 'what did we actually learn?' without re-reading thirty documents. The strong product teams treat their research corpus as a versioned asset that grows; the weak ones treat each interview as a one-off."
+engineStatus: "full"
+skills: ["graphify", "discovery-query", "assumption-audit", "prd-interrogate", "interview-guide", "synthesis-map", "interview-coach"]
+material:
+  - torres-continuous-discovery-habits
+  - fitzpatrick-mom-test
+---
+
+## The level-up path
+
+Discovery is the only wedge where mogkit ships a full **knowledge engine**: a
+stateful, multi-step system that operates on your corpus of sources and a
+generated knowledge graph. Everything you collect compounds.
+
+The loop:
+
+```
+interview-guide → (collect sources) → graphify → assumption-audit
+      ↑                                              ↓
+      └──────── prd-interrogate ← discovery-query / synthesis-map
+```
+
+You add interviews, tickets, and notes to `sources/`. `graphify` turns the
+corpus into a schema-valid graph with provenance on every claim.
+`discovery-query` answers questions against it. `assumption-audit` ranks
+what you'd be betting on without evidence. `prd-interrogate` makes your
+next PRD sharper by interrogating the evidence behind it first — it never
+writes the PRD; you do.
+
+## Visual setup walkthrough
+
+1. **Install mogkit and scaffold a workspace.**
+   ```bash
+   npx mogkit init my-research
+   cd my-research
+   ```
+   You'll see `sources/`, `graph/`, `knowledge/`, a `CLAUDE.md` orienting
+   every Claude Code session, and `.claude/skills/` with all 13 skills
+   installed.
+
+2. **Add your first source.**
+   ```bash
+   mogkit add
+   ```
+   Pick a file (an interview transcript, a support ticket export, a doc
+   you took notes in). Tag its type. It lands in `sources/` with
+   frontmatter.
+
+3. **Check the corpus health.**
+   ```bash
+   mogkit status
+   ```
+   On your first day this will say `thin`. That's the correct, useful
+   answer — the skills will gate their confidence on it.
+
+4. **Open the workspace in Claude Code and run `graphify`.**
+   The skill reads everything in `sources/`, builds the graph in
+   `graph/graph.json`, and writes a human-readable `graph/graph.md`. On
+   a thin corpus, it tells you so loudly. That is the honest result.
+
+5. **Interrogate.**
+   Once you have ~8 sources across 2+ types, run `discovery-query`,
+   `assumption-audit`, or — when you're about to write a PRD —
+   `prd-interrogate`. The output is always a reasoning scaffold, not a
+   finished doc.
+
+## What the skills will not do
+
+They will not write your PRD. They will not infer entities your corpus
+doesn't mention. They will not fabricate a rich graph from a handful of
+documents. The thin-corpus state is loud and honest on purpose — it is
+the primary state for most workspaces, and pretending otherwise builds a
+PM tool that hallucinates research.

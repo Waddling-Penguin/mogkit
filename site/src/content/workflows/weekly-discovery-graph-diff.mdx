@@ -1,0 +1,156 @@
+---
+title: "Weekly Discovery graph diff: surface what changed in your research"
+slug: "weekly-discovery-graph-diff"
+published: 2026-05-27
+updated: 2026-05-27
+wedge: discovery
+tools: ["mogkit", "Claude Code", "GitHub Actions", "git"]
+difficulty: intermediate
+timeToImplement: "45m"
+outcome: "A weekly cron compares this week's graph to last week's and surfaces new Pains, new Segments, new Assumptions, and resolved gaps — the diff a PM should actually read."
+relatedSkill: "graphify"
+hasCliSetup: true
+costNote: "No model calls in CI. The diff is computed from two JSON files. Cost: $0 in CI; only the graphify run uses Claude (which happens in your editor, not the workflow)."
+tags: ["mogkit", "discovery", "graphify", "diff", "weekly", "ci"]
+---
+
+## The problem
+
+You're running continuous discovery. Sources land in `sources/` over the
+week — interviews, tickets, notes. Each one is a tiny update to your
+graph. By Friday you've forgotten what's actually new since Monday. The
+graph as a whole is too big to re-read; the *diff* is the readable unit
+and nobody computes it.
+
+## What you'll build
+
+A scheduled GitHub Action that, every Monday, compares the current
+`graph/graph.json` to the version from a week ago and posts a structured
+diff: nodes added, nodes whose provenance grew (single-source → multi-
+source — i.e. things you triangulated), Assumptions that disappeared
+(because they got evidence), and Assumptions that appeared (because new
+hypotheses entered the corpus).
+
+The diff lands as either a commit message on a `weekly-digest` branch, a
+PR comment, or a posted GitHub Discussion — your pick. The point is the
+weekly artifact: a five-minute read that tells you what your discovery
+*moved* this week.
+
+## Prerequisites
+
+- A [mogkit](https://github.com/Waddling-Penguin/mogkit) workspace
+  (`npx mogkit init my-workspace`)
+- Claude Code installed, so you can run `graphify` to actually update
+  `graph/graph.json` over the week
+- The workspace pushed to a GitHub repo (it's already `git init`-ed by
+  `mogkit init`)
+- A team rhythm: someone runs `graphify` in Claude Code at least once
+  per week. Without that, the diff is empty.
+
+## Build it
+
+1. **Commit `graph/graph.json` to the repo.** The default workspace
+   `.gitignore` keeps it commented in (see the template). The diff is
+   only useful if the file is versioned.
+
+2. **Add `.github/workflows/weekly-graph-diff.yml`:**
+
+   ```yaml
+   name: weekly-graph-diff
+   on:
+     schedule:
+       - cron: "0 13 * * MON"   # Mondays 13:00 UTC
+     workflow_dispatch:
+   permissions:
+     contents: read
+     issues: write
+   jobs:
+     diff:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+           with: { fetch-depth: 0 }
+         - uses: actions/setup-node@v4
+           with: { node-version: 20 }
+         - name: Find last week's graph
+           id: prev
+           run: |
+             SHA=$(git rev-list -1 --before="7 days ago" HEAD -- graph/graph.json || true)
+             echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+         - name: Compute diff
+           if: steps.prev.outputs.sha != ''
+           env:
+             PREV_SHA: ${{ steps.prev.outputs.sha }}
+           run: |
+             git show $PREV_SHA:graph/graph.json > /tmp/prev-graph.json
+             node .github/scripts/graph-diff.mjs /tmp/prev-graph.json graph/graph.json > /tmp/diff.md
+             cat /tmp/diff.md
+         - name: Post as GitHub Discussion or Issue
+           if: steps.prev.outputs.sha != ''
+           uses: peter-evans/create-issue-from-file@v5
+           with:
+             title: "Discovery graph — week ending ${{ github.run_number }}"
+             content-filepath: /tmp/diff.md
+             labels: discovery-digest
+   ```
+
+3. **Write the diff script.** A short Node script at
+   `.github/scripts/graph-diff.mjs` that:
+   - Loads both graphs (`prev`, `next`)
+   - Builds id-keyed maps of nodes and edges
+   - Emits these sections, each a bulleted list:
+     - **New nodes** — present in `next`, absent in `prev`. Group by `type`.
+     - **Provenance grew** — nodes whose `provenance.length` increased.
+       These are the claims you triangulated this week. The most
+       important section.
+     - **Assumptions resolved** — Assumption nodes that *disappeared*
+       (the graph rewrote them as evidenced nodes). Optimistic signal.
+     - **New Assumptions** — Assumption nodes that appeared. Each with
+       its `risk` field.
+     - **Health change** — `meta.health` change (`thin → developing`,
+       etc.). The headline.
+
+4. **Title the digest the same way every week.** Future you will scan
+   the issue list and want the dates to read at a glance. Use the ISO
+   week or the date range.
+
+## How it works
+
+Four stages:
+
+- **Detect** — `git rev-list --before="7 days ago"` finds the most recent
+  commit that touched `graph/graph.json` before a week ago. That's "last
+  week's graph." No bespoke storage needed; git is the database.
+- **Materialize** — `git show <sha>:graph/graph.json` writes the old
+  version to a temp file. Now you have two JSON snapshots side by side.
+- **Diff** — pure JSON diff. Node-id keys, set arithmetic. The whole
+  thing is deterministic and free; no LLM call, no API call.
+- **Publish** — the digest lands as an issue (or discussion) with a
+  consistent label. The PM reads it on Monday morning over coffee.
+
+The clever part isn't the diff. It's that `graphify` already encodes
+provenance, so "provenance grew" — the signal you actually want — falls
+out of `prev.provenance.length` vs `next.provenance.length` per node.
+Without provenance as a first-class field, you'd be guessing.
+
+## Variations & next
+
+- **Per-segment digests.** Filter the diff to a single segment (e.g.
+  "what moved for mid-market this week?"). Useful when discovery is
+  organized around named cohorts.
+- **Slack post instead of GitHub issue.** Same script, different
+  publish step. The diff body is markdown that renders fine in Slack.
+- **Compose with `assumption-audit`.** Once the issue is open, the PM
+  runs `assumption-audit` in Claude Code on the current graph to triage
+  the new Assumptions surfaced this week. The digest is the trigger;
+  the audit is the response.
+
+## Limits & honesty
+
+It tells you what *changed*, not what *matters*. A new Pain node from a
+single ticket and a new Pain node from three interviews look the same
+in "New nodes" — read the "Provenance grew" section first. It assumes
+someone is actually running `graphify` regularly; if no sources got
+ingested this week, the diff will be honest about that (empty). It
+costs nothing per run but it costs a habit: the team has to add to the
+corpus.

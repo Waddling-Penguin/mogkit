@@ -1,0 +1,21 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  summary: string;
+  engineStatus: "full" | "coming";
+}
+const { slug, title, summary, engineStatus } = Astro.props;
+---
+
+<a href={`/wedges/${slug}`} class="group block rounded-lg border border-ink-200 bg-white p-5 no-underline hover:border-ink-400 transition-colors">
+  <div class="flex items-baseline justify-between mb-2">
+    <h3 class="text-ink-900 font-semibold group-hover:text-accent-700">{title}</h3>
+    {engineStatus === "full" ? (
+      <span class="pill-accent">knowledge engine</span>
+    ) : (
+      <span class="pill">standalone skills</span>
+    )}
+  </div>
+  <p class="text-sm text-ink-600 leading-relaxed">{summary}</p>
+</a>

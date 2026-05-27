@@ -1,0 +1,48 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Validate skill format
+        run: pnpm run validate:skills
+
+      - name: Validate graph schema
+        run: pnpm run validate:graph
+
+      - name: Validate workflow entries
+        run: pnpm run validate:workflows
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Build (CLI)
+        run: pnpm --filter ./cli run build
+
+      - name: Build (site)
+        run: pnpm --filter ./site run build
+
+      - name: Test
+        run: pnpm run test

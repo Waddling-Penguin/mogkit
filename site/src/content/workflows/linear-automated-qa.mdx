@@ -1,0 +1,139 @@
+---
+title: "Automated QA gate for Linear issues"
+slug: "linear-automated-qa"
+published: 2026-05-26
+updated: 2026-05-26
+wedge: planning
+tools: ["Linear", "GitHub Actions", "Claude API"]
+difficulty: intermediate
+timeToImplement: "30m"
+outcome: "Every Linear issue gets an automated QA pass against its own acceptance criteria before review."
+relatedSkill: null
+hasCliSetup: false
+costNote: "Claude API usage, ~cents per issue."
+tags: ["automation", "qa", "linear", "ci"]
+---
+
+## The problem
+
+Acceptance criteria get written in a Linear issue and then nobody checks
+the finished work against them. QA drifts to "looks fine." Regressions
+and missed criteria ship.
+
+## What you'll build
+
+When a pull request linked to a Linear issue opens, a GitHub Action
+fetches that issue's acceptance criteria, sends the PR diff and the
+criteria to Claude, and posts a per-criterion pass/flag comment on the PR
+before review. The reviewer still owns the call; the gate just makes
+sure no criterion goes unread.
+
+## Prerequisites
+
+- A Linear workspace and API key
+- A GitHub repo with Actions enabled
+- An Anthropic API key
+- The team convention that issues carry an `## Acceptance criteria`
+  section, one checkbox per criterion
+
+## Build it
+
+1. **Adopt the convention.** Every issue in Linear gets an `## Acceptance
+   criteria` section with one checkbox per criterion. Without this
+   convention, the model has no rubric to grade against and the gate
+   degrades into vibes.
+
+2. **Add secrets to the repo.** In GitHub → Settings → Secrets and
+   variables → Actions, add `LINEAR_API_KEY` and `ANTHROPIC_API_KEY`.
+
+3. **Create the workflow file.** Add `.github/workflows/qa-gate.yml`:
+
+   ```yaml
+   name: qa-gate
+   on:
+     pull_request:
+       types: [opened, synchronize]
+   jobs:
+     qa:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+           with: { fetch-depth: 0 }
+         - uses: actions/setup-node@v4
+           with: { node-version: 20 }
+         - name: Run QA gate
+           env:
+             LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+             ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+             PR_NUMBER: ${{ github.event.pull_request.number }}
+             BRANCH_NAME: ${{ github.head_ref }}
+             PR_BODY: ${{ github.event.pull_request.body }}
+           run: node .github/scripts/qa-gate.mjs
+   ```
+
+4. **Write the gate script.** A short Node script at
+   `.github/scripts/qa-gate.mjs` that:
+   - Extracts the Linear issue ID from the PR branch name (e.g.
+     `feat/eng-1234-add-x`) or the PR body
+   - Calls the Linear API for that issue and pulls the
+     `## Acceptance criteria` block
+   - Gets the PR diff via `gh api repos/$REPO/pulls/$PR_NUMBER`
+     (or `git diff origin/main...HEAD`)
+   - Calls the Claude API with a system prompt that instructs it to
+     evaluate the diff against each criterion and return JSON
+
+5. **Use a strict JSON system prompt.** The exact shape:
+
+   ```
+   You are a QA gate. You receive a list of acceptance criteria and a
+   code diff. For each criterion, return a JSON object:
+   { "criterion": string, "verdict": "pass" | "flag" | "unclear",
+     "reason": string }
+   Return a JSON array of these objects. No prose outside the JSON.
+   ```
+
+6. **Post the result.** Render the JSON array as a single PR comment,
+   one line per criterion, prefixed with ✓ / ⚠ / ? for pass / flag /
+   unclear. Use `gh pr comment $PR_NUMBER --body "$RENDERED"`.
+
+7. **Don't block merges.** The gate is informational. The human
+   reviewer reads the comment and decides.
+
+## How it works
+
+The workflow is a four-stage pipeline:
+
+- **Trigger** — a PR event fires the Action. The branch name or PR body
+  carries the Linear issue ID, which is the only thing tying the diff
+  to a specific rubric.
+- **Fetch** — pull the issue's acceptance criteria and the diff. These
+  are the two inputs the model needs; everything else is noise.
+- **Evaluate** — one Claude call, with a structured-output prompt that
+  forces a JSON shape per criterion. JSON-out is what makes the result
+  *parseable* instead of being prose you have to skim.
+- **Report** — render the JSON as a comment. The model informs the
+  human; it never blocks.
+
+The convention is the load-bearing piece. The model isn't grading "is
+this PR good" — it's grading "does this diff address each criterion in
+this rubric." That framing is what makes the output specific and useful
+instead of vague.
+
+## Variations & next
+
+- **Label-gated.** Run only when a `qa:auto` label is on the PR, so the
+  team can opt out.
+- **Cross-post.** Once you have the verdict, write it back to the
+  Linear issue as a comment too — closes the loop both directions.
+- **Criteria self-audit.** Add a second Claude call that grades the
+  *acceptance criteria themselves* for testability, and flags
+  unmeasurable ones. Fixes the upstream problem of vague criteria.
+
+## Limits & honesty
+
+It catches missed and misread criteria. It does not catch what the
+criteria themselves failed to specify — that's still a human job. It
+costs a few cents per PR (a single ~5k-token call). Most importantly:
+keep the human reviewer. This is a second pair of eyes, not the only
+pair. The moment teams treat the gate as the gate, the gate is wrong.

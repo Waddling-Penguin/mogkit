@@ -1,0 +1,147 @@
+---
+title: "Support → docs agent: Intercom conversations → Mintlify PRs"
+slug: "intercom-to-mintlify-docs"
+published: 2026-05-26
+updated: 2026-05-26
+wedge: gtm
+tools: ["Intercom", "Mintlify", "GitHub Actions", "Claude API"]
+difficulty: advanced
+timeToImplement: "2h"
+outcome: "A scheduled agent reads recent Intercom conversations and opens a docs PR with proposed edits + a gap report. A human reviews and merges."
+relatedSkill: null
+hasCliSetup: false
+costNote: "Claude API usage per run (~$0.50–$2.00 depending on conversation volume)."
+tags: ["automation", "docs", "support", "intercom", "mintlify", "agent"]
+---
+
+## The problem
+
+Support answers the same questions week after week. The docs lag behind
+what users actually ask. Nobody owns closing the gap, so the gap never
+closes. The information is *there* — every Intercom conversation is a
+signal of what users find unclear — but nobody sits down on a Friday
+and turns 200 conversations into doc updates.
+
+## What you'll build
+
+A scheduled GitHub Action that reads the last seven days of Intercom
+conversations, clusters the recurring questions, maps each cluster to
+your existing Mintlify docs, and opens a pull request on the docs repo
+with:
+
+- Proposed edits to existing docs (commits on a new branch)
+- A `docs-gaps.md` report listing themes that have no existing doc
+- A short summary at the top of the PR description
+
+A human reviews the PR, edits or rejects proposed changes, and merges.
+
+## Prerequisites
+
+- Intercom with API access
+- A Mintlify docs repo on GitHub
+- An Anthropic API key
+- A repo-scoped GitHub token with permission to open PRs on the docs repo
+- A weekly cadence the team can actually keep up with
+
+## Build it
+
+1. **Add secrets.** In the docs repo: `INTERCOM_API_KEY`,
+   `ANTHROPIC_API_KEY`, and a `DOCS_PR_TOKEN` (a fine-grained PAT scoped
+   to the docs repo with PR-write access — do not reuse the default
+   `GITHUB_TOKEN` if you want cross-repo branch creation).
+
+2. **Schedule the workflow.** Add
+   `.github/workflows/docs-from-support.yml`:
+
+   ```yaml
+   name: docs-from-support
+   on:
+     schedule:
+       - cron: "0 14 * * MON"   # Mondays 14:00 UTC
+     workflow_dispatch:
+   jobs:
+     propose:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - uses: actions/setup-node@v4
+           with: { node-version: 20 }
+         - name: Propose docs updates
+           env:
+             INTERCOM_API_KEY: ${{ secrets.INTERCOM_API_KEY }}
+             ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+             GITHUB_TOKEN: ${{ secrets.DOCS_PR_TOKEN }}
+           run: node .github/scripts/docs-from-support.mjs
+   ```
+
+3. **Pull recent Intercom conversations.** Call
+   `GET /conversations/search` with a created-at filter for the last 7
+   days. Extract the user-question text from each conversation (filter
+   to inbound messages from end-users; drop your team's replies).
+
+4. **Read the docs tree.** Parse `mint.json` to learn the nav structure
+   and list the MDX files. Read each one's frontmatter title and first
+   paragraph; the agent needs to know what docs already exist so it
+   doesn't propose a parallel structure.
+
+5. **Cluster + map.** One Claude call with a system prompt that:
+   - Receives the conversations and the docs tree
+   - Clusters the conversations by underlying question
+   - For each cluster, matches it to an existing doc *or* flags it as
+     a gap
+   - Returns JSON: `{ edits: [{ file, diff, reason }], gaps: [{ theme,
+     example_questions }] }`
+
+   Pin the JSON shape strictly. JSON-out is what makes the next step
+   mechanical.
+
+6. **Apply edits and write the gap report.** For each proposed edit,
+   write the change to a new branch (`docs/auto-YYYY-MM-DD`). Append
+   the gaps to `docs-gaps.md` at the repo root, with the date.
+
+7. **Open the PR.** Use `gh pr create` with a title like `docs:
+   weekly support-driven updates (YYYY-MM-DD, N clusters)` and a body
+   summarizing the clusters and gap counts.
+
+## How it works
+
+Four stages:
+
+- **Ingest** — recent conversations. This is the signal: what users
+  actually struggle with this week.
+- **Cluster** — collapse hundreds of conversations into a handful of
+  recurring themes. Without clustering you'd get one PR per
+  conversation, which is unreadable.
+- **Map** — the agent receives the *current* docs structure as part of
+  its input, so it proposes edits to real files and flags real gaps
+  rather than inventing a parallel structure. This is the difference
+  between a useful PR and a useless one.
+- **Propose** — the output is a PR, never a direct publish. The
+  human-in-the-loop step is deliberate and non-negotiable: docs are
+  user-facing, the model can be confidently wrong, and the value of
+  the agent is that a human *can* review a single weekly PR much faster
+  than they could read 200 conversations.
+
+The model is doing the synthesis humans hate doing weekly. The human is
+doing the editorial work humans are still better at. That split is the
+entire point.
+
+## Variations & next
+
+- **High-signal source only.** Run the agent against an Intercom tag
+  like `support-escalation` instead of the full inbox. Higher signal,
+  fewer false-positive clusters.
+- **Contradiction-flagging.** Ask the agent to flag any cluster that
+  contradicts recent product changes. Catches docs that say one thing
+  while the product does another.
+- **Slack digest.** In parallel with the PR, post the week's gap report
+  to a `#docs` channel. Faster awareness even when the PR sits.
+
+## Limits & honesty
+
+It surfaces *what* to document well. The proposed wording still needs
+an editor — the model writes serviceably but not in your voice. It
+will sometimes cluster two distinct issues together; the human
+reviewer catches that. It does not, and must not, publish docs
+without review. If you ever feel tempted to let it auto-merge, you've
+forgotten what the agent is for.

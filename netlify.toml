@@ -1,0 +1,14 @@
+[build]
+  base = "site"
+  publish = "site/dist"
+  command = "pnpm install --frozen-lockfile=false && pnpm --filter @mogkit/site run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+  PNPM_VERSION = "9"
+
+# pretty 404s
+[[redirects]]
+  from = "/*"
+  status = 404
+  to = "/404"

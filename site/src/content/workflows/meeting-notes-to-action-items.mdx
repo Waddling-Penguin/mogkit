@@ -1,0 +1,165 @@
+---
+title: "Meeting transcript → action items + draft tickets"
+slug: "meeting-notes-to-action-items"
+published: 2026-05-23
+updated: 2026-05-23
+wedge: planning
+tools: ["Otter / Fathom / Granola", "Claude API", "Linear", "GitHub Actions"]
+difficulty: beginner
+timeToImplement: "30m"
+outcome: "After every meeting, an agent proposes a structured action-item list with owners and draft Linear tickets. A human reviews before anything ships."
+relatedSkill: null
+hasCliSetup: false
+costNote: "Claude API usage, ~$0.02–$0.10 per meeting depending on transcript length."
+tags: ["automation", "meetings", "actions", "linear", "planning"]
+---
+
+## The problem
+
+Half the action items from your last meeting are sitting in someone's
+notes, unwritten, unowned. The conversation said "yeah let's do X by
+Friday" and then everyone left and the X is in nobody's queue. Two
+weeks later it's a stakeholder asking what happened with X.
+
+Transcripts exist. The action items are *in* them. Nobody has time on
+the same day to extract them by hand, and by the next day momentum is
+gone.
+
+## What you'll build
+
+A workflow that takes a meeting transcript (from Otter, Fathom, Granola,
+or any tool that exports text), sends it to Claude with a structured
+prompt, and gets back:
+
+1. A bulleted action-item list with proposed owner + due date if
+   mentioned
+2. Draft Linear tickets for the action items that need formal tracking
+3. A short "open questions" list — things the meeting raised but didn't
+   resolve
+
+You review the output, edit, and post the tickets. The model never
+creates tickets directly.
+
+## Prerequisites
+
+- A meeting recorder/transcriber that exports text (Otter, Fathom,
+  Granola, Zoom transcripts, anything similar)
+- An Anthropic API key
+- Optionally: a Linear API key for the draft-ticket step (skip the
+  Linear step if you don't use it)
+
+## Build it
+
+1. **Pick a trigger.** Two viable shapes:
+   - **Manual:** paste a transcript into a one-off CLI script you run
+     after each meeting. Lowest setup; works fine for small teams.
+   - **Automated:** if your transcriber writes to a Google Drive folder,
+     a Drive-triggered GitHub Action picks up new files. Higher
+     setup; better fit for ten-meeting weeks.
+
+   This recipe shows the manual shape. The automated variant is the
+   same logic with a different trigger.
+
+2. **Create the script.** `meeting-to-actions.mjs`:
+
+   ```js
+   import Anthropic from "@anthropic-ai/sdk";
+   import { readFileSync } from "node:fs";
+
+   const transcript = readFileSync(process.argv[2], "utf8");
+   const client = new Anthropic();
+
+   const SYSTEM = `You are an assistant that extracts action items from
+   meeting transcripts. Return JSON with this exact shape:
+   {
+     "actions": [{ "task": string, "owner": string | null,
+                   "due": string | null, "context_quote": string }],
+     "open_questions": [{ "question": string, "context_quote": string }]
+   }
+   Rules:
+   - Only include an action if the transcript explicitly indicates
+     someone agreed to do it. No inferring.
+   - If an owner is named, include them; if not, leave owner null.
+   - context_quote MUST be a verbatim quote from the transcript that
+     justifies the action.
+   - No prose outside the JSON.`;
+
+   const resp = await client.messages.create({
+     model: "claude-sonnet-4-6",
+     max_tokens: 2000,
+     system: SYSTEM,
+     messages: [{ role: "user", content: transcript }],
+   });
+   process.stdout.write(resp.content[0].text);
+   ```
+
+3. **Run it after the meeting.**
+
+   ```bash
+   node meeting-to-actions.mjs ~/transcripts/2026-05-23-planning.txt | tee actions.json
+   ```
+
+4. **Render the JSON into something readable.** A 20-line script
+   formats the actions and open-questions into markdown you can paste
+   into your team's notes doc or Slack.
+
+5. **Optionally — draft Linear tickets.** A second script reads the
+   JSON and, for actions tagged for tracking, calls the Linear API to
+   *open drafts* (status: `triage` or your team's equivalent). The
+   PM reviews each draft in Linear and either promotes it to a real
+   ticket or deletes it.
+
+6. **Always review before sending.** Don't auto-create real tickets;
+   don't auto-Slack action items as if they were committed. The model
+   misreads social cues, hedges, and jokes — sometimes systematically.
+   The human is the assignment-maker.
+
+## How it works
+
+Three stages:
+
+- **Ingest** — the transcript is the source of truth. The agent can't
+  see the room; if the transcript missed it, the agent will miss it.
+  Good transcripts make good action lists. Bad transcripts make bad
+  action lists. This is one of the workflows where input quality
+  dominates.
+- **Extract** — the JSON schema in the system prompt forces the model
+  to return parseable output and forces it to attach a `context_quote`
+  to every action. The quote requirement is the load-bearing piece: it
+  makes hallucinated actions impossible to ship without you noticing
+  ("this quote doesn't say that" is a fast review).
+- **Review** — the human is the publisher. The model proposes; you
+  dispose. The 60 seconds you spend reviewing is what makes the whole
+  thing trustworthy.
+
+Why JSON-out and not "ask Claude to write a nice action list": prose
+is hard to skim and impossible to mechanize. JSON-out lets you render
+it into anything (markdown, Linear payload, Slack block) and lets you
+*audit* it programmatically (e.g. flag actions with no owner).
+
+## Variations & next
+
+- **Per-meeting templates.** If you run different meeting types (1:1s,
+  planning, exec reviews), use different system prompts per type. A
+  1:1 review surfaces different things than a sprint planning.
+- **Append to a versioned `actions/` folder.** Each meeting's JSON
+  lands at `actions/YYYY-MM-DD-<slug>.json` in a git repo. Over time
+  you have a versioned history of every decision the team made.
+- **Stale-action sweep.** A weekly cron reads `actions/` and surfaces
+  actions older than N days that don't have a corresponding Linear
+  ticket. Closes the loop the other direction.
+
+## Limits & honesty
+
+The model misreads jokes and hedges sometimes. ("I'll *try* to look at
+that" can become a confidently-extracted commitment.) Always review.
+It will sometimes invent owners — the `context_quote` requirement
+catches most of this but not all. Transcripts have errors; if you
+trust the model more than you trust the transcript, you'll ship the
+transcript's errors as action items. Don't.
+
+The most important thing this workflow doesn't do: it doesn't make
+people accountable. Naming an owner in JSON is not the same as
+agreeing to own it. The human review step is also a *commitment*
+step — when the PM publishes "X owns Y by Friday", X has actually been
+told and agreed.

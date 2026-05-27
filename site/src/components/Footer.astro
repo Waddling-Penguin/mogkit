@@ -1,0 +1,42 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-ink-200 bg-ink-100/40 mt-24">
+  <div class="container-wide py-10 grid sm:grid-cols-3 gap-8 text-sm">
+    <div>
+      <div class="font-mono font-semibold text-ink-900 lowercase">mogkit</div>
+      <p class="text-ink-600 mt-1">
+        The open-source toolkit for product managers.
+      </p>
+      <p class="text-ink-500 mt-2 text-xs">
+        discovery-maxxing for product managers.
+      </p>
+    </div>
+    <div>
+      <div class="font-semibold text-ink-900">Wedges</div>
+      <ul class="mt-1 space-y-1 text-ink-600">
+        <li><a href="/wedges/discovery">Discovery</a></li>
+        <li><a href="/wedges/strategy">Strategy</a></li>
+        <li><a href="/wedges/planning">Planning & Roadmapping</a></li>
+        <li><a href="/wedges/gtm">GTM & Launch</a></li>
+        <li><a href="/wedges/conflict">Stakeholder & Conflict</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="font-semibold text-ink-900">Project</div>
+      <ul class="mt-1 space-y-1 text-ink-600">
+        <li><a href="/workflows">Workflow Library</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+        <li><a href="/setup">Setup 101</a></li>
+        <li><a href="https://github.com/Waddling-Penguin/mogkit">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-ink-200 py-4 text-xs text-ink-500">
+    <div class="container-wide flex items-center justify-between">
+      <span>© {year} mogkit · MIT</span>
+      <span class="font-mono">out-craft the room.</span>
+    </div>
+  </div>
+</footer>

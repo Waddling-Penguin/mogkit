@@ -1,0 +1,45 @@
+---
+title: "GTM & Launch"
+slug: "gtm"
+order: 4
+summary: "Launches fail for boring reasons. The fix is also boring: a pre-flight interrogation specific to this launch, not a generic checklist."
+problem: "Most launch failures are visible in advance to anyone who asks the right questions about the specific launch — what is unowned, what the rollback actually rolls back, who heard about it and when, what breaks under 10x or 0.1x demand. Generic launch checklists don't help; they list everything and load-bear on nothing. The work is to identify the gaps in *this* launch, then close them."
+engineStatus: "coming"
+skills: ["launch-readiness", "tradeoff-frame"]
+material:
+  - cdixon-gtm-essay
+  - grove-high-output-management
+---
+
+## The level-up path
+
+GTM is a standalone-skills wedge. The load-bearing move is the pre-flight
+interrogation:
+
+- **`launch-readiness`** — paste a launch description (what's launching,
+  to whom, when, what's already in place). Get back the gap-list:
+  ownership gaps, rollback realism, comms & enablement gaps, the 10x /
+  0.1x demand stress test, and explicit kill criteria. Specific to your
+  launch; never a generic checklist.
+- **`tradeoff-frame`** — for the launch-window and scope-cut calls that
+  always show up the week before. Names the real axes; doesn't pick.
+
+## A note on the knowledge engine
+
+No GTM-side knowledge engine in v1. Launches are episodic, not corpus-
+shaped; a versioned graph would be solving the wrong problem. If a
+durable launch-history engine earns its place — e.g. a "what did we
+learn from the last six launches" surface — it lands in a later
+version. Until then, the gap-list from `launch-readiness` plus a
+versioned `launches/<date>-<name>/` folder in your workspace is more
+than most teams have.
+
+## Visual setup walkthrough
+
+1. `npx mogkit init my-launch-workspace`.
+2. In Claude Code, run `launch-readiness` against a written launch
+   description. Get the gap list.
+3. Close the gaps in your launch plan — ownership, rollback, comms,
+   kill criteria.
+4. Keep `launches/<date>-<name>/` as a versioned record. The next launch
+   has the prior launch's notes to learn from.

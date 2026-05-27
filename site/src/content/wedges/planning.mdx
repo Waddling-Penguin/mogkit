@@ -1,0 +1,45 @@
+---
+title: "Planning & Roadmapping"
+slug: "planning"
+order: 3
+summary: "Specs that hold up under attack and roadmaps that don't lie about the tradeoffs."
+problem: "A spec read by its author looks airtight. Everyone else has to guess at the parts the author filled in from memory — and that's where the regressions, the missed edge cases, and the 'we never agreed on that' arguments live. The fix isn't a longer spec; it's a structured red-team before review. Same goes for the metric goal driving the plan: if you can't decompose it into the inputs that move it, you're planning against a vibe."
+engineStatus: "coming"
+skills: ["spec-stress-test", "metrics-tree", "tradeoff-frame"]
+material:
+  - perri-escaping-build-trap
+  - sean-ellis-hacking-growth
+---
+
+## The level-up path
+
+Three sharp standalone skills cover the load-bearing planning moves:
+
+- **`spec-stress-test`** — reads your PRD as an adversary. Edge cases,
+  failure modes, race conditions between requirements, unstated
+  assumptions, ranked by severity. Produces the attack list; you fix
+  the spec.
+- **`metrics-tree`** — decomposes the goal driving the plan. Top metric,
+  input metrics, leading indicators, instrumentation gaps. The "move
+  this first" pick is grounded in the tree, not a guess.
+- **`tradeoff-frame`** — for the contested scoping calls inside the
+  plan. Names the real axes, one-way vs two-way door, the evidence
+  that would actually decide it.
+
+## A note on the knowledge engine
+
+There is no corpus-backed engine for Planning in v1 — see [the
+principles](/). Roadmap drift is a craft problem, not a graph problem.
+If a planning-side engine earns its place, it will land later. Until
+then, the three skills above plus a versioned `roadmap.md` in your
+workspace go further than most teams' current practice.
+
+## Visual setup walkthrough
+
+1. `npx mogkit init my-planning-workspace`.
+2. Paste a PRD into `spec-stress-test`. Get back the attack list.
+3. Paste the goal (e.g. "improve week-1 activation") into `metrics-tree`.
+   Get back the input metrics and the single one to move first.
+4. For contested scope calls, paste the options into `tradeoff-frame`.
+5. Write the spec yourself. It's sharper than the version before the
+   attack list landed.

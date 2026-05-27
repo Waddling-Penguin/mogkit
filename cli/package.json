@@ -1,0 +1,36 @@
+{
+  "name": "mogkit",
+  "version": "0.1.0",
+  "description": "mogkit — the open-source toolkit for product managers. Scaffolds a PM workspace and installs Claude Code skills. Out-craft the room.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "mogkit": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "skills",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/bundle-skills.mjs && node scripts/fix-bin.mjs",
+    "prepack": "pnpm run build",
+    "dev": "tsx src/index.ts",
+    "test": "node --test --import tsx test/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist skills"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.7.0",
+    "commander": "^12.0.0",
+    "kleur": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

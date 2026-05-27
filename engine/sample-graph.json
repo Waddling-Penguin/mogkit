@@ -1,0 +1,825 @@
+{
+  "meta": {
+    "generated": "2026-05-10T09:00:00Z",
+    "sourceCount": 8,
+    "sourceTypes": ["interview", "ticket", "prd", "memo", "research"],
+    "health": "developing",
+    "notes": "Exemplar graph produced by executing the `graphify` procedure against engine/sample-corpus/. Health is `developing` (8 sources, 5 types). Demonstrates the schema contract: every node and edge carries verbatim provenance, except `Assumption` nodes whose empty provenance is the point. Three Assumption nodes are derived from explicit uncertainty in the PRD intent doc."
+  },
+  "nodes": [
+    {
+      "id": "person-maya-chen",
+      "type": "Person",
+      "label": "Maya Chen — team lead, Acme",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "Maya Chen (team lead, Acme — 14-person product team, mid-market)",
+          "loc": "frontmatter:participant"
+        }
+      ]
+    },
+    {
+      "id": "person-jordan-park",
+      "type": "Person",
+      "label": "Jordan Park — PM, RocketCo (churned)",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "Jordan Park (PM, RocketCo — 6-person seed-stage team, SMB)",
+          "loc": "frontmatter:participant"
+        }
+      ]
+    },
+    {
+      "id": "person-sam-okafor",
+      "type": "Person",
+      "label": "Sam Okafor — ops lead, GreenCo",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "Sam Okafor (ops lead, GreenCo — 40-person eng/product org, mid-market)",
+          "loc": "frontmatter:participant"
+        }
+      ]
+    },
+    {
+      "id": "person-nia",
+      "type": "Person",
+      "label": "Nia — support customer, Northwind",
+      "provenance": [
+        {
+          "source": "sources/ticket-08234-cant-invite-team.md",
+          "quote": "Customer (Nia, Northwind, SMB, 9 seats)",
+          "loc": "header"
+        }
+      ]
+    },
+    {
+      "id": "person-devon",
+      "type": "Person",
+      "label": "Devon — support customer, Lakeside",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "Customer (Devon, Lakeside, mid-market, 22 seats)",
+          "loc": "header"
+        }
+      ]
+    },
+    {
+      "id": "segment-smb",
+      "type": "Segment",
+      "label": "SMB (small business, ~3–15 seats)",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "6-person seed-stage team, SMB"
+        },
+        {
+          "source": "sources/ticket-08234-cant-invite-team.md",
+          "quote": "Northwind, SMB, 9 seats"
+        }
+      ]
+    },
+    {
+      "id": "segment-mid-market",
+      "type": "Segment",
+      "label": "Mid-market (~15–50 seats)",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "14-person product team, mid-market"
+        },
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "40-person eng/product org, mid-market"
+        },
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "Lakeside, mid-market, 22 seats"
+        }
+      ]
+    },
+    {
+      "id": "pain-admin-decisions-block-invites",
+      "type": "Pain",
+      "label": "Admins delay inviting the team because plan/seat/permission decisions are not surfaced first",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "I didn't want to start a workspace and then have to redo it once everyone was in. So I needed admin stuff first — who can invite, what permissions, that kind of thing."
+        },
+        {
+          "source": "sources/memo-q2-activation-strategy.md",
+          "quote": "Admins are blocked early on plan/seat decisions and never invite the team, so the trial never gets used.",
+          "loc": "Hypotheses (not validated) #1"
+        }
+      ]
+    },
+    {
+      "id": "pain-paywall-surprise-mid-flow",
+      "type": "Pain",
+      "label": "Invite-flow upgrade popup is misread as a mid-trial paywall",
+      "provenance": [
+        {
+          "source": "sources/ticket-08234-cant-invite-team.md",
+          "quote": "I'm trying to invite my 8 teammates and after the third one I got a popup saying I have to upgrade to Team plan. The trial said unlimited seats — what is going on?"
+        },
+        {
+          "source": "sources/ticket-08234-cant-invite-team.md",
+          "quote": "The wording said \"upgrade to continue.\" It should say \"after your trial, this plan starts at X.\""
+        }
+      ]
+    },
+    {
+      "id": "pain-plan-tier-budget-misfit",
+      "type": "Pain",
+      "label": "Admins discover the budgeted plan's seat limit is lower than headcount only after starting the invite flow",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "we had budget approval for one tier and the invite limit on it was lower than our headcount. So I had to go back to finance, which is another two days."
+        }
+      ]
+    },
+    {
+      "id": "pain-csv-import-loses-comments",
+      "type": "Pain",
+      "label": "CSV imports drop comment history, forcing teams to keep the old tool alive as a read-only archive",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "The CSV import worked but lost all the comment history. We ended up keeping Trello open for a month as the read-only archive."
+        },
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "Issues came over, but every comment thread on every issue is gone. We have 18 months of context in those comments and we can't lose it."
+        }
+      ]
+    },
+    {
+      "id": "pain-jira-csv-export-mismatch",
+      "type": "Pain",
+      "label": "Jira's CSV export fields don't align with Pebble's import schema, so users abandon the import attempt",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "The Jira CSV export is a mess — fields don't line up. I spent maybe an hour fighting with the import and then gave up."
+        }
+      ]
+    },
+    {
+      "id": "pain-sample-project-not-mine",
+      "type": "Pain",
+      "label": "Trial sample workspace doesn't help users judge whether the tool fits *their* actual work",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "The sample project is cute but it's not my work. I can't tell if a tool fits my actual situation by clicking around a demo workspace."
+        }
+      ]
+    },
+    {
+      "id": "pain-contractor-permissions-buried",
+      "type": "Pain",
+      "label": "Permissions flow for scoping contractors to specific projects is buried two settings menus deep",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "I wanted them in specific projects only, not the whole workspace, and that flow is buried two settings menus deep. I figured it out, but I had to figure it out."
+        }
+      ]
+    },
+    {
+      "id": "pain-rollout-stalled-on-import",
+      "type": "Pain",
+      "label": "Team rollouts stall when import does not preserve historical data fidelity",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "We're stalled on the rollout until this works."
+        }
+      ]
+    },
+    {
+      "id": "need-decide-admin-before-team",
+      "type": "Need",
+      "label": "Understand seats, permissions, and plan implications before inviting the team",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "I just need to know it exists before I burn a week."
+        }
+      ]
+    },
+    {
+      "id": "need-preserve-historical-context",
+      "type": "Need",
+      "label": "Carry historical context (comments, attachments, threads) over when migrating from a prior tool",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "We have 18 months of context in those comments and we can't lose it."
+        },
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "We ended up keeping Trello open for a month as the read-only archive."
+        }
+      ]
+    },
+    {
+      "id": "need-judge-fit-on-real-work",
+      "type": "Need",
+      "label": "Evaluate whether the tool fits *my* real workflow during trial, not a generic demo workspace",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "I can't tell if a tool fits my actual situation by clicking around a demo workspace."
+        }
+      ]
+    },
+    {
+      "id": "feature-native-jira-import",
+      "type": "Feature",
+      "label": "Native Jira API import preserving comments and attachments",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "We have a native Jira API import in beta that preserves comments and attachments."
+        },
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "If we had had a native Jira import that preserved the project structure, would you have stuck with it?"
+        }
+      ]
+    },
+    {
+      "id": "feature-okta-provisioning",
+      "type": "Feature",
+      "label": "Native Okta provisioning flow",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "A native Okta-provisioning flow would have saved me an hour."
+        }
+      ]
+    },
+    {
+      "id": "feature-pre-setup-admin-walkthrough",
+      "type": "Feature",
+      "label": "Pre-invite admin walkthrough surfacing seat / permission / plan implications",
+      "provenance": [
+        {
+          "source": "sources/prd-onboarding-v2-draft.md",
+          "quote": "Pre-setup admin walkthrough — surface seat/permission/plan implications before the team is invited, so the admin can decide confidently in one sitting."
+        }
+      ]
+    },
+    {
+      "id": "feature-anchor-first-week-activity",
+      "type": "Feature",
+      "label": "An anchor \"build your first board\" moment in week one, modeled on what spread adoption inside GreenCo",
+      "provenance": [
+        {
+          "source": "sources/prd-onboarding-v2-draft.md",
+          "quote": "Anchor activity in the first week — a \"build your first board\" moment that creates immediate utility, modeled on what spread adoption inside GreenCo."
+        }
+      ]
+    },
+    {
+      "id": "competitor-jira",
+      "type": "Competitor",
+      "label": "Jira — prior PM tool for RocketCo and Lakeside",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "Jira was insane for a six-person team."
+        },
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "Tried the Jira CSV import."
+        }
+      ]
+    },
+    {
+      "id": "competitor-trello",
+      "type": "Competitor",
+      "label": "Trello — prior PM tool for Acme",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "Migrated from Trello."
+        }
+      ]
+    },
+    {
+      "id": "competitor-asana",
+      "type": "Competitor",
+      "label": "Asana — prior PM tool for GreenCo",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "Migrated from Asana."
+        }
+      ]
+    },
+    {
+      "id": "competitor-linear",
+      "type": "Competitor",
+      "label": "Linear — referenced as the model for admin-first onboarding sequencing",
+      "provenance": [
+        {
+          "source": "sources/research-competitor-linear-onboarding.md",
+          "quote": "Linear's first-run experience asks four questions before showing any product surface"
+        }
+      ]
+    },
+    {
+      "id": "insight-sso-firstpass-load-bearing",
+      "type": "Insight",
+      "label": "For ops-led mid-market admins, SSO working first try is the single biggest signal of \"will this be ops-painful or not.\"",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "your SSO with Okta worked first try. That's the single biggest piece of \"is this going to be ops-painful or not.\""
+        }
+      ]
+    },
+    {
+      "id": "insight-adoption-spreads-from-anchor",
+      "type": "Insight",
+      "label": "Adoption spreads inside a team when one person builds a visibly-good artifact (e.g. a useful board) — \"the product adopted itself\"",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "someone built a really nice bug board in Pebble and word spread and now everyone's in there. The product adopted itself the moment one person showed what good looked like in it."
+        }
+      ]
+    },
+    {
+      "id": "insight-decide-admin-before-product",
+      "type": "Insight",
+      "label": "Sequencing admin decisions before product surface is a forcing function for procrastinated decisions, not just a setup wizard",
+      "provenance": [
+        {
+          "source": "sources/research-competitor-linear-onboarding.md",
+          "quote": "The four-question gate forces the admin to make exactly the decisions they were going to have to make anyway, in the order the product is about to need them."
+        }
+      ]
+    },
+    {
+      "id": "insight-mm-admin-prefers-minimal-tooling",
+      "type": "Insight",
+      "label": "A seasoned mid-market ops-led admin prefers SSO + docs + being left alone over a guided walkthrough",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "A native Okta-provisioning flow would have saved me an hour. Other than that I'm a happy admin."
+        }
+      ]
+    },
+    {
+      "id": "insight-native-jira-demand-recurring",
+      "type": "Insight",
+      "label": "Native-Jira-import-with-comments has been a recurring support request (at least six this month per internal note)",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "This is the 6th request for native-Jira-with-comments this month.",
+          "loc": "internal note"
+        }
+      ]
+    },
+    {
+      "id": "outcome-trial-paid-conversion",
+      "type": "Outcome",
+      "label": "Trial-to-paid conversion in SMB and mid-market cohorts (28% Q4 → 19% Q1; Q2 goal is to recover the gap)",
+      "provenance": [
+        {
+          "source": "sources/memo-q2-activation-strategy.md",
+          "quote": "Trial-to-paid conversion fell from 28% to 19% across Q4 → Q1 in the SMB and mid-market cohorts. Q2 priority is to recover the gap, not to push new top-of-funnel acquisition."
+        }
+      ]
+    },
+    {
+      "id": "outcome-trial-3-active-seats",
+      "type": "Outcome",
+      "label": "41% of trial workspaces never reach 3 active seats",
+      "provenance": [
+        {
+          "source": "sources/memo-q2-activation-strategy.md",
+          "quote": "41% of trial workspaces never reach 3 active seats."
+        }
+      ]
+    },
+    {
+      "id": "outcome-2-projects-active-day-7",
+      "type": "Outcome",
+      "label": "Workspaces hitting 2+ projects with real activity by day 7 convert at >50%; 0–1 convert at <10%",
+      "provenance": [
+        {
+          "source": "sources/memo-q2-activation-strategy.md",
+          "quote": "Workspaces that hit 2+ projects with real activity by day 7 convert at >50%. Workspaces with 0–1 convert at <10%."
+        }
+      ]
+    },
+    {
+      "id": "outcome-import-conversion-lift",
+      "type": "Outcome",
+      "label": "Trials whose admin uses our Jira or Asana import convert at 38% vs. 14% for trials that don't import",
+      "provenance": [
+        {
+          "source": "sources/memo-q2-activation-strategy.md",
+          "quote": "Trials where the admin uses our Jira or Asana import convert at 38% vs. 14% for trials that don't import."
+        }
+      ]
+    },
+    {
+      "id": "assumption-admin-step-solves-vs-delays",
+      "type": "Assumption",
+      "label": "The proposed pre-setup admin walkthrough solves the \"I'll come back later\" problem rather than merely delaying it earlier in the flow",
+      "provenance": [],
+      "risk": "If wrong, the walkthrough is a longer abandoned step rather than a forcing function — and we ship a quarter of scope that doesn't move trial→paid conversion."
+    },
+    {
+      "id": "assumption-mm-admins-want-walkthrough",
+      "type": "Assumption",
+      "label": "Mid-market admins actually want a guided pre-setup walkthrough rather than docs + SSO and otherwise being left alone",
+      "provenance": [],
+      "risk": "If wrong, we build a flow the most valuable cohort (mid-market) actively avoids; Sam at GreenCo is single-source evidence pointing the opposite direction."
+    },
+    {
+      "id": "assumption-import-cause-vs-trigger",
+      "type": "Assumption",
+      "label": "Import friction is the *cause* of trial churn, not just the visible trigger for users already leaning out",
+      "provenance": [],
+      "risk": "If wrong, GA-ing the native Jira import alone moves conversion less than expected — and we miss the underlying cause (e.g. admin paralysis pre-invite) that the import was masking."
+    }
+  ],
+  "edges": [
+    {
+      "from": "person-maya-chen",
+      "to": "segment-mid-market",
+      "type": "belongs-to",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "14-person product team, mid-market"
+        }
+      ]
+    },
+    {
+      "from": "person-jordan-park",
+      "to": "segment-smb",
+      "type": "belongs-to",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "6-person seed-stage team, SMB"
+        }
+      ]
+    },
+    {
+      "from": "person-sam-okafor",
+      "to": "segment-mid-market",
+      "type": "belongs-to",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "40-person eng/product org, mid-market"
+        }
+      ]
+    },
+    {
+      "from": "person-nia",
+      "to": "segment-smb",
+      "type": "belongs-to",
+      "provenance": [
+        {
+          "source": "sources/ticket-08234-cant-invite-team.md",
+          "quote": "Northwind, SMB, 9 seats"
+        }
+      ]
+    },
+    {
+      "from": "person-devon",
+      "to": "segment-mid-market",
+      "type": "belongs-to",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "Lakeside, mid-market, 22 seats"
+        }
+      ]
+    },
+    {
+      "from": "person-maya-chen",
+      "to": "pain-admin-decisions-block-invites",
+      "type": "experiences",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "I didn't want to start a workspace and then have to redo it once everyone was in. So I needed admin stuff first — who can invite, what permissions, that kind of thing."
+        }
+      ]
+    },
+    {
+      "from": "person-maya-chen",
+      "to": "pain-plan-tier-budget-misfit",
+      "type": "experiences",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "we had budget approval for one tier and the invite limit on it was lower than our headcount."
+        }
+      ]
+    },
+    {
+      "from": "person-maya-chen",
+      "to": "pain-csv-import-loses-comments",
+      "type": "experiences",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "The CSV import worked but lost all the comment history."
+        }
+      ]
+    },
+    {
+      "from": "person-jordan-park",
+      "to": "pain-jira-csv-export-mismatch",
+      "type": "experiences",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "I spent maybe an hour fighting with the import and then gave up."
+        }
+      ]
+    },
+    {
+      "from": "person-jordan-park",
+      "to": "pain-sample-project-not-mine",
+      "type": "experiences",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "I can't tell if a tool fits my actual situation by clicking around a demo workspace."
+        }
+      ]
+    },
+    {
+      "from": "person-sam-okafor",
+      "to": "pain-contractor-permissions-buried",
+      "type": "experiences",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "that flow is buried two settings menus deep."
+        }
+      ]
+    },
+    {
+      "from": "person-nia",
+      "to": "pain-paywall-surprise-mid-flow",
+      "type": "experiences",
+      "provenance": [
+        {
+          "source": "sources/ticket-08234-cant-invite-team.md",
+          "quote": "a popup saying I have to upgrade to Team plan. The trial said unlimited seats — what is going on?"
+        }
+      ]
+    },
+    {
+      "from": "person-devon",
+      "to": "pain-csv-import-loses-comments",
+      "type": "experiences",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "every comment thread on every issue is gone."
+        }
+      ]
+    },
+    {
+      "from": "person-devon",
+      "to": "pain-rollout-stalled-on-import",
+      "type": "experiences",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "We're stalled on the rollout until this works."
+        }
+      ]
+    },
+    {
+      "from": "person-jordan-park",
+      "to": "feature-native-jira-import",
+      "type": "requests",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "If we had had a native Jira import that preserved the project structure, would you have stuck with it?... Probably yes, for the trial."
+        }
+      ]
+    },
+    {
+      "from": "person-devon",
+      "to": "feature-native-jira-import",
+      "type": "requests",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "Yes please. We're stalled on the rollout until this works."
+        }
+      ]
+    },
+    {
+      "from": "person-sam-okafor",
+      "to": "feature-okta-provisioning",
+      "type": "requests",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "A native Okta-provisioning flow would have saved me an hour."
+        }
+      ]
+    },
+    {
+      "from": "pain-admin-decisions-block-invites",
+      "to": "outcome-trial-3-active-seats",
+      "type": "blocks",
+      "provenance": [
+        {
+          "source": "sources/memo-q2-activation-strategy.md",
+          "quote": "Admins are blocked early on plan/seat decisions and never invite the team, so the trial never gets used."
+        }
+      ]
+    },
+    {
+      "from": "pain-csv-import-loses-comments",
+      "to": "outcome-import-conversion-lift",
+      "type": "blocks",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "We're stalled on the rollout until this works."
+        }
+      ]
+    },
+    {
+      "from": "pain-jira-csv-export-mismatch",
+      "to": "outcome-trial-paid-conversion",
+      "type": "blocks",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "I spent maybe an hour fighting with the import and then gave up."
+        }
+      ]
+    },
+    {
+      "from": "pain-rollout-stalled-on-import",
+      "to": "outcome-trial-paid-conversion",
+      "type": "blocks",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "We're stalled on the rollout until this works."
+        }
+      ]
+    },
+    {
+      "from": "competitor-linear",
+      "to": "feature-pre-setup-admin-walkthrough",
+      "type": "competes-with",
+      "provenance": [
+        {
+          "source": "sources/research-competitor-linear-onboarding.md",
+          "quote": "What I'd take: The \"decide admin first, see product second\" sequencing."
+        }
+      ]
+    },
+    {
+      "from": "person-jordan-park",
+      "to": "competitor-jira",
+      "type": "belongs-to",
+      "provenance": [
+        {
+          "source": "sources/interview-02-rocketco-pm.md",
+          "quote": "Jira was insane for a six-person team."
+        }
+      ]
+    },
+    {
+      "from": "person-maya-chen",
+      "to": "competitor-trello",
+      "type": "belongs-to",
+      "provenance": [
+        {
+          "source": "sources/interview-01-acme-team-lead.md",
+          "quote": "Migrated from Trello."
+        }
+      ]
+    },
+    {
+      "from": "person-sam-okafor",
+      "to": "competitor-asana",
+      "type": "belongs-to",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "Migrated from Asana."
+        }
+      ]
+    },
+    {
+      "from": "insight-native-jira-demand-recurring",
+      "to": "feature-native-jira-import",
+      "type": "evidences",
+      "provenance": [
+        {
+          "source": "sources/ticket-08456-import-from-jira.md",
+          "quote": "This is the 6th request for native-Jira-with-comments this month."
+        }
+      ]
+    },
+    {
+      "from": "insight-mm-admin-prefers-minimal-tooling",
+      "to": "assumption-mm-admins-want-walkthrough",
+      "type": "contradicts",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "A native Okta-provisioning flow would have saved me an hour. Other than that I'm a happy admin."
+        }
+      ]
+    },
+    {
+      "from": "feature-pre-setup-admin-walkthrough",
+      "to": "assumption-admin-step-solves-vs-delays",
+      "type": "assumes",
+      "provenance": [
+        {
+          "source": "sources/prd-onboarding-v2-draft.md",
+          "quote": "Whether the pre-setup admin step solves the \"I'll come back later\" problem or just delays it."
+        }
+      ]
+    },
+    {
+      "from": "feature-pre-setup-admin-walkthrough",
+      "to": "assumption-mm-admins-want-walkthrough",
+      "type": "assumes",
+      "provenance": [
+        {
+          "source": "sources/prd-onboarding-v2-draft.md",
+          "quote": "Whether mid-market admins actually want the walkthrough, or whether they'd rather have docs and SSO and otherwise be left alone (Sam at GreenCo strongly hinted at the latter)."
+        }
+      ]
+    },
+    {
+      "from": "feature-native-jira-import",
+      "to": "assumption-import-cause-vs-trigger",
+      "type": "assumes",
+      "provenance": [
+        {
+          "source": "sources/prd-onboarding-v2-draft.md",
+          "quote": "Whether the import is the cause of churn or just the visible trigger for an already-leaning-out user (Jordan at RocketCo)."
+        }
+      ]
+    },
+    {
+      "from": "insight-adoption-spreads-from-anchor",
+      "to": "feature-anchor-first-week-activity",
+      "type": "supports",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "The product adopted itself the moment one person showed what good looked like in it."
+        }
+      ]
+    },
+    {
+      "from": "insight-decide-admin-before-product",
+      "to": "feature-pre-setup-admin-walkthrough",
+      "type": "supports",
+      "provenance": [
+        {
+          "source": "sources/research-competitor-linear-onboarding.md",
+          "quote": "The four-question gate forces the admin to make exactly the decisions they were going to have to make anyway, in the order the product is about to need them."
+        }
+      ]
+    },
+    {
+      "from": "insight-sso-firstpass-load-bearing",
+      "to": "feature-okta-provisioning",
+      "type": "supports",
+      "provenance": [
+        {
+          "source": "sources/interview-03-greenco-ops-lead.md",
+          "quote": "your SSO with Okta worked first try. That's the single biggest piece of \"is this going to be ops-painful or not.\""
+        }
+      ]
+    }
+  ]
+}

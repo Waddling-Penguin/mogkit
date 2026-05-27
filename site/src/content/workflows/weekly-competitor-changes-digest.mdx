@@ -1,0 +1,183 @@
+---
+title: "Weekly competitor-change digest from changelogs and release notes"
+slug: "weekly-competitor-changes-digest"
+published: 2026-05-15
+updated: 2026-05-15
+wedge: strategy
+tools: ["GitHub Actions", "Claude API", "RSS / changelog URLs"]
+difficulty: intermediate
+timeToImplement: "1h"
+outcome: "Every Monday, a one-page digest of competitor changes worth knowing — grouped by competitor, weighted by what likely matters to your market."
+relatedSkill: null
+hasCliSetup: false
+costNote: "Claude API usage, ~$0.05–$0.30/week depending on competitor count and verbosity of their changelogs."
+tags: ["competitive", "strategy", "automation", "digest", "weekly"]
+---
+
+## The problem
+
+Every team says "we should watch competitors more closely." Approximately
+zero teams do it consistently. The usual failure mode is somebody opens
+five tabs of changelog pages on a Monday, skims, gets pulled into
+something else, and the habit dies in two weeks.
+
+The information is mostly public — changelogs, release notes, blog posts,
+sometimes RSS. The problem isn't access; it's the synthesis step. Nobody
+wants to read 12 raw release notes and decide which of them matter.
+
+## What you'll build
+
+A scheduled GitHub Action that:
+
+1. Pulls the last 7 days of content from your competitors' changelogs,
+   release notes, or RSS feeds
+2. Sends the raw content to Claude with a prompt that scores each
+   change on relevance to *your* market (you describe the market in
+   the prompt) and groups by competitor
+3. Posts a one-page weekly digest as a GitHub Discussion (or Slack
+   message) titled with the date
+
+The output is structured: per competitor, a short list of "notable
+changes" with one-line summaries and a relevance score. Stuff scored
+low is omitted. You read it in three minutes.
+
+## Prerequisites
+
+- A GitHub repo to host the workflow (any repo; doesn't have to be
+  product code)
+- An Anthropic API key
+- A list of competitor changelog/release-note URLs (and ideally RSS
+  endpoints — many tools expose `/changelog.rss` or similar)
+- A 2–3 sentence description of *your* market and what your team cares
+  about, which lives as a constant in the script (this is what makes
+  the relevance scoring honest instead of generic)
+
+## Build it
+
+1. **List the competitors.** Create
+   `.github/competitive/competitors.json`:
+
+   ```json
+   [
+     { "name": "Linear", "feed": "https://linear.app/changelog/rss" },
+     { "name": "Asana",  "feed": "https://asana.com/changelog/rss" },
+     { "name": "Notion", "feed": "https://www.notion.so/releases/rss" }
+   ]
+   ```
+
+   RSS first when available; HTML changelog scraping is a fallback.
+
+2. **Write the market description.** This is the load-bearing piece.
+   Create `.github/competitive/market.md`:
+
+   ```md
+   We are a project management tool for product teams (3–50 seats) at
+   B2B SaaS companies. We win on speed, opinionated workflow, and
+   strong import from Jira. Changes that matter to us: pricing changes
+   that affect our SMB/mid-market segments, Jira-import or
+   integration changes from competitors, anything that touches admin
+   onboarding or SSO, AI features in PM tools.
+   ```
+
+   The model will use this verbatim. Edit it when your market shifts.
+
+3. **Add `.github/workflows/competitive-digest.yml`:**
+
+   ```yaml
+   name: competitive-digest
+   on:
+     schedule:
+       - cron: "0 13 * * MON"   # Mondays 13:00 UTC
+     workflow_dispatch:
+   permissions:
+     contents: read
+     issues: write
+   jobs:
+     digest:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - uses: actions/setup-node@v4
+           with: { node-version: 20 }
+         - run: npm i rss-parser @anthropic-ai/sdk
+         - name: Build digest
+           env:
+             ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+           run: node .github/competitive/build-digest.mjs > /tmp/digest.md
+         - uses: peter-evans/create-issue-from-file@v5
+           with:
+             title: "Competitive digest — week of ${{ github.run_number }}"
+             content-filepath: /tmp/digest.md
+             labels: competitive-digest
+   ```
+
+4. **Write the digest builder.** `.github/competitive/build-digest.mjs`
+   that:
+   - Reads `competitors.json` and `market.md`
+   - For each competitor, fetches the RSS feed and filters to entries
+     from the last 7 days
+   - Sends *all* collected entries plus the market description to a
+     single Claude call with this JSON-out system prompt:
+
+     ```
+     You score competitive changes against the user's market
+     description. For each entry you receive, return JSON:
+     { "competitor": string, "title": string,
+       "one_line": string, "relevance": "high" | "medium" | "low",
+       "why": string }
+     Omit nothing. Order by relevance high → low.
+     ```
+
+   - Renders the high+medium entries into a markdown digest, grouped by
+     competitor. Drops the lows.
+
+5. **Read the digest on Monday morning.** Five minutes. Worth the
+   $0.20 of API cost.
+
+## How it works
+
+Four stages:
+
+- **Collect** — RSS where available, scrape where it isn't. RSS gives
+  you stable structured entries; HTML scraping rots when the
+  competitor changes their site. Always prefer the feed.
+- **Filter** — by date. You only want what's new this week. Older
+  entries inflate the noise.
+- **Score against *your* market** — this is the only stage that uses
+  Claude, and it's where the value lives. A generic "summarize
+  changes" prompt would produce a generic digest that's no better
+  than the raw changelog. The market description is what makes the
+  output specific to *your* team's priorities.
+- **Publish** — the digest is an issue with a consistent label. It
+  builds up as a versioned history of how the landscape moved. You
+  can read back six months later and trace which competitor pivoted
+  when.
+
+The structured JSON output is what makes "high / medium / low" useful.
+Without it you'd get prose you'd have to re-skim every week.
+
+## Variations & next
+
+- **Multi-source per competitor.** Some competitors blog more than
+  they ship; some ship more than they blog. Accept multiple
+  feeds/URLs per competitor entry and union the results.
+- **Pricing-page watcher.** Add a separate cron that just diffs each
+  competitor's pricing page weekly. Different signal, different
+  cadence; same publish step.
+- **Cross-link to your discovery graph.** When a competitor ships a
+  feature that maps to an existing `Pain` node in your discovery
+  graph, surface that link in the digest. Suddenly the competitive
+  signal connects to the research signal.
+
+## Limits & honesty
+
+The model scores against the market description you wrote, not the
+real market. Update the description as you learn — a stale
+description produces a stale digest. RSS feeds sometimes lag the
+human-readable changelog by a day or two. Some competitors only
+publish a changelog after major releases, so quiet weeks for them
+are real, not a bug.
+
+This workflow does not replace doing actual competitive teardowns
+when something major ships. The digest is the *signal that something
+worth a teardown happened*. It is not the teardown itself.
