@@ -52,16 +52,16 @@ export function runDoctor(): number {
         },
   );
 
-  // claude CLI (optional)
+  // An AI assistant to run the skills (optional; Cursor's desktop app has no CLI to detect)
   checks.push(
-    commandExists("claude")
-      ? { name: "claude CLI on PATH", status: "ok" }
+    ["claude", "codex", "cursor-agent"].some(commandExists)
+      ? { name: "AI assistant on PATH (claude, codex or cursor-agent)", status: "ok" }
       : {
-          name: "claude CLI on PATH",
+          name: "AI assistant on PATH (claude, codex or cursor-agent)",
           status: "warn",
-          detail: "optional but recommended",
+          detail: "optional if you use the Cursor app or paste skills into a chat",
           fix:
-            "install Claude Code from https://claude.com/claude-code so you can run skills against this workspace.",
+            "install Claude Code (https://claude.com/claude-code) or Codex (https://developers.openai.com/codex), or open this folder in Cursor.",
         },
   );
 

@@ -50,7 +50,7 @@ The workspace is git-initialized. The corpus is a versioned asset that visibly g
 *(Workflow Library)* Every workflow entry has two tiers: a copy-paste **implement it** path, and a **how it works** explainer that teaches the mechanism. A PM can ship the workflow today *or* understand it well enough to build their own variant. We never ship a black box. This is principle 1 applied to the Library.
 
 ### 8. Portable, contributable formats
-Skills are plain markdown following a documented spec. Workflow entries are MDX following a documented spec. Claude Code is the v1 target, but no format hard-couples to it. The community is the moat — the formats must be easy to contribute to.
+Skills are plain markdown following a documented spec. Workflow entries are MDX following a documented spec. Skills follow the open Agent Skills format (`name` and `description` in the frontmatter), and the CLI installs them for Claude Code, Codex and Cursor. Any chat assistant can run a standalone skill from pasted text. The community is the moat — the formats must be easy to contribute to.
 
 ---
 

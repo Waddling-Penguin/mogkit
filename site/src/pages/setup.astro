@@ -15,14 +15,21 @@ import Eyebrow from "../components/Eyebrow.astro";
       <span class="text-mercury">start here.</span>
     </h1>
     <p class="mt-6 text-lg text-chrome leading-relaxed lift-in lift-in-3">
-      mogkit runs in your computer's terminal. The terminal is just a
-      text-based way to talk to your computer — it looks intimidating because
-      of the movies, but the moves are simple. We'll go step by step. By the
-      end of this page you'll have run your first PM skill.
+      mogkit runs in your computer's terminal. The terminal is an app where
+      you type a command and press Enter, and the computer replies in text.
+      Every command you need is on this page, ready to copy. By the end you
+      will have run your first PM skill.
     </p>
     <p class="mt-4 text-chrome leading-relaxed lift-in lift-in-4">
-      Estimated time: <span class="font-mono text-halo">10–15 minutes</span>,
-      most of it waiting for installs.
+      Estimated time: <span class="font-mono text-halo">15 minutes</span>,
+      most of it waiting for installs. mogkit is free. You need one AI
+      assistant to run it: Claude Code, OpenAI's Codex, or Cursor.
+    </p>
+    <p class="mt-4 text-chrome leading-relaxed lift-in lift-in-4">
+      Use ChatGPT or another chat app and don't want to install anything?
+      Open <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="/wedges">any skills page</a>, press
+      "Copy for ChatGPT or any AI chat" on a skill, paste it into a new
+      chat, then paste your work under it. You can stop reading here.
     </p>
   </article>
 
@@ -34,12 +41,12 @@ import Eyebrow from "../components/Eyebrow.astro";
       <ul class="mt-3 list-disc pl-6 space-y-1.5 text-chrome marker:text-ash">
         <li><strong class="text-halo font-medium">Mac:</strong> press <code>⌘ + Space</code>, type <code>Terminal</code>, hit Enter.</li>
         <li><strong class="text-halo font-medium">Windows:</strong> install <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="https://learn.microsoft.com/windows/wsl/install">WSL</a> first (one-time), then open the Ubuntu app.</li>
-        <li><strong class="text-halo font-medium">Linux:</strong> you already know.</li>
+        <li><strong class="text-halo font-medium">Linux:</strong> open your Terminal app.</li>
       </ul>
       <p class="mt-4 text-chrome leading-relaxed">
-        You'll see a blinking cursor next to your username. That's the prompt.
-        You'll type a command, hit Enter, and the computer responds. That's
-        the whole loop.
+        You'll see a blinking cursor next to your username. Type or paste a
+        command there and press Enter. The computer runs it and prints the
+        result. Every step below works this way.
       </p>
     </div>
   </Section>
@@ -47,20 +54,20 @@ import Eyebrow from "../components/Eyebrow.astro";
   <Section spacing="tight">
     <div class="container-tight">
       <Eyebrow>Step 2</Eyebrow>
-      <h2 class="font-display text-2xl text-halo tracking-tight mt-3 mb-4">Install Node 20+</h2>
+      <h2 class="font-display text-2xl text-halo tracking-tight mt-3 mb-4">Install Node</h2>
       <p class="text-chrome leading-relaxed">
-        Node is the JavaScript runtime mogkit's CLI runs on. Check whether you
-        already have it:
+        Node is a free program that mogkit needs in order to run. Check
+        whether you already have it:
       </p>
       <pre class="mt-4"><code>node --version</code></pre>
       <p class="mt-4 text-chrome leading-relaxed">
-        If that printed <code>v20.x.x</code> or higher, you're done with this
-        step. If it said "command not found" or showed a version below 20,
+        If that printed <code>v22</code> or a higher number, you're done with
+        this step. If it said "command not found" or showed a lower number,
         install Node:
       </p>
       <ul class="mt-3 list-disc pl-6 space-y-1.5 text-chrome marker:text-ash">
-        <li><strong class="text-halo font-medium">Easy:</strong> download the LTS installer from <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="https://nodejs.org">nodejs.org</a>.</li>
-        <li><strong class="text-halo font-medium">Better:</strong> install <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="https://github.com/nvm-sh/nvm">nvm</a> and run <code>nvm install 20</code>. nvm lets you manage Node versions without a fight.</li>
+        <li><strong class="text-halo font-medium">Easy:</strong> download the installer marked LTS from <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="https://nodejs.org">nodejs.org</a>, open it, and click through. Then close the terminal and open it again.</li>
+        <li><strong class="text-halo font-medium">If you already use nvm:</strong> run <code>nvm install --lts</code>.</li>
       </ul>
     </div>
   </Section>
@@ -68,40 +75,46 @@ import Eyebrow from "../components/Eyebrow.astro";
   <Section spacing="tight">
     <div class="container-tight">
       <Eyebrow>Step 3</Eyebrow>
-      <h2 class="font-display text-2xl text-halo tracking-tight mt-3 mb-4">Install Claude Code</h2>
+      <h2 class="font-display text-2xl text-halo tracking-tight mt-3 mb-4">Install an AI assistant</h2>
       <p class="text-chrome leading-relaxed">
-        Claude Code is the agent that runs the mogkit skills. Install it per
-        the official instructions at
-        <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="https://claude.com/claude-code">claude.com/claude-code</a> —
-        it ships as a CLI you'll launch from inside your workspace.
+        The assistant is the AI that reads your work and runs the mogkit
+        skills. Pick one. If you already pay for one of these, use that.
       </p>
-      <p class="mt-4 text-chrome leading-relaxed">Once installed, you should be able to run:</p>
-      <pre class="mt-4"><code>claude --version</code></pre>
-      <p class="mt-4 text-chrome leading-relaxed">and see a version string come back.</p>
+      <ul class="mt-3 list-disc pl-6 space-y-1.5 text-chrome marker:text-ash">
+        <li><strong class="text-halo font-medium">Claude Code</strong>, by Anthropic. Needs a paid Claude plan. Install from <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="https://claude.com/claude-code">claude.com/claude-code</a>.</li>
+        <li><strong class="text-halo font-medium">Codex</strong>, by OpenAI. Comes with paid ChatGPT plans. Install from <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="https://developers.openai.com/codex">developers.openai.com/codex</a>.</li>
+        <li><strong class="text-halo font-medium">Cursor</strong>. A desktop app with a free tier. Download from <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="https://cursor.com">cursor.com</a>.</li>
+      </ul>
+      <p class="mt-4 text-chrome leading-relaxed">
+        Sign in when the assistant asks. mogkit installs its skills for all
+        three, so you can switch later without redoing anything.
+      </p>
     </div>
   </Section>
 
   <Section spacing="tight">
     <div class="container-tight">
       <Eyebrow>Step 4</Eyebrow>
-      <h2 class="font-display text-2xl text-halo tracking-tight mt-3 mb-4">Install mogkit + scaffold a workspace</h2>
+      <h2 class="font-display text-2xl text-halo tracking-tight mt-3 mb-4">Install mogkit and create your workspace</h2>
       <p class="text-chrome leading-relaxed">
-        Install the CLI globally — this puts <code>mogkit</code> on your
-        PATH so every subsequent command works:
+        Install mogkit. This makes the <code>mogkit</code> command available
+        everywhere on your computer:
       </p>
       <pre class="mt-4"><code>npm install -g mogkit</code></pre>
       <p class="mt-4 text-chrome leading-relaxed">
-        Then pick a folder you keep projects in and scaffold:
+        Then create a workspace. This is one folder that holds your
+        research, your notes and the skills. The second line moves you
+        into it:
       </p>
       <pre class="mt-4"><code>mogkit init my-workspace
 cd my-workspace</code></pre>
       <p class="mt-4 text-chrome leading-relaxed">That's it. You now have a folder with:</p>
       <ul class="mt-3 list-disc pl-6 space-y-1.5 text-chrome marker:text-ash">
-        <li><code>CLAUDE.md</code> — orients every Claude Code session in this workspace</li>
-        <li><code>sources/</code> — your research corpus, version-controlled</li>
-        <li><code>graph/</code> — generated by the Discovery skills</li>
-        <li><code>knowledge/</code> — outputs of interrogation skills land here</li>
-        <li><code>.claude/skills/</code> — all 13 mogkit skills installed and ready</li>
+        <li><code>CLAUDE.md</code> and <code>AGENTS.md</code>: instructions your assistant reads every time you open this folder</li>
+        <li><code>sources/</code>: where your interviews, tickets and research go</li>
+        <li><code>graph/</code>: a map of your research, built by the Discovery skills</li>
+        <li><code>knowledge/</code>: a saved copy of every review you run</li>
+        <li><code>.claude/skills/</code> and <code>.agents/skills/</code>: all 21 mogkit skills, installed for Claude Code, Codex and Cursor</li>
       </ul>
     </div>
   </Section>
@@ -113,17 +126,17 @@ cd my-workspace</code></pre>
       <p class="text-chrome leading-relaxed">From inside the workspace, run:</p>
       <pre class="mt-4"><code>mogkit doctor</code></pre>
       <p class="mt-4 text-chrome leading-relaxed">
-        Every check should pass with a green <code>✓</code>. If something
-        fails, the message tells you what to fix and how. No googling required.
+        Every check should pass with a green <code>✓</code>. If one fails,
+        the message says what to fix and how.
       </p>
       <p class="mt-4 text-chrome leading-relaxed">
-        Want to play with a real corpus right away? Drop in our sample:
+        Want sample research to try the Discovery skills on? Load ours:
       </p>
       <pre class="mt-4"><code>mogkit demo</code></pre>
       <p class="mt-4 text-chrome leading-relaxed">
-        That loads 8 mixed-type sources (interviews, tickets, a PRD, a memo,
-        competitor research) into <code>sources/</code> — enough to see
-        every Discovery skill actually do something on day one.
+        That copies 8 sample files (interviews, tickets, a PRD, a memo,
+        competitor research) into <code>sources/</code>, which is enough for
+        every Discovery skill to produce a result on day one.
       </p>
     </div>
   </Section>
@@ -133,15 +146,33 @@ cd my-workspace</code></pre>
       <Eyebrow>Step 6</Eyebrow>
       <h2 class="font-display text-2xl text-halo tracking-tight mt-3 mb-4">Run your first skill</h2>
       <p class="text-chrome leading-relaxed">
-        Open the workspace in Claude Code and try a standalone skill. A good
-        first one: <code>tradeoff-frame</code>. Paste in a contested decision
-        you're chewing on at work right now — two real options. The skill
-        will return the axes of the disagreement, what each option optimizes
-        vs sacrifices, and whether the call is a one-way or two-way door.
+        Start your assistant from inside your workspace. Type
+        <code>claude</code> for Claude Code or <code>codex</code> for Codex.
+        For Cursor, open the app, choose File, then Open Folder, and pick
+        your workspace folder.
+      </p>
+      <pre class="mt-4"><code>claude</code></pre>
+      <p class="mt-4 text-chrome leading-relaxed">
+        Then ask for a skill by name and paste your input under it. A good
+        first one is <code>tradeoff-frame</code>. Give it a decision your
+        team disagrees on, with two real options. This wording works in all
+        three assistants:
+      </p>
+      <pre class="mt-4"><code>Use the tradeoff-frame skill on this decision:
+We are deciding whether to build a Slack integration ourselves
+or partner through Zapier. Engineering wants to build. Growth
+wants to partner.</code></pre>
+      <p class="mt-4 text-chrome leading-relaxed">
+        In Claude Code and Cursor you can also type
+        <code>/tradeoff-frame</code> as a shortcut.
       </p>
       <p class="mt-4 text-chrome leading-relaxed">
-        It won't pick the answer. That's deliberate. Frames the decision so
-        you can decide well.
+        You get back the real points of disagreement, what each option
+        gains and gives up, and whether the decision is easy to reverse.
+      </p>
+      <p class="mt-4 text-chrome leading-relaxed">
+        It won't pick the answer. That is deliberate. It lays out the
+        decision so you can make it well.
       </p>
     </div>
   </Section>
@@ -151,13 +182,13 @@ cd my-workspace</code></pre>
       <Eyebrow>Where to go next</Eyebrow>
       <ul class="mt-4 list-disc pl-6 space-y-2 text-chrome marker:text-ash">
         <li>
-          The <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="/wedges/discovery">Discovery wedge</a> — mogkit's deepest system. Worth setting up first if your work is research-led.
+          <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="/wedges">Browse the skills by topic</a>. Launching something soon? Start with <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="/wedges/gtm">GTM and Launch</a>. Doing customer research? Start with <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="/wedges/discovery">Discovery</a>.
         </li>
         <li>
-          The <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="/workflows">Workflow Library</a> — implementable AI-for-PM workflows. Each one teaches its mechanism.
+          The <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="/workflows">Workflow Library</a> has step-by-step guides for putting AI to work on recurring PM chores.
         </li>
         <li>
-          If anything sticks, run <code>mogkit doctor</code> — it diagnoses most setup issues in plain language.
+          If something stops working, run <code>mogkit doctor</code>. It finds most setup problems and explains the fix in plain language.
         </li>
       </ul>
     </div>

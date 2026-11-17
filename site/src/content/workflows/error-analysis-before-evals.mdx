@@ -1,0 +1,184 @@
+---
+title: "Read 100 traces before you measure anything: error analysis for AI features"
+slug: "error-analysis-before-evals"
+published: 2026-09-29
+updated: 2026-09-29
+wedge: planning
+tools: ["Claude Code", "mogkit eval-plan", "A spreadsheet", "Your trace logs"]
+difficulty: intermediate
+timeToImplement: "3h"
+outcome: "A table of the specific ways your AI feature fails, with counts from real usage, and a short list of which failures deserve an automated check."
+relatedSkill: "eval-plan"
+hasCliSetup: true
+costNote: "Covered by a Claude plan. The real cost is about three hours of your reading time."
+tags: ["evals", "ai-features", "quality", "error-analysis"]
+unlocks:
+  - "A named list of failure modes for your feature, each with a count and an example."
+  - "A decision per failure: fix it now, write a code check, write a judged check, or leave it."
+  - "A quality conversation with engineering based on counts from real usage."
+helps:
+  - "Replaces 'it seems better' with '14 of 100 traces quoted a policy that was not in the docs'."
+  - "Stops the team building a dashboard of scores nobody acts on."
+  - "Finds the two or three bugs that a prompt change fixes in an afternoon."
+skipIf:
+  - "Your feature has no logging yet. You need the traces first."
+  - "You have fewer than about 30 real conversations. Collect more, or write test inputs by hand."
+---
+
+## The problem
+
+Your team shipped an AI feature. Someone asks if it is any good. The
+honest answer is that nobody knows. A few people tried a few prompts and
+it seemed fine.
+
+The usual next step is a dashboard. The team picks scores such as
+helpfulness and accuracy, has a model grade each response, and watches the
+line. The line moves and nobody can say what a user experienced.
+
+Hamel Husain and Shreya Shankar have taught the alternative for years, and
+their
+[guide in Lenny's Newsletter](https://www.lennysnewsletter.com/p/advanced-evals-how-to-find-and-fix)
+last week walks through it again. Read the traces first. Decide what to
+measure after you know what breaks.
+
+## What you'll build
+
+A trace is the full record of one interaction: what the user sent, what
+the system looked up or did, and what it replied.
+
+You will read 100 of them and write a one-line note on each one that went
+wrong. The `eval-plan` skill then groups your notes into failure modes,
+counts them, and proposes what to do about each. You end with a table and
+an ordered to-do list.
+
+## Example output
+
+The table `eval-plan` produced for a made-up support assistant:
+
+```
+Sample: 100 traces, 100 annotated by the PM, 2 to 9 September
+Missing from sample: non-English messages, messages with images
+
+Failure mode                                     Count  Do
+-----------------------------------------------  -----  -----------
+No failure                                          61  -
+Quotes a refund policy not in retrieved docs        14  judged check
+Answers a billing question it should hand off        9  code check
+Retrieval returned docs for the wrong product        8  fix first
+Correct answer, buried under three paragraphs        6  judged check
+Asked for an order number the user already gave      2  leave
+
+Judged check, refund policy:
+  "Does every policy statement in the reply appear in the
+   retrieved documents? Yes or no."
+  A human must label 30 examples before this check is trusted.
+```
+
+## Prerequisites
+
+- An AI feature with real usage and logs of its conversations.
+- A way to export about 100 traces to a file. Ask an engineer if you do
+  not know how. Tools such as Langfuse and LangSmith have an export
+  button.
+- A mogkit workspace with Claude Code. [Setup 101](/setup) covers it.
+- Three hours you can spend reading without interruption.
+
+## Build it
+
+1. **Export 100 traces.** Ask for a random sample from the last two weeks,
+   not the ones someone already flagged. Save the file as
+   `sources/traces.csv` in your workspace.
+
+2. **Remove personal data.** Delete or mask names, emails and account
+   numbers before the file goes anywhere else. Ask an engineer to do this
+   in the export if they can.
+
+3. **Open the file in a spreadsheet and add a column called `note`.**
+
+4. **Read every trace. Write one line on each one that is wrong.** Say
+   what happened in plain words. "Made up a 60-day refund window." "Good
+   answer but far too long." Leave the note empty if the trace is fine.
+   Do not invent categories yet.
+
+5. **Save the file, then get the skill.** In the terminal, inside your
+   workspace:
+
+   ```bash
+   npx mogkit@latest skills add eval-plan
+   ```
+
+6. **Run it.** Start Claude Code with `claude`, then type:
+
+   ```
+   /eval-plan
+   Feature: a support assistant that answers billing and refund
+   questions from our help docs. A good reply is correct, uses only
+   what the docs say, is under 120 words, and hands off to a human
+   for account changes.
+   Traces with my notes are in sources/traces.csv.
+   ```
+
+7. **Check the grouping.** The skill groups your notes into failure
+   modes. Move any trace it put in the wrong group. You know the product.
+   The grouping is a draft.
+
+8. **Take the "fix first" rows to engineering today.** These are bugs.
+   Fix them before you measure anything.
+
+9. **For each remaining row, agree who builds the check.** A code check
+   is a small automated test. A judged check needs a person to label
+   examples first. The skill gives you the yes-or-no question for each.
+
+## How it works
+
+The method comes from qualitative research, the same family of
+techniques used to analyze user interviews.
+
+- **Open notes first.** You write what you see before you have
+  categories. If you start with categories, you only find what you
+  expected.
+- **Group second.** Similar notes become a failure mode with a name
+  specific to your product. "Quotes a refund policy not in the docs" tells
+  an engineer what to fix. "Low accuracy" does not.
+- **Count third.** The counts set the priority. A failure in 14 of 100
+  traces matters more than one that is alarming and appeared twice.
+- **Measure last.** You write automated checks only for failure modes you
+  have seen, and only after the cheap fixes are done.
+
+The reading has to be yours. In the September guide, Husain and Shankar
+report that agents helping with this step missed the failures that needed
+product judgment. A model can group your notes. It cannot decide what
+counts as a bad answer for your customer. That is why `eval-plan` refuses
+to group anything until you have annotated at least ten traces yourself.
+
+Every judged check is a yes-or-no question. A 1-to-5 score invites
+arguments about the difference between a 3 and a 4. Two people can agree
+on yes or no.
+
+## Variations & next
+
+- **Read with the people who know.** Have a support lead or a domain
+  expert annotate the same 100 traces. Where you disagree is where your
+  quality bar is undefined.
+- **Install the authors' own skills.** Husain and Shankar publish
+  open-source eval skills at
+  [github.com/ai-evals-course/evals-skills](https://github.com/ai-evals-course/evals-skills)
+  that help build and validate the judges once you have your failure
+  modes.
+- **Repeat monthly.** Read 50 fresh traces a month. New failure modes
+  appear when you change the prompt, the model, or the docs.
+
+## Limits & honesty
+
+A hundred traces give you rough shares. A failure you saw in 2 of 100
+could be 1% of usage or 5%.
+
+Your sample only covers what users did in those two weeks. The example
+above has no non-English messages, so it says nothing about them.
+
+This workflow produces a plan. Someone still has to build the checks, and
+a judged check is not trustworthy until a person has labeled examples and
+confirmed the judge agrees with them.
+
+Three hours is real time and you cannot hand it off. That is the cost of
+knowing what your feature does.

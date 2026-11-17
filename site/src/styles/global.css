@@ -236,6 +236,12 @@
   .prose-voidchrome code {
     @apply text-chrome bg-obsidian border-graphite;
   }
+  /* Code inside a block keeps the block's plain background. */
+  .prose-voidchrome pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
   .prose-voidchrome blockquote {
     @apply border-l border-graphite pl-4 italic text-ash my-5;
   }

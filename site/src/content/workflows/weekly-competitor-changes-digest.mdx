@@ -2,7 +2,7 @@
 title: "Weekly competitor-change digest from changelogs and release notes"
 slug: "weekly-competitor-changes-digest"
 published: 2026-05-15
-updated: 2026-05-15
+updated: 2026-11-16
 wedge: strategy
 tools: ["GitHub Actions", "Claude API", "RSS / changelog URLs"]
 difficulty: intermediate
@@ -144,15 +144,15 @@ gets a mention in the next strategy sync.
      digest:
        runs-on: ubuntu-latest
        steps:
-         - uses: actions/checkout@v4
-         - uses: actions/setup-node@v4
-           with: { node-version: 20 }
+         - uses: actions/checkout@v7
+         - uses: actions/setup-node@v7
+           with: { node-version: 24 }
          - run: npm i rss-parser @anthropic-ai/sdk
          - name: Build digest
            env:
              ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
            run: node .github/competitive/build-digest.mjs > /tmp/digest.md
-         - uses: peter-evans/create-issue-from-file@v5
+         - uses: peter-evans/create-issue-from-file@v6
            with:
              title: "Competitive digest — week of ${{ github.run_number }}"
              content-filepath: /tmp/digest.md

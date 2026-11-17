@@ -3,7 +3,7 @@ name: interview-coach
 tier: standalone
 wedge: discovery
 level: beginner
-summary: Coaches the interviewer based on a discovery-interview transcript — where they led the witness, where they accepted an answer without a follow-up, where they pitched instead of listened, and the highest-value follow-up questions they missed. Teaches the craft; never just summarizes the content.
+description: Coaches the interviewer based on a discovery-interview transcript — where they led the witness, where they accepted an answer without a follow-up, where they pitched instead of listened, and the highest-value follow-up questions they missed. Teaches the craft; never just summarizes the content.
 inputs:
   - a transcript of a discovery interview the PM just ran, pasted by the PM
 outputs:

@@ -3,7 +3,9 @@ import type { SkillMeta } from "../lib/skills";
 import Card from "./Card.astro";
 interface Props { skill: SkillMeta }
 const { skill } = Astro.props;
-const tierLabel = skill.tier === "discovery" ? "discovery engine" : "standalone";
+const tierLabel = skill.tier === "discovery" ? "uses your research folder" : "paste in and go";
+// The full description is written for the AI. People get its first sentence.
+const short = skill.summary.split(". ")[0].replace(/\.$/, "") + ".";
 ---
 <Card padding="sm">
   <div class="flex items-baseline justify-between gap-3 mb-2">
@@ -12,7 +14,37 @@ const tierLabel = skill.tier === "discovery" ? "discovery engine" : "standalone"
   </div>
   <div class="flex flex-wrap items-center gap-1.5 mb-3">
     <span class="pill-accent">{tierLabel}</span>
-    <span class="pill">{skill.wedge}</span>
   </div>
-  <p class="text-sm text-chrome leading-relaxed">{skill.summary}</p>
+  <p class="text-sm text-chrome leading-relaxed">{short}</p>
+  <button
+    type="button"
+    class="copy-skill mt-4 w-full rounded-md border border-graphite px-3 py-2 text-[13px] text-halo hover:border-mercury transition-colors"
+    data-skill={`Follow the instructions below exactly. After them I will paste my input.\n\n${skill.raw}`}
+  >
+    Copy for ChatGPT or any AI chat
+  </button>
 </Card>
+
+<script>
+  // No install needed: copies the whole skill so it can be pasted into any chat.
+  document.querySelectorAll<HTMLButtonElement>(".copy-skill").forEach((b) => {
+    b.addEventListener("click", async () => {
+      const text = b.dataset.skill ?? "";
+      let ok = true;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        // Older browsers and locked-down pages: copy through a hidden text box.
+        const box = document.createElement("textarea");
+        box.value = text;
+        document.body.appendChild(box);
+        box.select();
+        ok = document.execCommand("copy");
+        box.remove();
+      }
+      const label = b.textContent;
+      b.textContent = ok ? "Copied. Paste it into your chat" : "Copy was blocked by your browser";
+      setTimeout(() => (b.textContent = label), 2500);
+    });
+  });
+</script>

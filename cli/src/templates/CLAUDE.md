@@ -1,7 +1,7 @@
 # mogkit workspace — orienting context
 
 This is a `mogkit` PM workspace. You (Claude Code) will be invoked here by a PM
-working on real product discovery, strategy, and planning. This file orients
+working on real product discovery, strategy, planning, and go-to-market. This file orients
 every session in this workspace. Read it before acting.
 
 ## What lives here

@@ -3,7 +3,7 @@ name: narrative-review
 tier: standalone
 wedge: strategy
 level: advanced
-summary: Reviews a strategy doc, six-pager, or memo the way a skeptical executive reads it — surfacing logic gaps, hand-waves, claims-as-facts, the strongest counterargument, and what a smart skeptic attacks first. The author keeps authorship.
+description: Reviews a strategy doc, six-pager, or memo the way a skeptical executive reads it — surfacing logic gaps, hand-waves, claims-as-facts, the strongest counterargument, and what a smart skeptic attacks first. The author keeps authorship.
 inputs:
   - a strategy doc, six-pager, memo, or narrative pasted by the PM
 outputs:

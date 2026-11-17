@@ -59,3 +59,22 @@ test("listBundledSkills includes all 6 Phase 3 discovery skills with tier=discov
     assert.ok(s!.summary.length > 0);
   }
 });
+
+test("listBundledSkills includes the 8 standalone skills added in 0.2", () => {
+  const byName = new Map(listBundledSkills().map((s) => [s.name, s]));
+  for (const name of [
+    "positioning-check",
+    "icp-sharpen",
+    "pricing-pressure-test",
+    "launch-tier",
+    "win-loss-review",
+    "agent-readiness",
+    "eval-plan",
+    "prototype-brief",
+  ]) {
+    const s = byName.get(name);
+    assert.ok(s, `bundled: ${name}`);
+    assert.equal(s!.tier, "standalone", `${name} tier`);
+    assert.ok(s!.summary.length > 0);
+  }
+});

@@ -2,44 +2,66 @@
 title: "GTM & Launch"
 slug: "gtm"
 order: 4
-summary: "Launches fail for boring reasons. The fix is also boring: a pre-flight interrogation specific to this launch, not a generic checklist."
-problem: "Most launch failures are visible in advance to anyone who asks the right questions about the specific launch — what is unowned, what the rollback actually rolls back, who heard about it and when, what breaks under 10x or 0.1x demand. Generic launch checklists don't help; they list everything and load-bear on nothing. The work is to identify the gaps in *this* launch, then close them."
+summary: "Who it is for, what it costs, how big the launch is, and why deals are won or lost. PMs now share these calls with marketing and sales."
+problem: "Go-to-market used to arrive at the end, as a handoff to marketing. On most product teams in 2026 the PM helps decide who the product is for, how it is positioned, what it costs and how it launches. AI features made pricing harder, because each use now costs real money. And a new kind of visitor showed up: AI assistants that research and act for buyers. The seven skills here test each of those decisions against evidence before you commit."
 engineStatus: "coming"
-skills: ["launch-readiness", "tradeoff-frame"]
+skills: ["positioning-check", "icp-sharpen", "pricing-pressure-test", "launch-tier", "launch-readiness", "win-loss-review", "agent-readiness"]
 material:
+  - dunford-obviously-awesome
+  - voje-early-gtm-strategy
+  - a16z-dont-price-per-token
+  - verna-new-user-not-human
   - cdixon-gtm-essay
   - grove-high-output-management
 ---
 
-## The level-up path
+## Where to start
 
-GTM is a standalone-skills wedge. The load-bearing move is the pre-flight
-interrogation:
+Pick the question you are facing. Each skill takes what you paste in and
+returns the gaps. None of them writes the finished plan, page or price.
 
-- **`launch-readiness`** — paste a launch description (what's launching,
-  to whom, when, what's already in place). Get back the gap-list:
-  ownership gaps, rollback realism, comms & enablement gaps, the 10x /
-  0.1x demand stress test, and explicit kill criteria. Specific to your
-  launch; never a generic checklist.
-- **`tradeoff-frame`** — for the launch-window and scope-cut calls that
-  always show up the week before. Names the real axes; doesn't pick.
+**Before you build**
 
-## A note on the knowledge engine
+- **`icp-sharpen`** tests who you say the product is for against the
+  accounts you have won, lost and kept. It names who to turn away.
+- **`positioning-check`** tests a positioning draft against April
+  Dunford's five components and marks each one as evidence or opinion.
 
-No GTM-side knowledge engine in v1. Launches are episodic, not corpus-
-shaped; a versioned graph would be solving the wrong problem. If a
-durable launch-history engine earns its place — e.g. a "what did we
-learn from the last six launches" surface — it lands in a later
-version. Until then, the gap-list from `launch-readiness` plus a
-versioned `launches/<date>-<name>/` folder in your workspace is more
-than most teams have.
+**Before you price**
 
-## Visual setup walkthrough
+- **`pricing-pressure-test`** checks that what you charge for matches the
+  value a customer gets, that a customer can predict the bill, and what
+  your heaviest users do to the margin. It pays particular attention to
+  AI features that cost money on every use.
 
-1. `npx mogkit init my-launch-workspace`.
-2. In Claude Code, run `launch-readiness` against a written launch
-   description. Get the gap list.
-3. Close the gaps in your launch plan — ownership, rollback, comms,
-   kill criteria.
-4. Keep `launches/<date>-<name>/` as a versioned record. The next launch
-   has the prior launch's notes to learn from.
+**Before you launch**
+
+- **`launch-tier`** sizes the launch. A fix gets a changelog line. A
+  pricing change gets every team briefed. Most mistakes are picking the
+  wrong size.
+- **`launch-readiness`** then finds the gaps in the plan: what nobody
+  owns, what cannot be rolled back, who has not been told, and the
+  thresholds for pulling the launch.
+
+**After you launch**
+
+- **`win-loss-review`** reads deal notes and call transcripts and reports
+  why deals went the way they did, with a quote behind every reason.
+- **`agent-readiness`** checks whether an AI assistant can find,
+  understand, recommend and use your product, and where it gets facts
+  wrong.
+
+## Workflows that pair with these
+
+- [Weekly check: what does an AI assistant tell buyers about your product?](/workflows/weekly-ai-answer-check)
+- [Pre-launch bug bash with a browser agent](/workflows/browser-agent-bug-bash)
+- [Weekly competitor-change digest](/workflows/weekly-competitor-changes-digest)
+
+
+## Try it
+
+1. Follow [Setup 101](/setup) if you have not installed mogkit.
+2. Open your workspace in your AI assistant (Claude Code, Codex or Cursor).
+3. Type the skill name with a slash, for example `/launch-tier`, and
+   paste a description of the release.
+4. Read the gaps. Close them in your own plan.

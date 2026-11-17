@@ -4,150 +4,308 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/Section.astro";
 import Eyebrow from "../components/Eyebrow.astro";
 import Button from "../components/Button.astro";
-import WedgeTile from "../components/WedgeTile.astro";
+import Card from "../components/Card.astro";
 import WorkflowListItem from "../components/WorkflowListItem.astro";
 import SurfboardHeroIsland from "../components/SurfboardHeroIsland.astro";
 import ScrollHint from "../components/ScrollHint.astro";
-import { WEDGE_ORDER, WEDGE_META } from "../lib/wedges";
-
-const wedges = await getCollection("wedges");
-const wedgesBySlug = new Map(wedges.map((w) => [w.data.slug, w]));
 
 const workflows = (await getCollection("workflows")).sort(
   (a, b) => b.data.published.getTime() - a.data.published.getTime(),
 );
 const recentWorkflows = workflows.slice(0, 3);
+
+// Every question maps to a real skill. Add a row only when the skill exists.
+const levels = [
+  {
+    who: "New to product",
+    detail: "Your first PM role, or you are an engineer, designer or founder doing product work for the first time.",
+    help: "It shows you what an experienced PM would catch.",
+    questions: [
+      ["What did I miss in this spec?", "spec-stress-test"],
+      ["Did I lead the customer in that interview?", "interview-coach"],
+      ["What should this prototype prove before I build it?", "prototype-brief"],
+      ["How big should this launch be?", "launch-tier"],
+    ],
+  },
+  {
+    who: "Working PM",
+    detail: "You own a product area and ship every week.",
+    help: "It checks the calls you now share with sales, marketing and finance.",
+    questions: [
+      ["Will this pricing lose money on our heaviest users?", "pricing-pressure-test"],
+      ["Is our AI feature any good, and how would I know?", "eval-plan"],
+      ["Why are we losing deals?", "win-loss-review"],
+      ["What are we assuming with no evidence?", "assumption-audit"],
+      ["What is nobody owning in this launch?", "launch-readiness"],
+    ],
+  },
+  {
+    who: "Product lead or founder",
+    detail: "You set direction and need a team to agree on it.",
+    help: "It pressure-tests the story before the room does.",
+    questions: [
+      ["Will this strategy doc survive an exec review?", "narrative-review"],
+      ["What is the team really disagreeing about?", "tradeoff-frame"],
+      ["Who is this for, and who do we turn away?", "icp-sharpen"],
+      ["Does our positioning hold up against the alternative?", "positioning-check"],
+      ["Can ChatGPT and Claude find and recommend us?", "agent-readiness"],
+    ],
+  },
+];
+
+const areas = [
+  {
+    slug: "discovery",
+    title: "Customer research",
+    questions: [
+      "What do our interviews say about this problem, with quotes?",
+      "Which of our beliefs rest on one customer, or none?",
+      "Who should we interview next, and what do we ask?",
+    ],
+  },
+  {
+    slug: "strategy",
+    title: "Strategy",
+    questions: [
+      "Where would a skeptical exec attack this memo first?",
+      "Which metrics move our goal, and which one do we move first?",
+    ],
+  },
+  {
+    slug: "planning",
+    title: "Planning and building",
+    questions: [
+      "Which edge cases will break this spec?",
+      "How does our AI feature fail, and how often?",
+      "What is the one thing this prototype has to prove?",
+    ],
+  },
+  {
+    slug: "gtm",
+    title: "Launching and selling",
+    questions: [
+      "Who is this for, and what should it cost?",
+      "How big is this launch, and what is missing from the plan?",
+      "Why do we win and lose deals?",
+    ],
+  },
+  {
+    slug: "conflict",
+    title: "Decisions and people",
+    questions: [
+      "What are we really arguing about?",
+      "Who needs convincing, and in what order?",
+    ],
+  },
+];
+
+const people = [
+  ["Teresa Torres", "customer discovery"],
+  ["April Dunford", "positioning"],
+  ["Marty Cagan", "product risk"],
+  ["Hamel Husain and Shreya Shankar", "AI evals"],
+  ["Elena Verna", "growth, and AI agents as users"],
+  ["Kyle Poyar", "pricing"],
+  ["Maja Voje", "go-to-market"],
+  ["Madhavan Ramanujam", "monetization"],
+  ["Rob Fitzpatrick", "customer interviews"],
+  ["Gary Klein", "pre-mortems"],
+];
+const teams = [
+  ["Amazon", "Working Backwards"],
+  ["Figma", "agent bug bashes"],
+  ["a16z", "AI pricing"],
+  ["Appcues", "launch tiers"],
+  ["HubSpot", "AI search benchmarks"],
+  ["Amplitude", "input metrics"],
+  ["Product Marketing Alliance", "win-loss"],
+];
+
+// Each row is a published Workflow Library guide.
+const automations = [
+  ["Every morning", "A one-page brief on today's meetings, with the decisions and tickets behind each", "team-context-repo-morning-brief"],
+  ["After every meeting", "Action items with owners, and draft tickets for you to approve", "meeting-notes-to-action-items"],
+  ["Every Monday", "What your competitors shipped, scored for what matters to you", "weekly-competitor-changes-digest"],
+  ["Every Monday", "What AI assistants tell buyers about your product, and what they get wrong", "weekly-ai-answer-check"],
+  ["Every week", "Repeated support questions turned into proposed doc updates", "intercom-to-mintlify-docs"],
+  ["On every code change", "A check of the work against the ticket's acceptance criteria", "linear-automated-qa"],
+  ["Before every launch", "An AI agent clicks through your test plan and lists what broke", "browser-agent-bug-bash"],
+  ["Whenever you ask", "A funnel or retention number in plain English, with how it was counted", "plain-english-analytics-posthog-mcp"],
+];
 ---
 
-<BaseLayout title="mogkit — out-craft the room">
+<BaseLayout title="mogkit · AI review skills for product builders">
 
-  {/* HERO — chrome surfboard floats BEHIND the headline (Morphic-style).
-      Absolute-positioned R3F island fills the section; text overlays it.
-      Mobile: shorter section + smaller padding so the content lands above
-      the fold without a giant void. */}
+  {/* HERO. The chrome surfboard floats behind the headline. */}
   <section class="relative overflow-hidden">
     <div class="relative w-full min-h-[640px] sm:min-h-[82vh]">
       <SurfboardHeroIsland />
 
       <div class="relative z-10 flex flex-col items-center text-center px-5
-                  pt-[8vh] sm:pt-[18vh] pb-24 sm:pb-20">
+                  pt-[8vh] sm:pt-[16vh] pb-24 sm:pb-20">
         <p class="eyebrow lift-in lift-in-1">
-          the open-source toolkit for PMs
+          for product managers, founders and anyone who builds products
         </p>
-        <h1 class="font-display text-[2.4rem] leading-[1.02] sm:text-6xl md:text-7xl sm:leading-[0.95] text-halo tracking-tightest mt-5 sm:mt-6 max-w-3xl mx-auto lift-in lift-in-2 [text-shadow:0_2px_28px_rgb(10_10_11_/_0.95)]">
-          Sharper thinking.<br/>
-          <span class="text-mercury">Not just faster output.</span>
+        <h1 class="font-display text-[2.3rem] leading-[1.04] sm:text-6xl md:text-7xl sm:leading-[0.97] text-halo tracking-tightest mt-5 sm:mt-6 max-w-4xl mx-auto lift-in lift-in-2 [text-shadow:0_2px_28px_rgb(10_10_11_/_0.95)]">
+          Find the holes in your work<br class="hidden sm:inline"/>{" "}
+          <span class="text-mercury">before your team does.</span>
         </h1>
         <p class="mt-5 sm:mt-7 text-base sm:text-lg text-chrome max-w-2xl mx-auto leading-relaxed lift-in lift-in-3 [text-shadow:0_1px_16px_rgb(10_10_11_/_0.9)]">
-          mogkit installs PM craft into your terminal — a library of
-          methodology-backed skills that run in Claude Code, a thin CLI that
-          scaffolds your workspace, and a growing library of AI-for-PM workflows
-          you can ship today.
+          mogkit is a free set of 21 review skills for your AI assistant.
+          Paste in a spec, a launch plan, a pricing idea or a decision your
+          team is stuck on. You get back the gaps, the untested assumptions
+          and the questions to answer next.
         </p>
         <p class="mt-3 text-base sm:text-lg text-chrome max-w-2xl mx-auto leading-relaxed lift-in lift-in-3 [text-shadow:0_1px_16px_rgb(10_10_11_/_0.9)]">
-          It won't write your PRD. It'll make you write a better one.
+          It also has 11 guides for automating weekly PM chores. Works with
+          Claude, Codex, Cursor and ChatGPT.
         </p>
         <div class="mt-7 sm:mt-9 flex flex-wrap items-center justify-center gap-3 lift-in lift-in-4">
-          <Button href="/setup" variant="primary">Start with Setup 101 →</Button>
-          <Button href="/wedges/discovery" variant="ghost">See the Discovery engine</Button>
+          <Button href="/setup" variant="primary">Set up in 15 minutes →</Button>
+          <Button href="#questions" variant="ghost">See what you can ask it</Button>
         </div>
-        <p class="mt-6 sm:mt-7 font-mono text-[11px] sm:text-[12px] text-ash tracking-tight lift-in lift-in-4 break-all sm:break-normal">
-          $ npx mogkit init my-workspace
+        <p class="mt-6 sm:mt-7 text-[13px] text-ash lift-in lift-in-4">
+          Free and open source. No account. No coding.
         </p>
       </div>
 
-      {/* Scroll hint — pinned to the bottom of the hero, fills the dead
-          space below the CTA */}
       <div class="absolute bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-10 lift-in lift-in-4">
         <ScrollHint />
       </div>
     </div>
   </section>
 
-  {/* THE FOUR PILLARS */}
+  {/* WHO IT IS FOR, by level, as questions you get answered */}
+  <Section hairline>
+    <div class="container-wide scroll-mt-24" id="questions">
+      <div class="mb-8 max-w-2xl">
+        <Eyebrow>Who it is for</Eyebrow>
+        <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
+          Questions you get answered, at every level.
+        </h2>
+        <p class="mt-4 text-chrome leading-relaxed">
+          Each question below is one skill. You paste in your work and it
+          answers from what you gave it. It never makes up evidence.
+        </p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4 stagger">
+        {levels.map((l) => (
+          <Card padding="md">
+            <h3 class="font-display text-xl text-halo tracking-tight">{l.who}</h3>
+            <p class="mt-2 text-sm text-ash leading-relaxed">{l.detail}</p>
+            <p class="mt-3 text-[15px] text-chrome leading-relaxed">{l.help}</p>
+            <ul class="mt-5 space-y-3">
+              {l.questions.map(([q, skill]) => (
+                <li class="border-t border-graphite/60 pt-3">
+                  <div class="text-[15px] text-halo leading-snug">{q}</div>
+                  <code class="text-[11px] text-ash">{skill}</code>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </Section>
+
+  {/* HOW IT WORKS */}
   <Section hairline>
     <div class="container-wide">
-      <div class="grid sm:grid-cols-2 gap-y-14 gap-x-16 stagger">
+      <div class="mb-8">
+        <Eyebrow>How it works</Eyebrow>
+        <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
+          Three steps. No coding.
+        </h2>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-y-10 gap-x-10 stagger">
         {[
           {
-            eyebrow: "Craft, not output",
-            title: "No skill writes the finished deliverable.",
-            body: "Every skill produces a reasoning scaffold: what your evidence supports, what you're assuming without proof, what to validate next. You write the doc — and the doc is sharper. We sell judgment, not typing.",
+            n: "1",
+            title: "Set up once",
+            body: "About 15 minutes. Setup 101 gives you every command to copy. You need one AI assistant: Claude Code, Codex or Cursor. With ChatGPT you skip setup and copy a skill straight into a chat.",
           },
           {
-            eyebrow: "Local and yours",
-            title: "Runs in your terminal. MIT-licensed.",
-            body: "Version-controlled workspace. Your research is an asset you own and grow, not data in someone else's cloud. No SaaS, no login, no lock-in. The CLI never calls a model.",
+            n: "2",
+            title: "Paste your work",
+            body: "Ask for a skill by name, such as \"use the launch-readiness skill\", and paste in what you have. A rough draft is fine.",
           },
           {
-            eyebrow: "The on-ramp",
-            title: "From \"lives in Notion\" to \"works like an engineer.\"",
-            body: "Every step is small. Every step earns the next. We don't gatekeep the terminal — we make it approachable. Setup 101 is genuinely followable by someone who has never opened one.",
+            n: "3",
+            title: "Get the gaps back",
+            body: "You get three things: what your evidence supports, what you are assuming, and what to check next. A copy is saved in a folder on your computer.",
           },
-          {
-            eyebrow: "By the craft, for the craft",
-            title: "Methodology-backed. Community-built.",
-            body: "Continuous discovery, Working Backwards, the real traditions. Skills are plain markdown; workflow entries are MDX; both follow documented specs. The library compounds as PMs contribute to it.",
-          },
-        ].map((p) => (
+        ].map((s) => (
           <div>
-            <Eyebrow>{p.eyebrow}</Eyebrow>
-            <h2 class="font-display text-2xl text-halo tracking-tight mt-3 leading-[1.15]">
-              {p.title}
-            </h2>
-            <p class="mt-3 text-chrome leading-relaxed">{p.body}</p>
+            <div class="font-mono text-sm text-mercury">{s.n}</div>
+            <h3 class="font-display text-xl text-halo tracking-tight mt-2">{s.title}</h3>
+            <p class="mt-3 text-chrome leading-relaxed">{s.body}</p>
           </div>
         ))}
       </div>
     </div>
   </Section>
 
-  {/* THE FIVE WEDGES */}
+  {/* WHAT IT COVERS, by area of work */}
   <Section hairline>
     <div class="container-wide">
       <div class="mb-8">
-        <Eyebrow>One deep system, many sharp tools</Eyebrow>
+        <Eyebrow>What it covers</Eyebrow>
         <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
-          The five wedges
+          Five areas of product work
         </h2>
       </div>
       <div class="grid sm:grid-cols-2 gap-4 stagger">
-        {WEDGE_ORDER.map((slug, i) => {
-          const entry = wedgesBySlug.get(slug);
-          if (!entry) return null;
-          return (
-            <WedgeTile
-              slug={slug}
-              title={WEDGE_META[slug].title}
-              summary={entry.data.summary}
-              engineStatus={entry.data.engineStatus}
-              order={i + 1}
-            />
-          );
-        })}
+        {areas.map((a) => (
+          <Card href={`/wedges/${a.slug}`} padding="md">
+            <h3 class="font-display text-xl text-halo tracking-tight">{a.title}</h3>
+            <ul class="mt-3 space-y-1.5 text-[15px] text-chrome leading-relaxed">
+              {a.questions.map((q) => <li>{q}</li>)}
+            </ul>
+            <div class="mt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-mercury">see the skills →</div>
+          </Card>
+        ))}
+        <Card href="/workflows" padding="md">
+          <h3 class="font-display text-xl text-halo tracking-tight">Automating the chores</h3>
+          <ul class="mt-3 space-y-1.5 text-[15px] text-chrome leading-relaxed">
+            <li>What did our competitors ship this week?</li>
+            <li>What came out of that meeting, and who owns it?</li>
+          </ul>
+          <div class="mt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-mercury">see the guides →</div>
+        </Card>
       </div>
     </div>
   </Section>
 
-  {/* WORKFLOW LIBRARY — recent entries */}
+  {/* WHAT IT AUTOMATES. Guides from the Workflow Library. */}
   <Section hairline>
     <div class="container-wide">
       <div class="flex items-baseline justify-between mb-3 gap-4">
         <div>
-          <Eyebrow>Recipes + mechanism</Eyebrow>
+          <Eyebrow>What it automates</Eyebrow>
           <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
-            Workflow Library
+            Chores you can hand to an AI agent
           </h2>
         </div>
-        <a href="/workflows" class="text-sm text-mercury hover:text-halo transition-colors">
-          browse all →
+        <a href="/workflows" class="text-sm text-mercury hover:text-halo transition-colors shrink-0">
+          all 11 guides →
         </a>
       </div>
       <p class="text-chrome mb-8 max-w-2xl leading-relaxed">
-        Implementable AI-for-PM workflows. Each entry is both a copy-paste
-        recipe and a "how it works" explainer that teaches the mechanism.
-        We never ship a black box.
+        Each line is a step-by-step guide. You follow it once and the job
+        runs on its own after that. Every guide explains how it works and
+        says where a person still has to check the result.
       </p>
+      <div class="grid sm:grid-cols-2 gap-x-12">
+        {automations.map(([when, what, slug]) => (
+          <a href={`/workflows/${slug}`} class="group flex gap-4 border-b border-graphite/60 py-3">
+            <span class="font-mono text-[11px] uppercase tracking-[0.14em] text-mercury w-32 shrink-0 pt-1">{when}</span>
+            <span class="text-[15px] text-chrome leading-snug group-hover:text-halo transition-colors">{what}</span>
+          </a>
+        ))}
+      </div>
+      <div class="mt-12 mb-4">
+        <Eyebrow>Newest guides</Eyebrow>
+      </div>
       <div class="grid gap-4 stagger">
         {recentWorkflows.map((w) => (
           <WorkflowListItem
@@ -165,6 +323,94 @@ const recentWorkflows = workflows.slice(0, 3);
     </div>
   </Section>
 
+  {/* WHERE THE SKILLS COME FROM. Every name here is cited in a skill's
+      `methodology` line or a workflow post. Add a name only with a citation. */}
+  <Section hairline>
+    <div class="container-wide">
+      <div class="max-w-3xl">
+        <Eyebrow>Where the skills come from</Eyebrow>
+        <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
+          The best current thinking on building products, in one place.
+        </h2>
+        <p class="mt-4 text-chrome leading-relaxed">
+          The job keeps changing. PMs now prototype, price AI features, run
+          launches and check AI quality, and the best advice on each is
+          spread across books, newsletters and podcasts. mogkit turns that
+          published work into 21 skills you can run on your own work today,
+          so you are never the person on the team who is behind.
+        </p>
+      </div>
+      <div class="mt-10 grid sm:grid-cols-2 gap-x-16 gap-y-8">
+        <div>
+          <div class="font-mono text-[11px] uppercase tracking-[0.22em] text-mercury mb-3">People whose methods the skills follow</div>
+          <ul class="space-y-1.5 text-[15px]">
+            {people.map(([name, topic]) => (
+              <li class="flex justify-between gap-4 border-b border-graphite/40 pb-1.5">
+                <span class="text-halo">{name}</span>
+                <span class="text-ash text-right">{topic}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <div class="font-mono text-[11px] uppercase tracking-[0.22em] text-mercury mb-3">Published practice from teams at</div>
+          <ul class="space-y-1.5 text-[15px]">
+            {teams.map(([name, topic]) => (
+              <li class="flex justify-between gap-4 border-b border-graphite/40 pb-1.5">
+                <span class="text-halo">{name}</span>
+                <span class="text-ash text-right">{topic}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <p class="mt-8 text-sm text-ash max-w-3xl leading-relaxed">
+        Each skill names its sources, and we update the library as the
+        research moves. Names are listed to give credit. mogkit is an
+        independent project and none of these people or companies are
+        affiliated with it or endorse it.
+      </p>
+    </div>
+  </Section>
+
+  {/* WHAT TO EXPECT */}
+  <Section hairline>
+    <div class="container-wide">
+      <div class="grid sm:grid-cols-2 gap-y-14 gap-x-16 stagger">
+        {[
+          {
+            eyebrow: "You stay the author",
+            title: "No skill writes the finished deliverable.",
+            body: "Every skill returns three things: what your evidence supports, what you are assuming without proof, and what to check next. You write the doc, and it comes out sharper.",
+          },
+          {
+            eyebrow: "Private by default",
+            title: "Free, and your files stay with you.",
+            body: "Your research and notes live in a folder on your computer, with a saved history of every change. mogkit has no account, no server and no subscription. It is open source under the MIT license.",
+          },
+          {
+            eyebrow: "No coding",
+            title: "Built for PMs who have never opened a terminal.",
+            body: "Setup 101 starts from zero and gives you each command to copy. After that you type a skill name and paste your work.",
+          },
+          {
+            eyebrow: "Your AI tool",
+            title: "Works with Claude, Codex, Cursor and ChatGPT.",
+            body: "One setup installs the skills for Claude Code, Codex and Cursor. With ChatGPT or any other chat app, copy a skill from this site and paste it in. You are not tied to one AI company.",
+          },
+        ].map((p) => (
+          <div>
+            <Eyebrow>{p.eyebrow}</Eyebrow>
+            <h2 class="font-display text-2xl text-halo tracking-tight mt-3 leading-[1.15]">
+              {p.title}
+            </h2>
+            <p class="mt-3 text-chrome leading-relaxed">{p.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </Section>
+
   {/* GET STARTED — the on-ramp. Uses container-wide to align its left
       edge with the wedges + workflow library sections above. */}
   <Section hairline spacing="loose">
@@ -172,17 +418,17 @@ const recentWorkflows = workflows.slice(0, 3);
       <div class="max-w-2xl">
         <Eyebrow>Get started</Eyebrow>
         <h2 class="font-display text-3xl text-halo tracking-tight mt-3">
-          Two commands and you're set up.
+          Set up in about 15 minutes.
         </h2>
         <p class="mt-4 text-chrome leading-relaxed">
-          If you've used a terminal before, two commands and you're set up. If
-          you haven't, Setup 101 walks you through every step from opening the
-          terminal to running your first skill.
+          New to the terminal? Setup 101 walks you through every step, from
+          opening the Terminal app to running your first skill. If you have
+          used one before, these four lines are all you need.
         </p>
         <pre class="mt-8"><code>$ npm install -g mogkit
 $ mogkit init my-workspace
 $ cd my-workspace
-$ open this folder in Claude Code</code></pre>
+$ claude    # or: codex, or open the folder in Cursor</code></pre>
         <div class="mt-7 flex flex-wrap gap-3">
           <Button href="/setup" variant="primary">Setup 101 →</Button>
           <Button href="https://github.com/Waddling-Penguin/mogkit" variant="ghost">GitHub</Button>

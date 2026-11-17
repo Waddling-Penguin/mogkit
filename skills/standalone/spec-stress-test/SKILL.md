@@ -3,7 +3,7 @@ name: spec-stress-test
 tier: standalone
 wedge: planning
 level: intermediate
-summary: Red-teams a PRD or spec — surfaces edge cases, failure modes, race conditions between requirements, unstated assumptions, and what the user sees when each thing fails — ranked by severity. Produces the attack list; the PM fixes the spec.
+description: Red-teams a PRD or spec — surfaces edge cases, failure modes, race conditions between requirements, unstated assumptions, and what the user sees when each thing fails — ranked by severity. Produces the attack list; the PM fixes the spec.
 inputs:
   - a PRD, spec, or feature doc pasted by the PM
 outputs:

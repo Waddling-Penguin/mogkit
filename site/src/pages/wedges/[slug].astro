@@ -28,18 +28,18 @@ const material = materialRefs.filter((m): m is NonNullable<typeof m> => Boolean(
 
 <BaseLayout title={`${meta.title} · mogkit`} description={entry.data.summary}>
   <article class="container-tight pt-16 sm:pt-20 pb-8">
-    <p class="eyebrow mb-1">Wedge · {String(entry.data.order)}/5</p>
+    <p class="eyebrow mb-1">Skills · area {String(entry.data.order)} of 5</p>
     <h1 class="font-display text-4xl sm:text-5xl text-halo tracking-tightest leading-[0.98] mt-4 lift-in lift-in-2">
       {meta.title}
     </h1>
     <p class="mt-4 text-lg text-mercury leading-relaxed lift-in lift-in-3">
-      {meta.subtitle}
+      {entry.data.summary}
     </p>
     <div class="mt-5 lift-in lift-in-4">
       {entry.data.engineStatus === "full" ? (
-        <span class="pill-accent">knowledge engine: shipped</span>
+        <span class="pill-accent">builds a searchable library from your research</span>
       ) : (
-        <span class="pill">knowledge engine: coming · standalone skills shipped</span>
+        <span class="pill">works from whatever you paste in</span>
       )}
     </div>
   </article>
@@ -51,32 +51,33 @@ const material = materialRefs.filter((m): m is NonNullable<typeof m> => Boolean(
     </div>
   </Section>
 
+  {skills.length > 0 && (
+    <Section hairline>
+      <div class="container-tight">
+        <Eyebrow>The skills</Eyebrow>
+        <div class="grid sm:grid-cols-2 gap-3 mt-6">
+          {skills.map((s) => <SkillCard skill={s} />)}
+        </div>
+        <p class="mt-5 text-sm text-ash">
+          After <a class="text-mercury hover:text-halo underline decoration-graphite underline-offset-4" href="/setup">setup</a>,
+          ask your assistant for one by name. No setup? Press the copy
+          button on a card and paste it into ChatGPT or any AI chat.
+        </p>
+      </div>
+    </Section>
+  )}
+
   <Section spacing="default">
     <div class="container-tight prose-voidchrome">
       <Content />
     </div>
   </Section>
 
-  {skills.length > 0 && (
-    <Section hairline>
-      <div class="container-tight">
-        <Eyebrow>Skills to install</Eyebrow>
-        <div class="grid sm:grid-cols-2 gap-3 mt-6">
-          {skills.map((s) => <SkillCard skill={s} />)}
-        </div>
-        <p class="mt-5 text-sm text-ash">
-          All of these install automatically when you run
-          <code class="ml-1">npx mogkit init</code>.
-        </p>
-      </div>
-    </Section>
-  )}
-
   {material.length > 0 && (
     <Section hairline>
       <div class="container-tight">
-        <Eyebrow>Material</Eyebrow>
-        <p class="mt-2 text-sm text-ash">A curated path. Not a link dump.</p>
+        <Eyebrow>Further reading</Eyebrow>
+        <p class="mt-2 text-sm text-ash">The books and essays these skills are built on.</p>
         <ul class="mt-6 space-y-3">
           {material.map((m) => (
             <Card padding="md" class="block">

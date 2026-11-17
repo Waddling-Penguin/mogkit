@@ -3,7 +3,7 @@ name: tradeoff-frame
 tier: standalone
 wedge: conflict
 level: intermediate
-summary: Frames a contested decision honestly — names the real axes of disagreement, what each option optimizes versus sacrifices, whether the decision is a one-way or two-way door, and the evidence that would actually move a reasonable person. Frames; does not pick.
+description: Frames a contested decision honestly — names the real axes of disagreement, what each option optimizes versus sacrifices, whether the decision is a one-way or two-way door, and the evidence that would actually move a reasonable person. Frames; does not pick.
 inputs:
   - a contested decision and its candidate options, pasted by the PM (the decision in one or two sentences; the options as a short list)
 outputs:

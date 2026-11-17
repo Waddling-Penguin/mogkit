@@ -1,0 +1,177 @@
+---
+title: "Prototype before the spec: test one assumption with a clickable build"
+slug: "prototype-before-the-spec"
+published: 2026-07-14
+updated: 2026-07-14
+wedge: discovery
+tools: ["Claude Code", "mogkit prototype-brief"]
+difficulty: beginner
+timeToImplement: "2h"
+outcome: "A clickable prototype that tests the one assumption your idea depends on, five user sessions, and a spec you write afterwards from what people did."
+relatedSkill: "prototype-brief"
+hasCliSetup: true
+costNote: "Covered by a Claude plan. Budget five 20-minute user sessions and whatever you pay participants."
+tags: ["prototyping", "discovery", "assumption-testing", "claude-code"]
+unlocks:
+  - "A working prototype in an afternoon, built by you, with no engineering time spent."
+  - "A written pass signal and kill signal, decided before anyone sees the prototype."
+  - "A spec backed by five observed sessions in place of five opinions from a review meeting."
+helps:
+  - "Stops the pattern where the team argues about a doc for two weeks and learns nothing."
+  - "Keeps the prototype small, because the brief says what to fake."
+  - "Gives engineering something they can click, which answers questions a paragraph cannot."
+skipIf:
+  - "The risk is technical. Whether your systems can do it is a question for an engineer's spike."
+  - "You cannot reach five real users this month. Solve that first."
+---
+
+## The problem
+
+A coding agent can build a clickable prototype in an afternoon. Colin
+Matthews laid out the approach in
+[Lenny's Newsletter](https://www.lennysnewsletter.com/p/how-top-pms-increase-their-leverage)
+on 30 June, and a lot of PMs have tried it since.
+
+Most of those prototypes teach the team nothing. The PM builds the whole
+feature, shows it in a review, hears "looks great", and writes the same
+spec they would have written anyway. The prototype was a demo. Nobody
+decided what it was supposed to prove.
+
+## What you'll build
+
+Three things, in this order.
+
+1. A one-page test scope from the `prototype-brief` skill. It names the
+   single assumption you are testing, what the prototype must do for real,
+   what it can fake, and the result that would kill the idea.
+2. A small prototype that Claude Code builds from that scope.
+3. Five user sessions and a short write-up of what people did.
+
+You write the spec last.
+
+## Example output
+
+The scope `prototype-brief` returned for a made-up idea, a "share a report
+by link" feature:
+
+```
+The one to test
+  Untested and most damaging if wrong: finance managers will send
+  a live link to their CFO in place of the PDF they export today.
+  (Value risk. A prototype is a fair test.)
+
+Scope of the test
+  Must be real:      the share dialog, the link, and the page the
+                     CFO opens, with realistic numbers
+  Can be faked:      login, permissions, every other report
+  Must not be faked: the recipient view. If it looks like a mock,
+                     nobody will judge whether they would send it.
+
+Pass and kill signals
+  Pass: 4 of 5 participants send the link without being asked to
+  Kill: 3 of 5 export the PDF anyway, or ask where the export is
+```
+
+## Prerequisites
+
+- A mogkit workspace with the skills installed. [Setup 101](/setup) covers
+  it.
+- Claude Code installed and signed in.
+- Five people who match your target user and will give you 20 minutes.
+
+## Build it
+
+1. **Update your skills** so you have `prototype-brief`. In the terminal,
+   inside your workspace:
+
+   ```bash
+   npx mogkit@latest skills add prototype-brief
+   ```
+
+2. **Run the brief.** Start Claude Code with `claude`, then type:
+
+   ```
+   /prototype-brief
+   We want to let finance managers share a live report by link.
+   Today they export a PDF and email it. Three customers asked for
+   this in support tickets.
+   ```
+
+   Use your own idea. Paste any customer evidence you have.
+
+3. **Read "The one to test".** If the skill says a prototype is the wrong
+   test, believe it and run the cheaper test it names.
+
+4. **Make a folder for the prototype**, separate from your real product
+   code.
+
+   ```bash
+   mkdir prototypes && cd prototypes && claude
+   ```
+
+5. **Ask Claude Code to build only the scope.** Paste the "Scope of the
+   test" section and add one instruction:
+
+   ```
+   Build a clickable web prototype of exactly this scope. Use
+   realistic sample data. Hard-code everything listed under "can be
+   faked". Do not add features that are not in the scope. When it
+   runs, tell me the address to open in my browser.
+   ```
+
+6. **Click through it yourself.** Fix anything that would distract a
+   participant. Stop when the one interaction under test feels real.
+
+7. **Run five sessions.** Give each person the task as a goal ("your CFO
+   wants this month's numbers") and stay quiet. Write down what they do,
+   not what they say they would do.
+
+8. **Compare against the signals.** Count the sessions against the pass
+   and kill lines you set in step 2. Then write the spec, or drop the idea.
+
+## How it works
+
+The order is the mechanism.
+
+- **Scope first.** The brief makes you write the pass and kill signals
+  before the prototype exists. Once you have built something, you want it
+  to work, and you will read ambiguous sessions as good news. Signals you
+  set earlier are harder to bend.
+- **One assumption.** A prototype that covers the whole feature gives
+  participants twenty things to react to. You cannot tell which one caused
+  the hesitation. A prototype of one interaction gives a readable result.
+- **Fake the rest.** The real-versus-faked list is what keeps the build to
+  an afternoon. Claude Code builds what you describe, so a tight scope
+  produces a small prototype.
+- **Behavior over opinion.** A participant who says "I'd use this" has
+  told you they are polite. A participant who looks for the PDF export
+  has told you something true.
+
+The spec you write afterwards includes evidence a doc review cannot
+produce: what five people did when they met the thing.
+
+## Variations & next
+
+- **Prototype on your real design system.** Ask an engineer to set up a
+  copy of the front-end code you are allowed to change. Prototypes built
+  on it look like the product, which removes a distraction from sessions.
+- **Use a different builder.** Lovable, v0 and Figma Make all work for
+  step 5. The brief and the sessions stay the same.
+- **Hand over the evidence.** Attach the scope, the prototype link and
+  the session notes to the spec. Run `spec-stress-test` on the spec
+  before review.
+
+## Limits & honesty
+
+A prototype is not production code. Do not ship it. If the idea passes,
+engineers build the real thing, and they may build it differently.
+
+Five sessions find big problems. They do not measure demand. A pass means
+"worth building a proper version to learn more."
+
+The prototype tests value and usability. It tells you nothing about
+whether the real feature is feasible, affordable or legal.
+
+The afternoon estimate holds for one interaction. A complex flow with
+several screens and states takes longer, and the agent's first attempt
+will need correcting.

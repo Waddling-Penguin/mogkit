@@ -1,0 +1,8 @@
+{
+  "title": "Advanced evals: how to find (and fix) hidden AI failures in your product",
+  "url": "https://www.lennysnewsletter.com/p/advanced-evals-how-to-find-and-fix",
+  "author": "Hamel Husain and Shreya Shankar",
+  "wedge": "planning",
+  "why": "The error-analysis method for AI features: read real traces, name the failures, count them, and only then decide what to measure. The eval-plan skill follows it.",
+  "kind": "newsletter"
+}

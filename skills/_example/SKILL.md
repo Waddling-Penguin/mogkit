@@ -3,7 +3,7 @@ name: _example
 tier: standalone
 wedge: strategy
 level: beginner
-summary: A minimal valid skill — copy this folder, rename it, replace the content. Demonstrates the required frontmatter and the four required body sections in order.
+description: A minimal valid skill — copy this folder, rename it, replace the content. Demonstrates the required frontmatter and the four required body sections in order.
 inputs:
   - one paragraph of text the PM pastes
 outputs:
