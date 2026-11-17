@@ -74,16 +74,18 @@ export function runSkillsAdd(name: string): number {
     );
     return 1;
   }
-  if (isSkillInstalled(paths.claudeSkills, skill.name)) {
-    console.log(
-      kleur.dim(`${skill.name} is already installed in .claude/skills/`),
-    );
+  // Install for Claude Code (.claude) and for Codex and Cursor (.agents).
+  const missing = [paths.claudeSkills, paths.agentsSkills].filter(
+    (dir) => !isSkillInstalled(dir, skill.name),
+  );
+  if (missing.length === 0) {
+    console.log(kleur.dim(`${skill.name} is already installed`));
     return 0;
   }
-  installSkillToWorkspace(paths.claudeSkills, skill);
+  for (const dir of missing) installSkillToWorkspace(dir, skill);
   console.log(
     kleur.green("✓") +
-      ` installed ${kleur.bold(skill.name)} into .claude/skills/${skill.name}/`,
+      ` installed ${kleur.bold(skill.name)} into .claude/skills/ and .agents/skills/`,
   );
   return 0;
 }

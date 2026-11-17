@@ -1,0 +1,185 @@
+---
+title: "Ask your product analytics in plain English, and check the answer"
+slug: "plain-english-analytics-posthog-mcp"
+published: 2026-06-16
+updated: 2026-06-16
+wedge: strategy
+tools: ["Claude Code", "PostHog MCP"]
+difficulty: beginner
+timeToImplement: "20m"
+outcome: "You ask a funnel or retention question in a sentence and get the number, the query behind it, and the event definitions it used, so you can check it before you repeat it in a meeting."
+relatedSkill: "metrics-tree"
+hasCliSetup: true
+costNote: "Your Claude plan covers the questions. PostHog's MCP server is free to connect. Queries count against your normal PostHog usage."
+tags: ["analytics", "mcp", "posthog", "metrics", "no-code"]
+unlocks:
+  - "Answers to funnel, retention and cohort questions in about a minute, without waiting on a data analyst."
+  - "The exact query and event names behind every number, saved next to the answer."
+  - "A weekly list of questions you asked and what you found, kept in your workspace."
+helps:
+  - "Replaces the 'can someone pull this for me' message and the two-day wait."
+  - "Catches the common error where two people mean different things by 'active user'."
+  - "Pairs with metrics-tree, so you ask about the inputs that move the goal and skip the vanity numbers."
+skipIf:
+  - "Your events are not tracked or named consistently. Fix tracking first."
+  - "You need a number for a board deck or a pricing decision. Have an analyst confirm it."
+---
+
+## The problem
+
+You have a question about your product. How many people who started
+onboarding last month finished it? Do customers who invite a teammate stay
+longer? The data exists. Getting to it means learning a query language,
+building a chart you will use once, or asking an analyst who has a queue.
+
+So most questions never get asked. The team plans from the three dashboards
+somebody built last year.
+
+## What you'll build
+
+A connection between Claude Code and your PostHog project. You type a
+question in plain English. Claude runs the query against your real data and
+replies with the number.
+
+You also add one rule to your workspace. Every answer must show the query,
+the events it counted, and the date range. You read those three things
+before you trust the number.
+
+## Example output
+
+A question asked against a made-up project:
+
+```
+You: Of the people who started onboarding in May, what share
+     finished it within 7 days?
+
+Answer: 41% (1,204 of 2,937)
+
+How I counted
+  Started:   event "onboarding_started", 1 to 31 May 2026
+  Finished:  event "onboarding_completed" by the same person,
+             within 7 days of their first "onboarding_started"
+  Excluded:  internal users (filter "is_internal = false")
+
+Check before you use this
+  - "onboarding_completed" fires on the last screen. A user who
+    closes the tab on that screen is not counted.
+  - 212 people started onboarding more than once. I used their
+    first start.
+```
+
+## Prerequisites
+
+- A mogkit workspace. If you do not have one, follow
+  [Setup 101](/setup) first. It takes about 15 minutes.
+- Claude Code installed and signed in.
+- A PostHog account with access to the project you want to ask about.
+
+## Build it
+
+1. **Open your workspace in the terminal.** The terminal is the text
+   window where you type commands. Setup 101 shows how to open it.
+
+   ```bash
+   cd my-workspace
+   ```
+
+2. **Connect PostHog.** Paste this line and press Enter. Use
+   `mcp-eu.posthog.com` in place of `mcp.posthog.com` if your PostHog
+   project is hosted in the EU.
+
+   ```bash
+   claude mcp add --transport http posthog https://mcp.posthog.com/mcp -s user
+   ```
+
+3. **Start Claude Code and sign in to PostHog.**
+
+   ```bash
+   claude
+   ```
+
+   Type `/mcp`, pick `posthog`, and follow the sign-in page that opens in
+   your browser. You do this once.
+
+4. **Add the checking rule.** Open the file `CLAUDE.md` in your workspace
+   and paste this at the bottom. Claude reads this file at the start of
+   every session.
+
+   ```md
+   ## Analytics answers
+
+   When you answer a question from PostHog data, always show:
+   1. The number, with the counts behind any percentage.
+   2. "How I counted": the exact events, filters and date range.
+   3. "Check before you use this": anything about the events or the
+      data that could make the number wrong.
+   Save each question and answer to knowledge/analytics/YYYY-MM-DD.md.
+   Never estimate. If the data cannot answer the question, say so.
+   ```
+
+5. **Ask what events exist.** Start here every time you work with a
+   project you do not know well.
+
+   ```
+   List the events in my PostHog project that relate to onboarding.
+   For each one, tell me when it fires.
+   ```
+
+6. **Ask your question.** Be specific about the people, the action and
+   the dates.
+
+   ```
+   Of the people who started onboarding in May, what share finished it
+   within 7 days?
+   ```
+
+7. **Read "How I counted" before the number.** If the events or filters
+   are not what you meant, say so and ask again.
+
+## How it works
+
+MCP, the Model Context Protocol, is a standard way to give an AI assistant
+access to a tool. PostHog runs an MCP server. When you connect it, Claude
+gains a set of actions it can take in your PostHog project, such as listing
+events and running a query.
+
+Your question goes through three steps.
+
+- **Translate.** Claude turns your sentence into a query. This is the step
+  where mistakes happen. "Finished onboarding" could match three different
+  events, and Claude has to pick one.
+- **Run.** PostHog runs the query on your real data and returns rows. Claude
+  does not guess at this stage. The numbers come from PostHog.
+- **Report.** Claude writes the answer and, because of your rule in
+  `CLAUDE.md`, shows which events and filters it picked.
+
+The rule matters more than the connection. The arithmetic is reliable. The
+translation is where a wrong assumption gets in, and the "How I counted"
+block puts that assumption on the screen where you can catch it.
+
+## Variations & next
+
+- **Start from a metrics tree.** Run the `metrics-tree` skill on your goal
+  first. It lists the input metrics that move the goal. Then ask PostHog
+  about each input in turn.
+- **Use a different analytics tool.** Amplitude and Mixpanel both publish
+  MCP servers. The checking rule in step 4 works the same way with either.
+- **Save a question you ask often.** Ask Claude to turn a repeated question
+  into a saved PostHog insight, so the rest of the team sees the same
+  definition.
+
+## Limits & honesty
+
+Claude can pick the wrong event, and the answer will still look confident.
+Reading "How I counted" is the whole safeguard, so do not skip it.
+
+The answer is only as good as your tracking. If an event fires twice, or
+not on mobile, the number is wrong and nothing in this workflow will tell
+you.
+
+The connection can read your project's data. Connect it with your own
+login so it sees only what you are allowed to see, and do not paste
+customer details into other tools.
+
+For a decision with money or a public claim attached, treat the answer as a
+first look and ask an analyst to confirm it.

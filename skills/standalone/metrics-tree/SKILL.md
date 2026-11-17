@@ -3,7 +3,7 @@ name: metrics-tree
 tier: standalone
 wedge: strategy
 level: intermediate
-summary: Turns a fuzzy goal into a structured metrics tree — the top metric, its defining equation, the input metrics that compose it, the leading indicators, and the single metric most worth moving first — without inventing a number the PM hasn't measured.
+description: Turns a fuzzy goal into a structured metrics tree — the top metric, its defining equation, the input metrics that compose it, the leading indicators, and the single metric most worth moving first — without inventing a number the PM hasn't measured.
 inputs:
   - a fuzzy goal or objective pasted by the PM (e.g. "increase activation", "improve retention", "make checkout faster")
 outputs:

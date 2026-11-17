@@ -2,16 +2,17 @@
 title: "Planning & Roadmapping"
 slug: "planning"
 order: 3
-summary: "Specs that hold up under attack and roadmaps that don't lie about the tradeoffs."
+summary: "Find the holes in a spec, check an AI feature, and decide what a prototype must prove."
 problem: "A spec read by its author looks airtight. Everyone else has to guess at the parts the author filled in from memory — and that's where the regressions, the missed edge cases, and the 'we never agreed on that' arguments live. The fix isn't a longer spec; it's a structured red-team before review. Same goes for the metric goal driving the plan: if you can't decompose it into the inputs that move it, you're planning against a vibe."
 engineStatus: "coming"
-skills: ["spec-stress-test", "metrics-tree", "tradeoff-frame"]
+skills: ["spec-stress-test", "metrics-tree", "eval-plan", "prototype-brief", "tradeoff-frame"]
 material:
   - perri-escaping-build-trap
   - sean-ellis-hacking-growth
+  - husain-shankar-advanced-evals
 ---
 
-## The level-up path
+## How the skills fit together
 
 Three sharp standalone skills cover the load-bearing planning moves:
 
@@ -26,15 +27,18 @@ Three sharp standalone skills cover the load-bearing planning moves:
   plan. Names the real axes, one-way vs two-way door, the evidence
   that would actually decide it.
 
-## A note on the knowledge engine
+Two more skills cover planning work that became routine in 2026:
 
-There is no corpus-backed engine for Planning in v1 — see [the
-principles](/). Roadmap drift is a craft problem, not a graph problem.
-If a planning-side engine earns its place, it will land later. Until
-then, the three skills above plus a versioned `roadmap.md` in your
-workspace go further than most teams' current practice.
+- **`eval-plan`** is for AI features. You read real traces and note what
+  went wrong. The skill groups your notes into named failure modes with
+  counts and says which ones deserve an automated check. It never
+  outputs an accuracy score.
+- **`prototype-brief`** is for the afternoon before you build a
+  prototype with a coding agent. It names the one assumption the
+  prototype has to test and the result that would kill the idea.
 
-## Visual setup walkthrough
+
+## Try it
 
 1. `npx mogkit init my-planning-workspace`.
 2. Paste a PRD into `spec-stress-test`. Get back the attack list.

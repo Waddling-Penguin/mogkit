@@ -3,7 +3,7 @@ name: assumption-audit
 tier: discovery
 wedge: discovery
 level: intermediate
-summary: Reads the graph and ranks every claim with single-source or zero-source backing by risk — surfacing what the team would be betting on without evidence, each tied to the decision it would affect. Surfaces risk; does not resolve it.
+description: Reads the graph and ranks every claim with single-source or zero-source backing by risk — surfacing what the team would be betting on without evidence, each tied to the decision it would affect. Surfaces risk; does not resolve it.
 inputs:
   - graph/graph.json (produced by graphify)
 outputs:

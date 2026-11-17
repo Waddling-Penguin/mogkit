@@ -3,7 +3,7 @@ name: synthesis-map
 tier: discovery
 wedge: discovery
 level: advanced
-summary: Takes a fresh batch of interviews and turns them into an opportunity map — the input to an Opportunity Solution Tree. Maps opportunities (the underlying jobs and pains that would move outcomes), not solutions; keeps provenance on every opportunity.
+description: Takes a fresh batch of interviews and turns them into an opportunity map — the input to an Opportunity Solution Tree. Maps opportunities (the underlying jobs and pains that would move outcomes), not solutions; keeps provenance on every opportunity.
 inputs:
   - graph/graph.json (the current graph, for context and de-duplication)
   - a fresh batch of interview files in sources/ that have not yet been synthesized (typically newly added since the last graphify run)

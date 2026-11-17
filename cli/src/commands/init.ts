@@ -68,7 +68,7 @@ export async function runInit(
       `  ${kleur.cyan("mogkit demo")}    — load the sample corpus to play with`,
       `  ${kleur.cyan("mogkit add")}     — ingest your own research file`,
       ``,
-      `  ${kleur.dim("then open this directory in Claude Code and run a skill")}`,
+      `  ${kleur.dim("then open this directory in Claude Code, Codex or Cursor and run a skill")}`,
     ].join("\n"),
     "workspace ready",
   );

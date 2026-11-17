@@ -24,7 +24,7 @@ name: prd-interrogate
 tier: discovery              # standalone | discovery
 wedge: discovery             # discovery | strategy | planning | gtm | conflict
 level: advanced              # beginner | intermediate | advanced
-summary: One sentence. What the skill does and what the PM walks away with.
+description: One sentence. What the skill does and what the PM walks away with.
 inputs:
   - graph/graph.json
   - a stated PRD intent
@@ -74,7 +74,7 @@ name: prd-interrogate
 tier: discovery
 wedge: discovery
 level: advanced
-summary: Turns a PRD intent into an interrogation — what your evidence supports, what is assumed, and what to validate — so you write a sharper PRD yourself.
+description: Turns a PRD intent into an interrogation — what your evidence supports, what is assumed, and what to validate — so you write a sharper PRD yourself.
 inputs:
   - graph/graph.json
   - a stated PRD intent from the PM

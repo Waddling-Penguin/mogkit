@@ -3,7 +3,7 @@ name: prd-interrogate
 tier: discovery
 wedge: discovery
 level: advanced
-summary: Turns a PRD intent into an interrogation — what your evidence supports, what is assumed, what is unvalidated, and who you haven't talked to — so you write a sharper PRD yourself. Never produces the PRD.
+description: Turns a PRD intent into an interrogation — what your evidence supports, what is assumed, what is unvalidated, and who you haven't talked to — so you write a sharper PRD yourself. Never produces the PRD.
 inputs:
   - graph/graph.json (produced by graphify)
   - a stated PRD intent from the PM (the feature or problem the PRD will cover)

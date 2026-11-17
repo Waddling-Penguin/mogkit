@@ -3,7 +3,7 @@ name: graphify
 tier: discovery
 wedge: discovery
 level: advanced
-summary: Reads every file in `sources/` and produces a schema-valid `graph/graph.json` plus a human-readable `graph/graph.md`. Every node and edge carries provenance; unsourced claims become explicit `Assumption` nodes. Rates corpus `health` and says so loudly when it is thin.
+description: Reads every file in `sources/` and produces a schema-valid `graph/graph.json` plus a human-readable `graph/graph.md`. Every node and edge carries provenance; unsourced claims become explicit `Assumption` nodes. Rates corpus `health` and says so loudly when it is thin.
 inputs:
   - all files in sources/
   - engine/graph-schema.json (the contract the output must satisfy)

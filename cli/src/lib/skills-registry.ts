@@ -35,6 +35,7 @@ function parseFrontmatter(md: string): SkillFrontmatter | null {
     // Strip surrounding quotes if present.
     fm[k] = v.replace(/^["']|["']$/g, "").trim();
   }
+  fm.summary ??= fm.description; // SKILL.md uses the Agent Skills key
   if (
     !fm.name ||
     !fm.tier ||

@@ -1,0 +1,197 @@
+---
+title: "A shared product context folder, plus a morning brief that reads it"
+slug: "team-context-repo-morning-brief"
+published: 2026-08-11
+updated: 2026-08-11
+wedge: planning
+tools: ["Claude Cowork", "Claude Code", "Git", "Google Calendar", "Jira or Linear"]
+difficulty: beginner
+timeToImplement: "1h"
+outcome: "One folder holds what your product team knows: strategy, decisions, customers, terms. Every weekday morning an agent reads it with your calendar and tickets, and writes you a one-page brief."
+relatedSkill: null
+hasCliSetup: true
+costNote: "Covered by a paid Claude plan. No extra tools to buy."
+tags: ["context", "scheduled-agent", "planning", "no-code", "claude-md"]
+unlocks:
+  - "An AI assistant that already knows your strategy, your customers and your team's vocabulary, with no re-explaining."
+  - "A one-page brief each morning covering today's meetings, the related docs, and the tickets that need you."
+  - "A decision log the whole team can search, with the date and the reason for each call."
+helps:
+  - "Ends the habit of pasting the same background into every chat."
+  - "Cuts meeting prep from 30 minutes to reading one page."
+  - "New teammates read the folder and get up to speed in a day."
+skipIf:
+  - "Your company does not allow AI tools to connect to calendar or ticket data. Check first."
+  - "You will not keep the folder current. A stale context folder gives confident wrong answers."
+---
+
+## The problem
+
+Every AI chat starts from zero. You explain the product, the customer, the
+quarter's goal and what "activation" means on your team. Tomorrow you
+explain it again. The assistant gives generic advice because it knows
+nothing specific.
+
+The same gap hurts people. A decision made in March lives in one person's
+memory and a lost Slack thread.
+
+Jyothi Nookula showed her own version of the fix on
+[Aakash Gupta's podcast](https://www.aakashg.com/jyothi-nookula-claude-stack-podcast/)
+in July: put the context in files, point the assistant at them, and
+schedule a morning brief. This entry is that setup, kept as small as it
+can be.
+
+## What you'll build
+
+Two things.
+
+1. **A context folder.** Plain text files, stored in git so every change
+   is saved with a date. A short `CLAUDE.md` file at the top tells the
+   assistant what is in the folder and how to use it.
+2. **A morning brief.** A scheduled task in Claude Cowork that runs each
+   weekday. It reads the folder, your calendar and your assigned tickets,
+   and writes one page.
+
+## Example output
+
+```
+Brief for Tuesday 11 August
+
+Meetings (3)
+  10:00  Pricing review with finance
+         Context: decisions/2026-07-22-credits-vs-seats.md says we
+         chose credits and left overage caps open. That is today's
+         open question.
+  13:30  Customer call, Northwind (design partner)
+         Last call 28 July: they asked for SSO on the mid tier.
+         No ticket exists for it.
+  16:00  Sprint review
+
+Needs you today
+  PROJ-412  Blocked 4 days, waiting on your answer about empty states
+  PROJ-398  Spec review requested Friday, not started
+
+Not in the folder
+  Nothing on file about Northwind's renewal date. Ask in the call.
+```
+
+## Prerequisites
+
+- A paid Claude plan with Cowork, which is in the Claude desktop app.
+- Node.js and Claude Code. [Setup 101](/setup) walks through both.
+- Permission from your company to connect your calendar and ticket tool.
+
+## Build it
+
+1. **Create the folder.** In the terminal:
+
+   ```bash
+   npx mogkit init product-context
+   cd product-context
+   mkdir context decisions customers
+   ```
+
+   `mogkit init` creates the folder, turns on git, and adds a starter
+   `CLAUDE.md`.
+
+2. **Write four short files.** Keep each under a page. You are writing for
+   a smart new hire.
+
+   ```
+   context/strategy.md     what we are building this year and why
+   context/glossary.md     what our terms mean ("activation" = ...)
+   context/team.md         who owns what
+   context/metrics.md      the numbers we watch and their definitions
+   ```
+
+3. **Add this to the bottom of `CLAUDE.md`.**
+
+   ```md
+   ## Product context
+
+   Before you answer a product question, read the files in context/.
+   Decisions live in decisions/ as YYYY-MM-DD-short-name.md, each
+   with the decision, the reason, and who made it.
+   Customer notes live in customers/, one file per customer.
+   If the folder does not cover something, say "not in the folder".
+   Do not fill the gap with a guess.
+   ```
+
+4. **Log your first decision.** Create
+   `decisions/2026-08-11-example.md` with three lines: what you decided,
+   why, and who agreed. Do this after every real decision from now on.
+
+5. **Save your work.**
+
+   ```bash
+   git add . && git commit -m "Start product context folder"
+   ```
+
+6. **Open the Claude desktop app, go to Cowork, and choose the
+   `product-context` folder** as the working folder.
+
+7. **Connect your tools.** In Cowork's connector settings, connect Google
+   Calendar and Jira or Linear. Sign in to each when asked.
+
+8. **Create the scheduled task.** Ask Cowork to schedule this prompt for
+   every weekday at 8:00:
+
+   ```
+   Write my brief for today and save it to briefs/YYYY-MM-DD.md.
+   1. List today's meetings from my calendar. For each, find related
+      files in decisions/ and customers/ and say what is still open.
+   2. List tickets assigned to me that are blocked or waiting on me.
+   3. End with "Not in the folder": things today's meetings need
+      that the folder has no file for.
+   Keep it to one page. Facts only. Quote the file name for anything
+   you take from the folder.
+   ```
+
+9. **Read tomorrow's brief and correct it.** When it gets something
+   wrong, the fix is almost always a missing or outdated file. Update the
+   file.
+
+## How it works
+
+An AI model knows nothing about your company until something puts that
+information in front of it. A context folder is the simplest way to do
+that. The assistant reads the files at the start of the task, the same way
+a new hire reads the wiki.
+
+- **`CLAUDE.md` is the index.** Claude reads it first in every session. It
+  stays short and points to the other files. A long `CLAUDE.md` gets
+  skimmed, by people and by the model.
+- **Files beat memory.** The model does not remember yesterday. The
+  folder does. Each decision file you add makes every later answer
+  better.
+- **Git gives you history.** Every change is saved with a date and an
+  author, so "when did we decide that?" has an answer.
+- **The schedule runs the same prompt daily.** Connectors fetch today's
+  calendar and tickets. The prompt joins them to the folder. The "not in
+  the folder" section tells you which file to write next.
+
+## Variations & next
+
+- **Share it.** Push the folder to a private GitHub repository and invite
+  the product team. Changes go through review like code does.
+- **Add your skills.** The workspace already has the mogkit skills in
+  `.claude/skills/`. Anyone who opens the folder can run
+  `spec-stress-test` or `tradeoff-frame` with the team's context loaded.
+- **Add a Friday review.** Schedule a second task that lists the week's
+  new decision files and asks which decisions never got written down.
+
+## Limits & honesty
+
+The brief is as current as the folder. If you stop logging decisions, it
+will quote old ones with full confidence.
+
+A scheduled task that works in a folder on your computer runs only while
+the computer is awake and the Claude desktop app is open. If your laptop
+is closed at 8:00, the brief does not run until you open it.
+
+The folder will hold sensitive material. Keep the repository private,
+leave out anything about individual performance or pay, and follow your
+company's rules for customer data.
+
+The brief saves prep time. It does not attend the meeting for you or tell
+you what to decide.

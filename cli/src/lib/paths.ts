@@ -53,6 +53,9 @@ export type WorkspacePaths = {
   graph: string;
   knowledge: string;
   claudeSkills: string;
+  /** Codex and Cursor read skills from here; Claude Code reads .claude/skills. */
+  agentsSkills: string;
+  agentsMd: string;
   graphJson: string;
 };
 
@@ -65,6 +68,8 @@ export function workspacePaths(root: string): WorkspacePaths {
     graph: join(root, "graph"),
     knowledge: join(root, "knowledge"),
     claudeSkills: join(root, ".claude", "skills"),
+    agentsSkills: join(root, ".agents", "skills"),
+    agentsMd: join(root, "AGENTS.md"),
     graphJson: join(root, "graph", "graph.json"),
   };
 }

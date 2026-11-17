@@ -3,7 +3,7 @@ name: stakeholder-map
 tier: standalone
 wedge: conflict
 level: intermediate
-summary: Maps the stakeholders around a decision — each one's stated position, the likely underlying incentive, where the real disagreement sits (often not the surface one), and the minimum set of conversations to unblock. Names dynamics; never scripts manipulation.
+description: Maps the stakeholders around a decision — each one's stated position, the likely underlying incentive, where the real disagreement sits (often not the surface one), and the minimum set of conversations to unblock. Names dynamics; never scripts manipulation.
 inputs:
   - a decision and the people/teams involved, pasted by the PM (the decision in one or two sentences; the stakeholders as a list with roles)
 outputs:

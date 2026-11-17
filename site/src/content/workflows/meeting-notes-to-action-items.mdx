@@ -2,7 +2,7 @@
 title: "Meeting transcript → action items + draft tickets"
 slug: "meeting-notes-to-action-items"
 published: 2026-05-23
-updated: 2026-05-23
+updated: 2026-11-16
 wedge: planning
 tools: ["Otter / Fathom / Granola", "Claude API", "Linear", "GitHub Actions"]
 difficulty: beginner
@@ -134,7 +134,7 @@ task, you spot the hallucination on review and drop it.
    - No prose outside the JSON.`;
 
    const resp = await client.messages.create({
-     model: "claude-sonnet-4-6",
+     model: "claude-sonnet-5-5",
      max_tokens: 2000,
      system: SYSTEM,
      messages: [{ role: "user", content: transcript }],

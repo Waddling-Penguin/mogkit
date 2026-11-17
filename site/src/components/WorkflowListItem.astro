@@ -15,9 +15,9 @@ const dateStr = published.toISOString().slice(0, 10);
 ---
 <Card href={`/workflows/${slug}`} padding="md" class="group">
   <div class="flex items-baseline justify-between gap-4 mb-1">
-    <h3 class="font-display text-xl text-halo tracking-tight flex items-baseline gap-3">
+    <h3 class="relative font-display text-xl text-halo tracking-tight">
       <span
-        class="font-mono text-base text-mercury translate-x-[-6px] opacity-0
+        class="absolute -left-4 font-mono text-base text-mercury translate-x-[-6px] opacity-0
                group-hover:translate-x-0 group-hover:opacity-100
                transition-all duration-450 ease-voidchrome"
         aria-hidden="true"

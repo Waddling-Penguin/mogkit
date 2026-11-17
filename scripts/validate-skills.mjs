@@ -17,7 +17,7 @@ const REQUIRED_FRONTMATTER = {
   tier: ["standalone", "discovery"],
   wedge: ["discovery", "strategy", "planning", "gtm", "conflict"],
   level: ["beginner", "intermediate", "advanced"],
-  summary: "string",
+  description: "string",
   inputs: "array",
   outputs: "array",
   methodology: "string",

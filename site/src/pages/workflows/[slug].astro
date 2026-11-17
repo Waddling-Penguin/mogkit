@@ -67,8 +67,8 @@ const updatedStr = d.updated.toISOString().slice(0, 10);
 
   <Section spacing="default">
     <div class="container-huge">
-      <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-12">
-        <div class="prose-voidchrome max-w-3xl mx-auto lg:mx-0 lg:order-1 order-2">
+      <div class="grid gap-10 grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-12">
+        <div class="prose-voidchrome min-w-0 w-full max-w-3xl mx-auto lg:mx-0 lg:order-1 order-2">
           <Content />
         </div>
         <div class="lg:order-2 order-1 max-w-3xl mx-auto lg:max-w-none">
@@ -84,7 +84,7 @@ const updatedStr = d.updated.toISOString().slice(0, 10);
 
   <Section spacing="tight" hairline>
     <div class="container-tight flex items-baseline justify-between text-sm">
-      <a href="/workflows" class="text-mercury hover:text-halo transition-colors">← back to the library</a>
+      <a href="/workflows" class="text-mercury hover:text-halo transition-colors">← all guides</a>
       <a href="/rss.xml" class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash hover:text-mercury transition-colors">RSS</a>
     </div>
   </Section>

@@ -18,6 +18,7 @@ test("scaffoldWorkspace creates the expected structure", () => {
   const p = workspacePaths(target);
   assert.equal(existsSync(p.claudeMd), true, "CLAUDE.md present");
   assert.equal(existsSync(p.gitignore), true, ".gitignore present");
+  assert.equal(existsSync(p.agentsMd), true, "AGENTS.md present");
   assert.equal(existsSync(p.sources), true, "sources/ exists");
   assert.equal(existsSync(p.graph), true, "graph/ exists");
   assert.equal(existsSync(p.knowledge), true, "knowledge/ exists");
@@ -49,11 +50,24 @@ test("scaffoldWorkspace creates the expected structure", () => {
     "prd-interrogate",
     "interview-guide",
     "synthesis-map",
+    "positioning-check",
+    "icp-sharpen",
+    "pricing-pressure-test",
+    "launch-tier",
+    "win-loss-review",
+    "agent-readiness",
+    "eval-plan",
+    "prototype-brief",
   ]) {
     assert.equal(
       existsSync(join(p.claudeSkills, name, "SKILL.md")),
       true,
       `skill installed: ${name}`,
+    );
+    assert.equal(
+      existsSync(join(p.agentsSkills, name, "SKILL.md")),
+      true,
+      `skill installed for Codex and Cursor: ${name}`,
     );
   }
 

@@ -3,7 +3,7 @@ name: interview-guide
 tier: discovery
 wedge: discovery
 level: intermediate
-summary: Reads the graph (specifically its gaps) and produces a discovery interview guide targeted at the biggest current gaps — non-leading, JTBD-grounded questions, each tied to a named gap so the next conversation actually moves the graph.
+description: Reads the graph (specifically its gaps) and produces a discovery interview guide targeted at the biggest current gaps — non-leading, JTBD-grounded questions, each tied to a named gap so the next conversation actually moves the graph.
 inputs:
   - graph/graph.json (produced by graphify)
   - optional - the specific segment or persona the PM is about to interview

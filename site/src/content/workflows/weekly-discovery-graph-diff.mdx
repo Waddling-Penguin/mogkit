@@ -2,7 +2,7 @@
 title: "Weekly Discovery graph diff: surface what changed in your research"
 slug: "weekly-discovery-graph-diff"
 published: 2026-05-27
-updated: 2026-05-27
+updated: 2026-11-16
 wedge: discovery
 tools: ["mogkit", "Claude Code", "GitHub Actions", "git"]
 difficulty: intermediate
@@ -110,10 +110,10 @@ claims you triangulated this week, the real progress.
      diff:
        runs-on: ubuntu-latest
        steps:
-         - uses: actions/checkout@v4
+         - uses: actions/checkout@v7
            with: { fetch-depth: 0 }
-         - uses: actions/setup-node@v4
-           with: { node-version: 20 }
+         - uses: actions/setup-node@v7
+           with: { node-version: 24 }
          - name: Find last week's graph
            id: prev
            run: |
@@ -129,7 +129,7 @@ claims you triangulated this week, the real progress.
              cat /tmp/diff.md
          - name: Post as GitHub Discussion or Issue
            if: steps.prev.outputs.sha != ''
-           uses: peter-evans/create-issue-from-file@v5
+           uses: peter-evans/create-issue-from-file@v6
            with:
              title: "Discovery graph — week ending ${{ github.run_number }}"
              content-filepath: /tmp/diff.md

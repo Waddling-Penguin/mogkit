@@ -15,21 +15,21 @@ const difficulties = ["beginner", "intermediate", "advanced"];
 ---
 
 <BaseLayout
-  title="Workflow Library · mogkit"
-  description="A growing, newest-first collection of implementable AI-for-PM workflows. Copy-paste recipes and how-it-works explainers, side by side."
+  title="Guides · mogkit"
+  description="Step-by-step guides for putting AI to work on recurring product management chores. Each has the steps to copy and a plain explanation of how it works."
 >
   <section class="container-wide pt-16 sm:pt-20 pb-8">
     <div class="flex items-baseline justify-between gap-4 flex-wrap">
       <div>
-        <Eyebrow>Workflow Library</Eyebrow>
+        <Eyebrow>Guides</Eyebrow>
         <h1 class="font-display text-4xl sm:text-5xl text-halo tracking-tightest leading-[0.98] mt-4 lift-in lift-in-2">
-          Implementable<br/>
-          <span class="text-mercury">AI-for-PM workflows.</span>
+          Put AI to work<br/>
+          <span class="text-mercury">on your PM chores.</span>
         </h1>
         <p class="mt-6 text-chrome max-w-2xl leading-relaxed lift-in lift-in-3">
-          Each entry is both a copy-paste recipe a PM could ship today and a
-          "how it works" explainer that teaches the mechanism. Newest first.
-          We never ship a black box.
+          Step-by-step guides, newest first. Each one has the steps to copy
+          and a plain explanation of how it works, so you can adapt it to
+          your team. Start with one marked beginner.
         </p>
       </div>
       <a href="/rss.xml" class="font-mono text-[12px] uppercase tracking-[0.18em] text-mercury hover:text-halo transition-colors">
@@ -40,7 +40,7 @@ const difficulties = ["beginner", "intermediate", "advanced"];
     {/* Filter bar */}
     <div class="mt-10 flex flex-wrap items-center gap-3 text-sm" id="filters">
       <div class="flex items-center gap-2">
-        <label class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash">wedge</label>
+        <label class="font-mono text-[11px] uppercase tracking-[0.18em] text-ash">topic</label>
         <select id="filter-wedge" class="bg-obsidian border border-graphite rounded px-2.5 py-1.5 text-sm text-chrome focus:outline-none focus:border-mercury">
           <option value="">all</option>
           {wedges.map((w) => <option value={w}>{w}</option>)}

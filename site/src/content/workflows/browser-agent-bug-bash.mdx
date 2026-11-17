@@ -1,0 +1,191 @@
+---
+title: "Pre-launch bug bash with a browser agent"
+slug: "browser-agent-bug-bash"
+published: 2026-11-10
+updated: 2026-11-10
+wedge: gtm
+tools: ["Claude Code", "Playwright MCP", "A staging site"]
+difficulty: intermediate
+timeToImplement: "1h"
+outcome: "Before launch, an agent clicks through your test plan in a real browser on staging and returns a findings list with a screenshot for each one. Your team's bug bash starts from that list."
+relatedSkill: "launch-readiness"
+hasCliSetup: true
+costNote: "Covered by a Claude plan. A 20-scenario run takes 20 to 40 minutes of agent time."
+tags: ["launch", "qa", "browser-agent", "gtm", "testing"]
+unlocks:
+  - "A first pass over every scenario in your test plan, done before the team meeting."
+  - "Edge-case inputs nobody has the patience to type: 1,000 characters, emoji, empty fields."
+  - "A findings file with steps to reproduce and a screenshot per issue."
+helps:
+  - "The one-hour team bug bash goes to judgment calls, because the agent already found the broken basics."
+  - "You, the PM, can run it yourself without booking QA time."
+  - "The same test plan runs again after fixes, so you confirm they worked."
+skipIf:
+  - "You have no staging environment. Never point this at production with real customer data."
+  - "Your launch risk is about load or security. This checks behavior a user would see."
+---
+
+## The problem
+
+The bug bash is on the calendar for the day before launch. Eight people
+join a call, click around for an hour, and file what they notice. Half the
+findings are the same three obvious bugs. Nobody tests the long company
+name or the empty state, because nobody enjoys it.
+
+Then a customer finds it in the first week.
+
+On Claire Vo's [How I AI](https://www.chatprd.ai/how-i-ai/inside-figma-s-pm-os-31-ai-skills-better-bug-bashes-and-an-automated-growth-loop)
+in late October, Figma PM Ezra Mechaber described handing the first pass to an
+agent with a browser. He writes a test plan, gives the agent a test
+account, and reads its findings before the team meets. He said it caught a
+1,000-emoji input failure and a grammar bug in a team name.
+
+## What you'll build
+
+A test plan file and a browser connection for Claude Code. You tell the
+agent to work through the plan on your staging site. It opens a real
+browser, performs each scenario, tries edge-case inputs, and writes a
+findings file with screenshots.
+
+Your team's bug bash then starts from the findings.
+
+## Example output
+
+```
+Bug bash findings, invoice sharing, staging, 10 November
+Scenarios run: 18. Passed: 13. Findings: 5. Could not run: 0.
+
+F1  HIGH  Share link shows the wrong month to the recipient
+    Scenario 4. Steps: open October report, Share, copy link,
+    open link in a signed-out window. Expected October.
+    Saw September. Screenshot: findings/f1.png
+
+F2  MED   Team name with an apostrophe breaks the email subject
+    Scenario 9, edge input "O'Brien & Sons". Subject line reads
+    "O&#39;Brien &amp; Sons shared a report".
+    Screenshot: findings/f2.png
+
+F3  LOW   Empty state has no button
+    Scenario 12. A new account with no reports sees "No reports
+    yet" and nothing to click. Screenshot: findings/f3.png
+
+Not checked: email delivery (cannot read the inbox), payments.
+```
+
+## Prerequisites
+
+- A staging or test version of your product at a web address, with fake
+  data.
+- A test account for it. Not your own account and not a customer's.
+- A mogkit workspace with Claude Code. [Setup 101](/setup) covers it.
+
+## Build it
+
+1. **Give Claude Code a browser.** In the terminal, inside your
+   workspace:
+
+   ```bash
+   claude mcp add playwright npx @playwright/mcp@latest
+   ```
+
+   Playwright is a free tool that lets software control a web browser.
+
+2. **Write the test plan.** Create `launches/invoice-sharing/test-plan.md`.
+   Write scenarios as goals, with the result you expect.
+
+   ```md
+   # Test plan: invoice sharing
+
+   Site: https://staging.example.com
+   Account: use TEST_EMAIL and TEST_PASSWORD from my message
+
+   ## Scenarios
+   1. Sign in. Expect the dashboard.
+   2. Open the October report and share it by link. Expect a link.
+   3. Open that link signed out. Expect the October report, read-only.
+   4. Revoke the link, then open it again. Expect an "expired" page.
+
+   ## Edge inputs to try in every text field
+   - empty
+   - 1,000 characters
+   - emoji, and a name with an apostrophe and an ampersand
+   - a script tag such as <script>alert(1)</script>
+
+   ## Do not
+   - change account settings, billing, or anything outside sharing
+   - send email to any address except the test address
+   ```
+
+3. **Start Claude Code and give it the job.** Type `claude`, then:
+
+   ```
+   Work through launches/invoice-sharing/test-plan.md in the browser.
+   Test account: qa-bot@example.com / the password I will type next.
+   For every scenario, do it, compare with the expected result, and
+   try each edge input where a text field exists.
+   Write launches/invoice-sharing/findings.md with: a summary line,
+   then one entry per finding with severity, scenario number, exact
+   steps, expected, actual, and a screenshot saved in findings/.
+   List anything you could not check. Follow the "Do not" list.
+   Report only. Do not fix anything.
+   ```
+
+4. **Watch the first few scenarios.** A browser window opens and you can
+   see every click. Stop it if it wanders outside the plan.
+
+5. **Reproduce the HIGH findings yourself.** Follow the steps in the
+   file. An agent can misread a page, so confirm before you file a bug.
+
+6. **Send the findings file to the team before the bug bash.** Ask them
+   to spend the hour on what the agent cannot judge: does the flow make
+   sense, is the wording clear, does it feel finished.
+
+7. **Run it again after the fixes.** Same command, same plan. Compare the
+   two findings files.
+
+## How it works
+
+- **The browser connection.** Playwright MCP gives Claude a set of
+  actions: open a page, click, type, read what is on screen, take a
+  screenshot. Claude uses the same pages your users do. It is not
+  reading your code.
+- **The plan is the instruction.** The agent is only as thorough as the
+  plan. Scenarios written as "expect X" give it something to compare
+  against. A plan that says "test sharing" produces a vague report.
+- **Edge inputs are where it earns its keep.** A person tests the long
+  name once. The agent tests it in every field of every scenario without
+  getting bored.
+- **The "Do not" list is the guard rail.** An agent with a browser and a
+  login can do anything that account can do. The list, the test account
+  and the staging site together limit the damage a mistake can cause.
+- **Screenshots make it checkable.** Each finding has evidence you can
+  look at in five seconds, which is how you catch the agent's own
+  mistakes.
+
+## Variations & next
+
+- **Run `launch-readiness` first.** It lists the gaps in the launch as a
+  whole: owners, rollback, support briefing. Add its findings to the test
+  plan as scenarios.
+- **Size the launch with `launch-tier`.** A small release may need only
+  the agent pass. A major one needs the agent pass and the full team.
+- **Use a different agent.** Mechaber's setup used OpenAI's Codex with
+  its browser. Claude in Chrome also works. The test plan file stays the
+  same.
+
+## Limits & honesty
+
+The agent checks behavior against what you wrote. It will not tell you a
+flow is confusing, a label is misleading, or the feature solves the wrong
+problem. People do that.
+
+It makes mistakes. It can report a slow page as a failure or miss a
+visual bug that is obvious to a person. Reproduce anything you plan to
+act on.
+
+It cannot check what it cannot see: email delivery, SMS, payments that
+need a real card, or anything behind a CAPTCHA.
+
+Use staging and a test account every time. Do not give an agent a login
+that can reach real customer data, and do not type the password for a
+real account into a chat.

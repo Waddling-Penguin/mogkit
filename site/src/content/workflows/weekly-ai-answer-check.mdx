@@ -1,0 +1,211 @@
+---
+title: "Weekly check: what does an AI assistant tell buyers about your product?"
+slug: "weekly-ai-answer-check"
+published: 2026-10-20
+updated: 2026-10-20
+wedge: gtm
+tools: ["GitHub Actions", "Claude Code Action", "mogkit agent-readiness"]
+difficulty: intermediate
+timeToImplement: "45m"
+outcome: "Every Monday you get a short report: for each question your buyers ask, whether an AI assistant recommended you, mentioned you, or left you out, which sources it cited, and which facts it got wrong."
+relatedSkill: "agent-readiness"
+hasCliSetup: false
+costNote: "Claude API usage, roughly $1 to $3 per weekly run for 10 questions asked 3 times each."
+tags: ["gtm", "aeo", "ai-search", "scheduled-agent", "positioning"]
+unlocks:
+  - "A weekly record of whether an assistant recommends you, mentions you, or skips you, per buyer question."
+  - "A list of facts the assistant got wrong about your product, such as old pricing."
+  - "The sources the assistant cites, which shows you which pages shape the answer."
+helps:
+  - "Turns 'are we showing up in AI answers?' into a table you can track week to week."
+  - "Catches a wrong price or a removed feature before a buyer repeats it on a sales call."
+  - "Shows whether a docs or pricing page change made any difference."
+skipIf:
+  - "Your buyers do not research with AI assistants. Ask five recent customers how they found you."
+  - "You want a ranking guarantee. Nobody can give you one."
+---
+
+## The problem
+
+A buyer opens an assistant and types "what is the best tool for X for a
+team of 20?" The answer names three products. You do not know if yours is
+one of them, what the assistant said about your price, or where it got its
+information.
+
+Most teams check this once, by hand, see their name, and move on. The
+answer changes from week to week and from one run to the next. One look
+tells you very little.
+
+## What you'll build
+
+A scheduled job that runs every Monday. It asks an assistant each of your
+buyer questions three times with web search turned on, then writes a
+report. For every question the report says whether your product was
+recommended, mentioned or absent, which competitors appeared, which
+sources the assistant cited, and any statement about your product that
+conflicts with a facts file you maintain.
+
+The report opens as a GitHub issue, so you build up a week-by-week
+history.
+
+## Example output
+
+```
+AI answer check, week of 19 October 2026
+Product: Tidewater (fictional). 10 questions, 3 runs each.
+
+Summary
+  Recommended in 9 of 30 runs. Mentioned in 6 more. Absent in 15.
+
+Q3  "best expense tool for a 20-person agency"
+  Run 1: absent      named: Ramp, Expensify, Pleo
+  Run 2: mentioned   listed fourth, "also consider"
+  Run 3: absent      named: Ramp, Expensify, Brex
+  Sources cited: g2.com category page, a 2025 comparison blog post
+  Note: neither source is a page we control.
+
+Wrong facts (2)
+  Q5 run 2: "Tidewater starts at $12 per user."
+            facts.md says $15 since March.
+  Q8 run 1: "No QuickBooks integration."
+            facts.md lists QuickBooks under integrations.
+```
+
+## Prerequisites
+
+- A GitHub account and a repository to hold the job. Any private
+  repository works. It does not need product code in it.
+- An Anthropic API key, from console.anthropic.com.
+- Ten questions a buyer would ask before they know your product exists.
+  Take them from sales calls. Do not include your product name in them.
+
+## Build it
+
+1. **Add your API key to the repository.** On GitHub, open the
+   repository, then Settings, then Secrets and variables, then Actions.
+   Create a secret named `ANTHROPIC_API_KEY`.
+
+2. **Write the questions.** Create `ai-check/questions.md`:
+
+   ```md
+   1. What is the best expense tool for a 20-person agency?
+   2. How do small teams handle receipts for client billing?
+   3. Expense software that works with QuickBooks, under $20 a user?
+   ```
+
+3. **Write the facts file.** Create `ai-check/facts.md` with what is true
+   today. Keep it to what a buyer asks about.
+
+   ```md
+   Product: Tidewater
+   Price: from $15 per user per month. Free trial, 14 days.
+   Integrations: QuickBooks, Xero, Slack.
+   Not supported: payroll, corporate cards.
+   Competitors we watch: Ramp, Expensify, Pleo.
+   ```
+
+4. **Add the job.** Create `.github/workflows/ai-answer-check.yml`:
+
+   ```yaml
+   name: ai-answer-check
+   on:
+     schedule:
+       - cron: "0 13 * * MON"   # Mondays 13:00 UTC
+     workflow_dispatch:
+   permissions:
+     contents: read
+     issues: write
+     id-token: write
+   jobs:
+     check:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v7
+         - uses: anthropics/claude-code-action@v1
+           with:
+             anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+             prompt: |
+               Read ai-check/questions.md and ai-check/facts.md.
+               For each question, do this 3 separate times: search
+               the web as a buyer would and write the answer you
+               would give that buyer. Do not look at facts.md while
+               answering.
+               Then write ai-check/report.md. For each question and
+               run, record: whether the product in facts.md was
+               recommended, mentioned, or absent; the products
+               named; the sources you relied on. Then list every
+               statement about the product that conflicts with
+               facts.md, quoting both.
+               Start with a summary line of counts. Report only.
+               Give no advice.
+             claude_args: |
+               --allowedTools "Read,Write,WebSearch,WebFetch"
+         - uses: peter-evans/create-issue-from-file@v6
+           with:
+             title: AI answer check
+             content-filepath: ai-check/report.md
+             labels: ai-answer-check
+   ```
+
+5. **Run it once by hand.** On GitHub, open the Actions tab, choose
+   `ai-answer-check`, and press "Run workflow". The report appears under
+   Issues in a few minutes.
+
+6. **Read the wrong facts first.** Each one traces to a source. If the
+   source is your own page, fix the page. If it is someone else's, ask
+   them to correct it.
+
+7. **Update `facts.md` whenever pricing or features change.** The check
+   compares against this file, so an old file produces false alarms.
+
+## How it works
+
+The job has three stages.
+
+- **Ask.** The Claude Code Action runs Claude on GitHub's servers on a
+  schedule. The `--allowedTools` line gives it web search and file
+  access, and nothing else. It answers each question the way an assistant
+  with search would answer a buyer.
+- **Repeat.** Assistants give different answers to the same question.
+  Three runs per question is the minimum that shows whether an
+  appearance is steady or luck. "Recommended in 1 of 3" is a different
+  finding from "recommended in 3 of 3".
+- **Compare.** The facts file is what makes the report useful. Without it
+  you get a list of answers to read. With it, the job can point at the
+  exact sentence that is wrong and the source it came from.
+
+The report separates "recommended" from "mentioned" on purpose. Showing
+up fourth in a list under "also consider" is not the same as being the
+answer.
+
+The sources are the part you can act on. An assistant builds its answer
+from pages it can read. If the cited pages are a review site and a
+two-year-old blog post, those pages are shaping what buyers hear.
+
+## Variations & next
+
+- **Run the full audit.** Paste one week's report and your public pages
+  into the `agent-readiness` skill. It walks the whole journey, from
+  discovery to an agent using the product, and names the largest blocker.
+- **Check other assistants.** This job measures Claude with web search.
+  ChatGPT, Perplexity and Google's AI answers each use their own search
+  and will differ. Ask the same questions there by hand once a month and
+  paste the answers into the issue.
+- **Track the trend.** After six weeks, ask Claude to read the six issues
+  and chart the recommended count per question.
+
+## Limits & honesty
+
+This measures one assistant. It does not tell you what ChatGPT or Google
+shows, and those may send you more buyers.
+
+Thirty runs a week is a small sample. A move from 9 to 11 recommendations
+means nothing. Look for changes that hold for three or four weeks.
+
+There is no reliable trick for getting recommended. Google has said
+publicly that it does not use `llms.txt` files for Search. What you
+control is whether your pricing, features and limits are stated in plain
+text on pages a crawler can read, and whether they are correct.
+
+Do not try to plant fake reviews or hidden text to sway the answers. It is
+dishonest, and it fails when someone checks.

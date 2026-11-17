@@ -3,7 +3,7 @@ name: launch-readiness
 tier: standalone
 wedge: gtm
 level: intermediate
-summary: Interrogates a planned launch — what is unowned, the rollback plan, the comms and enablement gaps, what breaks if adoption is 10x or 0.1x of expectation, and the explicit kill criteria. Produces the gap list specific to this launch; never a generic checklist.
+description: Interrogates a planned launch — what is unowned, the rollback plan, the comms and enablement gaps, what breaks if adoption is 10x or 0.1x of expectation, and the explicit kill criteria. Produces the gap list specific to this launch; never a generic checklist.
 inputs:
   - a launch description pasted by the PM (what's launching, when, to whom, and any plans already in place)
 outputs:

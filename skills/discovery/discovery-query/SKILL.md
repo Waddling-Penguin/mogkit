@@ -3,7 +3,7 @@ name: discovery-query
 tier: discovery
 wedge: discovery
 level: intermediate
-summary: Answers a discovery question by interrogating the graph — returning grounded findings with provenance, the explicit gaps in the evidence, and the discovery questions that would close them. Refuses to answer beyond what the corpus supports, and names every gap.
+description: Answers a discovery question by interrogating the graph — returning grounded findings with provenance, the explicit gaps in the evidence, and the discovery questions that would close them. Refuses to answer beyond what the corpus supports, and names every gap.
 inputs:
   - graph/graph.json (produced by graphify)
   - a discovery question stated by the PM

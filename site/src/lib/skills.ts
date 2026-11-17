@@ -12,6 +12,8 @@ export type SkillMeta = {
   level: "beginner" | "intermediate" | "advanced";
   summary: string;
   methodology?: string;
+  /** Full SKILL.md text, for the copy-to-chat button. */
+  raw: string;
 };
 
 function parseFrontmatter(md: string): Record<string, string> | null {
@@ -25,6 +27,7 @@ function parseFrontmatter(md: string): Record<string, string> | null {
     const [, k, v] = m;
     if (v) out[k] = v.replace(/^["']|["']$/g, "").trim();
   }
+  out.summary ??= out.description; // SKILL.md uses the Agent Skills key
   return out;
 }
 
@@ -36,7 +39,8 @@ function scanTier(dir: string): SkillMeta[] {
     if (!statSync(sub).isDirectory()) continue;
     const f = join(sub, "SKILL.md");
     if (!existsSync(f)) continue;
-    const fm = parseFrontmatter(readFileSync(f, "utf8"));
+    const raw = readFileSync(f, "utf8");
+    const fm = parseFrontmatter(raw);
     if (!fm?.name || !fm.tier || !fm.wedge || !fm.level || !fm.summary) continue;
     out.push({
       name: fm.name,
@@ -45,6 +49,7 @@ function scanTier(dir: string): SkillMeta[] {
       level: fm.level as SkillMeta["level"],
       summary: fm.summary,
       methodology: fm.methodology,
+      raw,
     });
   }
   return out.sort((a, b) => a.name.localeCompare(b.name));

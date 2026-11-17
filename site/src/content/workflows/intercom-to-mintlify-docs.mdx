@@ -2,7 +2,7 @@
 title: "Support → docs agent: Intercom conversations → Mintlify PRs"
 slug: "intercom-to-mintlify-docs"
 published: 2026-05-26
-updated: 2026-05-26
+updated: 2026-11-16
 wedge: gtm
 tools: ["Intercom", "Mintlify", "GitHub Actions", "Claude API"]
 difficulty: advanced
@@ -110,9 +110,9 @@ editorial pass.
      propose:
        runs-on: ubuntu-latest
        steps:
-         - uses: actions/checkout@v4
-         - uses: actions/setup-node@v4
-           with: { node-version: 20 }
+         - uses: actions/checkout@v7
+         - uses: actions/setup-node@v7
+           with: { node-version: 24 }
          - name: Propose docs updates
            env:
              INTERCOM_API_KEY: ${{ secrets.INTERCOM_API_KEY }}

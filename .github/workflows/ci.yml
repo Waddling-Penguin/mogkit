@@ -9,16 +9,16 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # pnpm version is read from `packageManager` in root package.json —
       # do NOT specify `version:` here or action-setup errors with
       # "Multiple versions of pnpm specified".
       - uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
 
       - name: Install dependencies

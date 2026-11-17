@@ -43,6 +43,7 @@ export function scaffoldWorkspace(targetDir: string): ScaffoldResult {
   // Templates
   const tpl = findTemplatesDir();
   copyFileSync(join(tpl, "CLAUDE.md"), p.claudeMd);
+  copyFileSync(join(tpl, "AGENTS.md"), p.agentsMd);
   copyFileSync(join(tpl, "gitignore.tmpl"), p.gitignore);
 
   // Stub READMEs in each empty folder so git tracks them.
@@ -61,6 +62,7 @@ export function scaffoldWorkspace(targetDir: string): ScaffoldResult {
 
   // Install all bundled skills.
   const installed = installAllSkills(p.claudeSkills);
+  installAllSkills(p.agentsSkills);
 
   // git init (best-effort; not fatal if git missing).
   let gitInitialized = false;
